@@ -1,0 +1,11 @@
+CMakeLists.txt
+cram
+giskard_msgs
+iai_common_msgs
+iai_maps
+lynxmotion_al5d_description
+lynxmotion_cpp
+pr2_kinematics
+roboticsgroup_gazebo_plugins
+.rosinstall
+.rosinstall.bak
