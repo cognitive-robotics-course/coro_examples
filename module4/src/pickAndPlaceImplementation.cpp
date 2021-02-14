@@ -1436,3 +1436,32 @@ void print_message_to_file(FILE *fp, char message[]) {
    fprintf(fp,"The message is: %s\n", message);
 }
 
+#ifdef ROS
+int spawn_brick(std::string color, double x, double y, double z, double phi) {
+    // The values are expected to be in mm and degrees
+    ros::NodeHandle nh;
+    ros::service::waitForService("/lynxmotion_al5d/spawn_brick");
+    ros::ServiceClient client = nh.serviceClient<lynxmotion_al5d_description::SpawnBrick>("/lynxmotion_al5d/spawn_brick");
+    lynxmotion_al5d_description::SpawnBrick srv;
+
+    srv.request.color = color;
+    srv.request.pose.position.x = x / 1000.0;
+    srv.request.pose.position.y = y / 1000.0;
+    srv.request.pose.position.z = z / 1000.0;
+    srv.request.pose.orientation.yaw = radians(phi);
+
+    if (client.call(srv))
+    {
+        ROS_INFO("Spawned brick [%s] of color [%s] at position (%.2f %.2f %.2f %.2f %.2f %.2f)", srv.response.name.c_str(), color.c_str(), (x/1000.0), (y/1000.0), (z/1000.0), 0.0, 0.0, radians(phi));
+        ROS_INFO("Waiting for 3 seconds");
+        wait(3000);
+    }
+    else
+    {
+        ROS_ERROR("Failed to call the service");
+        return 1;
+    }
+    
+    return 0;
+}    
+#endif

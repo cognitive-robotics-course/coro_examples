@@ -41,6 +41,7 @@
     #include <std_msgs/Float64.h>
     #include <std_msgs/Float64MultiArray.h>
     #include <sensor_msgs/JointState.h>
+    #include <lynxmotion_al5d_description/SpawnBrick.h>
 #endif
 using namespace std;
 
@@ -74,7 +75,7 @@ namespace std {
 
 ****************************************************************************************************************************/
 
-#define MAX_FILENAME_LENGTH 80
+#define MAX_FILENAME_LENGTH 200
 #define STRING_LENGTH 200
 #define KEY_LENGTH 20
 #define NUMBER_OF_KEYS 9
@@ -255,3 +256,7 @@ void readRobotConfigurationData(char filename[]);
 
 void prompt_and_exit(int status);
 void prompt_and_continue();
+
+#ifdef ROS
+    int spawn_brick(std::string color, double x, double y, double z, double phi);
+#endif

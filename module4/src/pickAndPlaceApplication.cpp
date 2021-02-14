@@ -36,16 +36,18 @@
 *
 *******************************************************************************************************************/
 
+#include <stdlib.h>
+#include <time.h>
 #ifdef WIN32
-#include "pickAndPlace.h"
+    #include "pickAndPlace.h"
 #else
-#include <module4/pickAndPlace.h>
+    #include <module4/pickAndPlace.h>
 #endif
 
 int main(int argc, char ** argv) {
 
    #ifdef ROS
-   ros::init(argc, argv, "pickAndPlace"); // Initialize the ROS system
+       ros::init(argc, argv, "pickAndPlace"); // Initialize the ROS system
    #endif
 
    extern robotConfigurationDataType robotConfigurationData;
@@ -141,10 +143,18 @@ int main(int argc, char ** argv) {
       prompt_and_exit(1);
    }
    if (debug) printf("Destination pose %f %f %f %f\n", destination_x, destination_y, destination_z, destination_phi);
+
+    /* Spawn the brick at the specified position */
+    // Randomly pick a color
+    const char* colors[3] = {"red", "green", "blue"};
+    srand(time(NULL));
+    // Call the utility function
+    spawn_brick(colors[rand() % 3], object_x, object_y, object_z, object_phi);
     
    /* now start the pick and place task */
    /* --------------------------------- */
 
+  
    effector_length = (float) robotConfigurationData.effector_z; // initialized from robot configuration data
   
    E               = trans(0.0, 0.0, effector_length);                                           // end-effector (gripper) frame 
@@ -159,11 +169,11 @@ int main(int argc, char ** argv) {
    /* ---------------------------------------------- */
    
    #ifdef ROS
-   robotConfigurationData.current_joint_value[0] = 0.00;
-   robotConfigurationData.current_joint_value[1] = 1.57;
-   robotConfigurationData.current_joint_value[2] = -1.57;
-   robotConfigurationData.current_joint_value[3] = 0.00;
-   robotConfigurationData.current_joint_value[4] = 0.00;
+       robotConfigurationData.current_joint_value[0] = 0.00;
+       robotConfigurationData.current_joint_value[1] = 1.57;
+       robotConfigurationData.current_joint_value[2] = -1.57;
+       robotConfigurationData.current_joint_value[3] = 0.00;
+       robotConfigurationData.current_joint_value[4] = 0.00;
    #endif
   
    /* close the gripper */

@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
   roslib
+  lynxmotion_al5d_description
 )
 
 catkin_package()

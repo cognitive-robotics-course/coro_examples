@@ -1,4 +1,5 @@
 CMakeLists.txt
+!*/CMakeLists.txt
 cram
 giskard_msgs
 iai_common_msgs
@@ -9,3 +10,4 @@ pr2_kinematics
 roboticsgroup_gazebo_plugins
 .rosinstall
 .rosinstall.bak
+*.swp
