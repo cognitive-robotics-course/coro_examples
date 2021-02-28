@@ -42,6 +42,7 @@
     #include <std_msgs/Float64MultiArray.h>
     #include <sensor_msgs/JointState.h>
     #include <lynxmotion_al5d_description/SpawnBrick.h>
+    #include <lynxmotion_al5d_description/KillBrick.h>
 #endif
 using namespace std;
 
@@ -216,7 +217,7 @@ bool computeServoPositions(double joint_angles[], int servo_positions[]);
 
 void sig(int s);
 int  pose_within_working_env(float x, float y, float z);
-void display_error_and_exit(char error_message[]);
+void display_error_and_exit(const char error_message[]);
 double degrees(double radians);
 double radians(double degrees);
 
@@ -258,5 +259,6 @@ void prompt_and_exit(int status);
 void prompt_and_continue();
 
 #ifdef ROS
-    int spawn_brick(std::string color, double x, double y, double z, double phi);
+int spawn_brick(std::string name, std::string color, double x, double y, double z, double phi);
+int kill_brick(std::string name);
 #endif

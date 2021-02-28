@@ -34,6 +34,20 @@
 *   David Vernon
 *   27 July 2020
 *
+*   Ported to ROS for use with the Lynxmotion_AL5D simulator in Gazebo
+*   Vinny Adjibi
+*   9 February 2021
+*
+*   The option to spawn and kill a brick to aid with debugging with the simulator in now options
+*   To switch this option on, set the create_brick variable to true
+*   David Vernon
+*   25 February 2021
+*
+*   Implemented piece-wise continuous path control for approach and depart phases of both the pick and the place actions
+*   To override this, set the continuous_path variable to false 
+*   David Vernon
+*   26 February 2021
+*
 *******************************************************************************************************************/
 
 #include <stdlib.h>
@@ -45,13 +59,15 @@
 #endif
 
 int main(int argc, char ** argv) {
-
+  
    #ifdef ROS
        ros::init(argc, argv, "pickAndPlace"); // Initialize the ROS system
    #endif
 
    extern robotConfigurationDataType robotConfigurationData;
+   
    bool debug = true;
+   
    FILE *fp_in;                    // pickAndPlace input file
    int  end_of_file; 
    char robot_configuration_filename[MAX_FILENAME_LENGTH];
@@ -66,6 +82,7 @@ int main(int argc, char ** argv) {
    Frame object;
    Frame object_grasp;
    Frame object_approach;
+   Frame object_depart;
    Frame destination;
 
    /* data variables */
@@ -84,30 +101,47 @@ int main(int argc, char ** argv) {
 
    float grasp_x           =   0;   // grasp pose relative to object and destination poses                        
    float grasp_y           =   0;
-   float grasp_z           =   0;
+   float grasp_z           =   5;
    float grasp_theta       = 180;   // rotation in degrees about the y axis 
       
+   float approach_distance;         // approach  distance from grasp pose in -z direction
+   float depart_distance;           // departure distance from grasp pose in -z direction
+   float initial_approach_distance; // start the approach from this distance
+   float final_depart_distance;     // start the approach from this distance
+   float delta;                     // increment in approach and depart distance 
 
-   float approach_distance = 100;   // approach and departure distance from grasp pose in -z direction
-  
+   bool continuous_path = false;    // if true, implement approximation of continuous path control
+                                    // when approaching and departing the grasp pose
+                                    // otherwise just move directly from the initial approach pose to the grasp pose
+                                    // and directly from the grasp pose to the final depart pose 
+
+#ifdef ROS   
+   bool create_brick = false;       // if true, spawn a brick at the specified location
+   
+   const char* name  = "brick1";    // name and colors for option to spawn and kill a brick
+   const char* colors[3]  = {"red", "green", "blue"};
+#endif
+
+   
    /* open the input file */
    /* ------------------- */
 
-   // Set the filename. Different directories for ROS and Windows versions
-   #ifdef ROS
+   /* Set the filename. Different directories for ROS and Windows versions */
+   
+#ifdef ROS
     strcat(directory, (ros::package::getPath(ROS_PACKAGE_NAME) + "/data/").c_str());
-   #else
-    // On Windows the exec is in bin, so we go in the parent directory first
-    strcat(directory, "../data/");
-   #endif
+#else
+    strcat(directory, "../data/");// On Windows the exec is in bin, so we go in the parent directory first
+#endif
 
     strcpy(filename, directory);
-    strcat(filename, "pickAndPlaceInput.txt");
+    strcat(filename, "pickAndPlaceInput.txt"); // Input filename matches the application name
    if ((fp_in = fopen(filename, "r")) == 0) {
-	  printf("Error can't open input pickAndPlaceInput.txt\n");
+      printf("Error can't open input pickAndPlaceInput.txt\n");
       prompt_and_exit(0);
    }
 
+   
    /* get the robot configuration data */
    /* -------------------------------- */
 
@@ -118,12 +152,13 @@ int main(int argc, char ** argv) {
    }
    if (debug) printf("Robot configuration filename %s\n", robot_configuration_filename);
 
-    strcpy(filename, robot_configuration_filename);
-    strcpy(robot_configuration_filename, directory);
-    strcat(robot_configuration_filename, filename);
+   strcpy(filename, robot_configuration_filename);
+   strcpy(robot_configuration_filename, directory);
+   strcat(robot_configuration_filename, filename);
 
    readRobotConfigurationData(robot_configuration_filename);
 
+   
    /* get the object pose data */
    /* ------------------------ */
 
@@ -134,6 +169,7 @@ int main(int argc, char ** argv) {
    }
    if (debug) printf("Object pose %f %f %f %f\n", object_x, object_y, object_z, object_phi);
 
+   
    /* get the destination pose data */
    /* ----------------------------- */
 
@@ -144,132 +180,250 @@ int main(int argc, char ** argv) {
    }
    if (debug) printf("Destination pose %f %f %f %f\n", destination_x, destination_y, destination_z, destination_phi);
 
-    /* Spawn the brick at the specified position */
-    // Randomly pick a color
-    const char* colors[3] = {"red", "green", "blue"};
-    srand(time(NULL));
-    // Call the utility function
-    spawn_brick(colors[rand() % 3], object_x, object_y, object_z, object_phi);
-    
+   
+#ifdef ROS
+
+   /* If we are using the simulator on ROS, we can instantiate the brick here to help with debugging */
+   /* Normally, we would instantiate the brick using the terminal to mimic the way we would do it    */
+   /* when using the physical robot, i.e. manually positioning it for the robot to pick and place    */
+
+   if (create_brick) {
+     
+       /* Spawn the brick at the specified position */
+       /* Randomly pick a color                     */
+
+       srand(time(NULL));
+
+       if (debug) {
+          printf("Spawning brick %s  color %s at position (%.2f %.2f %.2f %.2f)\n",
+	         name, colors[rand() % 3], object_x, object_y, object_z, object_phi);
+       }
+     
+       /* Call the utility function */
+       
+       spawn_brick(name, colors[rand() % 3], object_x, object_y, object_z, object_phi);
+   }
+#endif     
+   
    /* now start the pick and place task */
    /* --------------------------------- */
 
-  
    effector_length = (float) robotConfigurationData.effector_z; // initialized from robot configuration data
+   initial_approach_distance = 20;
+   final_depart_distance     = 20;
+   delta = 2;
   
    E               = trans(0.0, 0.0, effector_length);                                           // end-effector (gripper) frame 
    Z               = trans(0.0 ,0.0, 0.0);                                                       // robot base frame
    object          = trans(object_x,      object_y,      object_z)      * rotz(object_phi);      // object pose
    destination     = trans(destination_x, destination_y, destination_z) * rotz(destination_phi); // destination pose
    object_grasp    = trans(grasp_x,       grasp_y,       grasp_z)       * roty(grasp_theta);     // object grasp frame w.r.t. both object and destination frames
-   object_approach = trans(0,0,-approach_distance);                                              // frame defined w.r.t. grasp frame
-   
-
-   /* setting the joint values to the home position  */
-   /* ---------------------------------------------- */
-   
-   #ifdef ROS
-       robotConfigurationData.current_joint_value[0] = 0.00;
-       robotConfigurationData.current_joint_value[1] = 1.57;
-       robotConfigurationData.current_joint_value[2] = -1.57;
-       robotConfigurationData.current_joint_value[3] = 0.00;
-       robotConfigurationData.current_joint_value[4] = 0.00;
-   #endif
-  
-   /* close the gripper */
+   object_approach = trans(0,0,-initial_approach_distance);                                      // frame defined w.r.t. grasp frame
+   object_depart   = trans(0,0,-final_depart_distance);                                          // frame defined w.r.t. grasp frame
+ 
+   /* open the gripper */
    /* ----------------- */
 
-   grasp(GRIPPER_OPEN);     
-
-   wait(3000); // wait for 3 seconds
-
-   /* move to initial approach pose */
-   /* ----------------------------- */
+   if (debug) printf("Opening gripper\n");
    
-   if (debug) printf("\nInitial approach pose\n");
+   grasp(GRIPPER_OPEN);
+
+#ifdef ROS
+      wait(5000); // wait to allow the simulator to go to the home pose before beginning
+                  // we need to do this because the simulator does not initialize in the home pose
+#endif
+
+   
+
+   /* move to the pick approach pose */
+   /* ------------------------------ */
+   
+   if (debug) printf("Moving to object approach pose\n");
 
    T6 = inv(Z) * object * object_grasp * object_approach * inv(E);
 
    if (move(T6) == false) display_error_and_exit("move error ... quitting\n");;
 
-   wait(3000); // wait for 3 seconds
+   wait(2000); 
 
- 
-   /* move to the grasp pose */
-   /* ---------------------- */
+
+   if (continuous_path) {
+
+      /* incrementally decrease the approach distance */
+     
+      approach_distance = initial_approach_distance - delta;
+   
+      while (approach_distance >= 0) {
+	
+	 object_approach   = trans(0,0,-approach_distance);
+	 
+         T6 = inv(Z) * object * object_grasp * object_approach * inv(E);
+	 
+         if (move(T6) == false) display_error_and_exit("move error ... quitting\n");  
+
+         approach_distance = approach_distance - delta;                              
+      }
+   }
+
+   
+   /* move to the pick pose */
+   /* --------------------- */
       
-   if (debug) printf("\nGrasp pose\n");
+   if (debug) printf("Moving to object pose\n");
 
    T6 = inv(Z) * object * object_grasp * inv(E);
 
    if (move(T6) == false) display_error_and_exit("move error ... quitting\n");
 
-   wait(3000); // wait for 3 seconds
+   wait(1000); 
 
+   
    /* close the gripper */
    /* ----------------- */
 
-   if (debug) printf("\nGripper Closing\n");
+   if (debug) printf("Closing gripper\n");
 
-   grasp(GRIPPER_CLOSED);     
-   wait(3000); // wait for 3 seconds
-         
-   /* move back to initial approach pose */
-   /* ---------------------------------- */
+   grasp(GRIPPER_CLOSED);
 
-   if (debug) printf("\nInitial approach pose (departing)\n");
+   wait(1000);
 
-   T6 = inv(Z) * object * object_grasp * object_approach * inv(E);
+           
+   /* move to pick depart pose */
+   /* ------------------------ */
 
-   if (move(T6) == false) display_error_and_exit("move error ... quitting\n");
+   if (debug) printf("Moving to object depart pose\n");
 
-   wait(3000); // wait for 3 seconds
+   if (continuous_path) {
+
+      /* incrementally increase depart distance */
+
+      depart_distance = delta;
+      
+      while (depart_distance <= final_depart_distance) {
+
+	 object_depart   = trans(0,0,-depart_distance);
+
+         T6 = inv(Z) * object * object_grasp * object_depart * inv(E);          
+                                                                              
+         if (move(T6) == false) display_error_and_exit("move error ... quitting\n"); 
+
+         depart_distance = depart_distance + delta;
+      }
+   }
+
+   
+   T6 = inv(Z) * object * object_grasp * object_depart * inv(E);
+
+   if (move(T6) == false) display_error_and_exit("move error ... quitting\n");;
+
+   wait(2000);
+
    
    /* move to destination approach pose */
    /* --------------------------------- */
 
-   if (debug) printf("\nDestination approach pose\n");
+   if (debug) printf("Moving to destination approach pose\n");
 
+   object_approach = trans(0,0,-initial_approach_distance);
+ 
    T6 = inv(Z) * destination * object_grasp * object_approach * inv(E);
 
    if (move(T6) == false) display_error_and_exit("move error ... quitting\n");
 
-   wait(3000); // wait for 3 seconds
-  
+   wait(2000);
+
+      
    /* move to the destination pose */
    /* ---------------------------- */
-       
-   if (debug) printf("\n pose\n");
+
+   if (debug) printf("Moving to destination pose\n");
+      
+   if (continuous_path) {
+
+      /* incrementally decrease approach distance */
+
+      approach_distance = initial_approach_distance - delta;
+   
+      while (approach_distance >= 0) {
+	
+         object_approach   = trans(0,0,-approach_distance);
+	
+         T6 = inv(Z) * destination * object_grasp * object_approach * inv(E);   
+                                                                                  
+         if (move(T6) == false) display_error_and_exit("move error ... quitting\n");  
+
+         approach_distance = approach_distance - delta;
+      }
+   }
+
 
    T6 = inv(Z) * destination * object_grasp * inv(E);
 
    if (move(T6) == false) display_error_and_exit("move error ... quitting\n");;
  
-   wait(3000); // wait for 3 seconds
+   wait(1000);
 
+   
    /* open the gripper */
    /* ---------------- */
 
+   if (debug) printf("Opening gripper\n");
+
    grasp(GRIPPER_OPEN);     
-   wait(3000); // wait for 3 seconds
+   wait(1000); 
 
-   /* move back to initial approach pose */
-   /* ---------------------------------- */
+   
+   /* move to depart pose */
+   /* ------------------- */
 
-   if (debug) printf("\nDestination approach pose (departing)\n");
+   if (debug) printf("Moving to destination depart pose\n");
 
-   T6 = inv(Z) * destination * object_grasp * object_approach * inv(E);
+   if (continuous_path) {
 
-   if (move(T6) == false) display_error_and_exit("move error ... quitting\n");;
+      depart_distance = delta;
+      
+      while (depart_distance <= final_depart_distance) {
 
-   wait(3000); // wait for 3 seconds
+	 object_depart   = trans(0,0,-depart_distance);
+
+         T6 = inv(Z) * destination * object_grasp * object_depart * inv(E);          
+                                                                              
+         if (move(T6) == false) display_error_and_exit("move error ... quitting\n"); 
+
+         depart_distance = depart_distance + delta;
+      }
+   }
+   
+   object_depart   = trans(0,0,-final_depart_distance);
+      
+   T6 = inv(Z) * destination * object_grasp * object_depart * inv(E);
+
+   if (move(T6) == false) display_error_and_exit("move error ... quitting\n");
+
+   wait(1000);
+
     
    goHome(); // this returns the robot to the home position so that when it's switched off 
              // it's in a pose that is close to the one that the servo-controller uses as its initial state
              // could also do this with a move() as show above
 
-   if (debug)
-	   prompt_and_exit(0);
+#ifdef ROS
+   prompt_and_continue();
 
+   if (create_brick) {
+     
+       /* Remove the brick for the next time  */
+       /* ----------------------------------- */
+
+       if (debug) {
+          printf("Killing brick\n");
+       }
+     
+       /* Call the utility function */
+       
+       kill_brick(name);
+   }
+#endif
+   
    return 0;
 }

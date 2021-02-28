@@ -513,7 +513,7 @@ double radians(double degrees)
 
 bool computeJointAngles(double x, double y, double z, double pitch_angle_d, double roll_angle_d, double joint_angles[]) {
  
-    bool debug = true;
+    bool debug = false;
 
   
     if (debug) printf("computeJointAngles(): x %4.1f, y %4.1f, z %4.1f, pitch %4.1f, roll %4.1f\n", x, y, z, pitch_angle_d, roll_angle_d);
@@ -1176,7 +1176,7 @@ void readRobotConfigurationData(char filename[]) {
    int k;
 
    keyword keylist[NUMBER_OF_KEYS] = {
-	  "com",
+      "com",
       "baud",
       "speed",
       "channel",
@@ -1184,7 +1184,7 @@ void readRobotConfigurationData(char filename[]) {
       "degree",
       "effector",
       "wrist",
-	  "current"
+      "current"
    };
 
    keyword key;                  // the key string when reading parameters
@@ -1285,7 +1285,7 @@ void readRobotConfigurationData(char filename[]) {
       printf("DEGREE:   "); for (k=0; k<6; k++) printf("%3.1f ", robotConfigurationData.degree[k]); printf("\n");
       printf("EFFECTOR: "); printf("%d %d %d \n", robotConfigurationData.effector_x, robotConfigurationData.effector_y, robotConfigurationData.effector_z);
       printf("WRIST:    "); printf("%s \n", value);
-	  printf("CURRENT:  "); for (k=0; k<6; k++) printf("%4.3f ", robotConfigurationData.current_joint_value[k]); printf("\n");
+      printf("CURRENT:  "); for (k=0; k<6; k++) printf("%4.3f ", robotConfigurationData.current_joint_value[k]); printf("\n");
    }
 }
 

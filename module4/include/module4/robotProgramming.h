@@ -76,7 +76,7 @@ namespace std {
 
 ****************************************************************************************************************************/
 
-#define MAX_FILENAME_LENGTH 80
+#define MAX_FILENAME_LENGTH 200
 #define STRING_LENGTH 200
 #define KEY_LENGTH 20
 #define NUMBER_OF_KEYS 9

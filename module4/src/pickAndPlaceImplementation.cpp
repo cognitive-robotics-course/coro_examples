@@ -520,7 +520,7 @@ double radians(double degrees)
 
 bool computeJointAngles(double x, double y, double z, double pitch_angle_d, double roll_angle_d, double joint_angles[]) {
  
-    bool debug = true; 
+    bool debug = false; 
   
     if (debug) printf("computeJointAngles(): x %4.1f, y %4.1f, z %4.1f, pitch %4.1f, roll %4.1f\n", x, y, z, pitch_angle_d, roll_angle_d);
 
@@ -1193,7 +1193,7 @@ void readRobotConfigurationData(char filename[]) {
    int k;
 
    keyword keylist[NUMBER_OF_KEYS] = {
-	  "com",
+      "com",
       "baud",
       "speed",
       "channel",
@@ -1201,7 +1201,7 @@ void readRobotConfigurationData(char filename[]) {
       "degree",
       "effector",
       "wrist",
-	  "current"
+      "current"
    };
 
    keyword key;                  // the key string when reading parameters
@@ -1302,7 +1302,7 @@ void readRobotConfigurationData(char filename[]) {
       printf("DEGREE:   "); for (k=0; k<6; k++) printf("%3.1f ", robotConfigurationData.degree[k]); printf("\n");
       printf("EFFECTOR: "); printf("%d %d %d \n", robotConfigurationData.effector_x, robotConfigurationData.effector_y, robotConfigurationData.effector_z);
       printf("WRIST:    "); printf("%s \n", value);
-	  printf("CURRENT:  "); for (k=0; k<6; k++) printf("%4.3f ", robotConfigurationData.current_joint_value[k]); printf("\n");
+      printf("CURRENT:  "); for (k=0; k<6; k++) printf("%4.3f ", robotConfigurationData.current_joint_value[k]); printf("\n");
    }
 }
 
@@ -1403,7 +1403,7 @@ void fail(char *message)
 /*=======================================================*/
 
 
-void display_error_and_exit(char error_message[]) {
+void display_error_and_exit(const char *error_message) {
    printf("%s\n", error_message);
    printf("Hit any key to continue >>");
    getchar();
@@ -1437,13 +1437,22 @@ void print_message_to_file(FILE *fp, char message[]) {
 }
 
 #ifdef ROS
-int spawn_brick(std::string color, double x, double y, double z, double phi) {
+int spawn_brick(std::string name, std::string color, double x, double y, double z, double phi) {
+
+    bool debug = false;
+
+    if (debug) {
+       printf("spawn_brick:  %s with color %s at position (%.2f %.2f %.2f %.2f)\n",
+	      name.c_str(), color.c_str(), x, y, z, phi);
+    }
+  
     // The values are expected to be in mm and degrees
     ros::NodeHandle nh;
     ros::service::waitForService("/lynxmotion_al5d/spawn_brick");
     ros::ServiceClient client = nh.serviceClient<lynxmotion_al5d_description::SpawnBrick>("/lynxmotion_al5d/spawn_brick");
     lynxmotion_al5d_description::SpawnBrick srv;
 
+    srv.request.name  = name;
     srv.request.color = color;
     srv.request.pose.position.x = x / 1000.0;
     srv.request.pose.position.y = y / 1000.0;
@@ -1452,9 +1461,7 @@ int spawn_brick(std::string color, double x, double y, double z, double phi) {
 
     if (client.call(srv))
     {
-        ROS_INFO("Spawned brick [%s] of color [%s] at position (%.2f %.2f %.2f %.2f %.2f %.2f)", srv.response.name.c_str(), color.c_str(), (x/1000.0), (y/1000.0), (z/1000.0), 0.0, 0.0, radians(phi));
-        ROS_INFO("Waiting for 3 seconds");
-        wait(3000);
+      if (debug) ROS_INFO("Spawned brick [%s] of color [%s] at position (%.3f %.3f %.3f %.2f %.3f %.3f)", srv.response.name.c_str(), color.c_str(), (x/1000.0), (y/1000.0), (z/1000.0), 0.0, 0.0, radians(phi));
     }
     else
     {
@@ -1464,4 +1471,33 @@ int spawn_brick(std::string color, double x, double y, double z, double phi) {
     
     return 0;
 }    
+
+int kill_brick(std::string name) {
+
+    bool debug = false;
+
+    if (debug) {
+       printf("kill_brick: %s\n",name.c_str());
+    }
+  
+    ros::NodeHandle nh;
+    ros::service::waitForService("/lynxmotion_al5d/kill_brick");
+    ros::ServiceClient client = nh.serviceClient<lynxmotion_al5d_description::KillBrick>("/lynxmotion_al5d/kill_brick");
+    lynxmotion_al5d_description::KillBrick srv;
+
+    srv.request.name  = name.c_str();
+
+    if (client.call(srv))
+    {
+        if (debug) ROS_INFO("Killed brick [%s]", name.c_str());
+    }
+    else
+    {
+        ROS_ERROR("Failed to call the service");
+        return 1;
+    }
+    
+    return 0;
+}    
+
 #endif

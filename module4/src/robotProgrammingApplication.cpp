@@ -36,7 +36,7 @@
 *   HOME    <servo 1 setpoint>   <servo 2 setpoint>   <servo 3 setpoint>   <servo 4 setpoint>   <servo 5 setpoint>   <servo 6 setpoint> 
 *   DEGREE  <servo 1 pulses>     <servo 2 pulses>     <servo 3 pulses>     <servo 4 pulses>     <servo 5 pulses>     <servo 6 pulses>
 *   WRIST   <wrist type>
-*   DEFAULT <joint 1 angle> <joint 2 angle> <joint 3 angle> <joint 4 angle> <joint 5 angle> <gripper distance>
+*   CURRENT <joint 1 angle> <joint 2 angle> <joint 3 angle> <joint 4 angle> <joint 5 angle> <gripper distance>
 *
 *   The serial port name is assigned automatically by the operating system when the robot's USB-to-serial port is connected to the computer
 *   e.g., COM0, COM6, ... 
@@ -56,7 +56,7 @@
 *   and instead pin 6 is used to control servo 3.
 *
 *   The home data specifies the servo setpoint value required to position the robot in the pre-defined home position with 
-*   joint angles 0, 90, -90, -90, 0, respectively, and gripper fully open.
+*   joint angles 0, 1.57 radians, -1.57 radians, 0, 0, respectively, and gripper fully open (0.030 m).
 *   These setpoint values are specified in microseconds: 
 *   typically 500 microseconds corresponds to the servo-motor positioned at one extreme and 2500 microseconds to the other extreme.
 *
@@ -66,7 +66,7 @@
 *   The wrist data specifies whether the wrist is a lightweight wrist or a heavy duty wrist. The key values are "lightweight" or "heavyduty"
 *   This information is used to determine which direction the roll servo should turn (the heavy duty wrist reverses the direction)
 *   
-*   The default data specifies the initial joint angles in radians and the gripper distance in metres
+*   The current data specifies the initial joint angles in radians and the gripper distance in metres
 *   This information is updated every time either setJointAngles() or grasp() is called 
 *   and is used in constructing the message to be published on the ROS topic when using ROS to control the robot or the simulator
 *
@@ -183,597 +183,296 @@ int main(int argc, char ** argv) {
       readRobotConfigurationData(filename);
 	  	 
       goHome();    // not strictly necessary ... just for demonstration
-      wait(2000);  // wait for 5 seconds
+      wait(2000);  // wait for 2 seconds
       
 
       effector_length = (float) robotConfigurationData.effector_z;
 
-
-
-      delta = 5;                                 // increment in approach distance 
-
-
+      delta = 2;                                 // increment in approach distance 
 
       E = trans(0.0, 0.0, effector_length);      // end-effector (gripper) frame
-
       Z = trans(0.0 ,0.0, 0.0);                  // robot base frame
 
-
-
-
-
+      
       /*****************************************************************************************/
-
       /* example pose: just a translation so that the gripper frame is aligned with base frame */
-
       /* with the y axis (direction of gripper movement) pointing away from the robot          */
-
       /*                                                                                       */
-
       /* Add the effector_length to z position because this is where we want the tip of the    */
-
       /* gripper to be                                                                         */
-
       /*****************************************************************************************/
-
-
 
       example_pose = trans(example_x, example_y, example_z+effector_length); 
 
-
-
       T5 = inv(Z) * example_pose * inv(E);
-
-
-
+      
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");
-
-
 
       wait(5000);  // wait for 5 seconds
 
-                                                                    
-
       /*****************************************************************************************/
-
       /* example pose ... rotate the wrist 90 degrees about z to have the gripper y axis       */
-
       /* (i.e. direction of gripper movement) pointing to the left                             */
-
       /*                                                                                       */
-
       /* Add the effector_length to z position because this is where we want the tip of the    */
-
       /* gripper to be                                                                         */
-
       /*****************************************************************************************/
-
-
 
       example_pose = trans(example_x, example_y, example_z+effector_length) *  rotz(90.0);
 
-
-
       T5 = inv(Z) * example_pose * inv(E);
-
-
-
+      
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");
 
-
-
-      wait(5000);  // wait for 5 seconds
-
-
-
-
-
-                                                                          
+      wait(5000);  // wait for 5 seconds                                                                          
 
       /*****************************************************************************************/
-
       /* example pose ... rotate the wrist 90 degrees about z and then  90 degrees about y     */
-
       /* to achieve the same pose as the home configuration, i.e. gripper pointing in the y    */
-
       /* direction and the direction of gripper movement aligned with the base x axis          */
-
       /*                                                                                       */
-
       /* Add the effector_length to z position because this is where we want the tip of the    */
-
       /* gripper to be                                                                         */
-
       /*****************************************************************************************/
-
- 
 
       example_pose = trans(example_x, example_y+effector_length, example_z) *  rotz(90.0) * roty(90); 
 
-
-
       T5 = inv(Z) * example_pose * inv(E);
-
-
 
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");
 
-
-
       wait(5000);  // wait for 5 seconds
 
-       
-
-
-
       /*****************************************************************************************/
-
       /* same pose as above ... but different combination of rotations to achieve it           */
-
       /*****************************************************************************************/
-
- 
 
       example_pose = trans(example_x, example_y+effector_length, example_z) *  roty(90.0) * rotx(-90); 
 
-
-
       T5 = inv(Z) * example_pose * inv(E);
-
-
 
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");
 
-
-
       wait(5000);  // wait for 5 seconds
 
-       
-
+      /*****************************************************************************************/
+      /* same wrist orientation as above but with the wrist now 40mm above to the work surface */
       /*****************************************************************************************/
 
-      /* same wrist orientation as above but with the wrist now 20mm above to the work surface */
-
-      /*****************************************************************************************/
-
- 
-
-      example_pose = trans(example_x, example_y+effector_length, 20) *  rotz(90.0) * roty(90); 
-
-
+      example_pose = trans(example_x, example_y+effector_length, 40) *  rotz(90.0) * roty(90); 
 
       T5 = inv(Z) * example_pose * inv(E);
 
-
-
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");
 
-
-
-      wait(5000);  // wait for 5 seconds
-
-
-
- 
-
+      wait(3000);  // wait for 3 seconds
 
 
       /*****************************************************************************************/
-
       /*                                                                                       */
-
       /* now show how an object can be grasped from above using the technique in the notes     */
-
       /*                                                                                       */
-
       /*****************************************************************************************/
-
-
 
       object_grasp = trans(object_x, object_y, object_z) * roty(180.0) * rotz(object_theta);     // object grasp frame
 
       //object_grasp.printFrame();  // useful for validation
 
-
-
       /* approach distance */
 
-
-
-      initial_approach_distance = 100; 
-
-   
-
-      approach_distance = initial_approach_distance;
-
-      object_approach = trans(0,0,-approach_distance); // frame defined wrt object_grasp frame
-
-
-
-
+      initial_approach_distance = 50; // 100
+      approach_distance         = initial_approach_distance;
+      object_approach           = trans(0,0,-approach_distance); // frame defined wrt object_grasp frame
 
       /* move to initial approach pose */
 
-
-
       T5 = inv(Z) * object_grasp * object_approach * inv(E);
-
-
 
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");
 
-
-
-      wait(5000);  // wait for 5 seconds
-
-
-
-
+      wait(3000);  // wait for 3 seconds
 
       grasp(GRIPPER_OPEN); // open the gripper fully before attempting to grasp an object
 
       wait(1000); 
 
-
-
-
-
       /* move vertically in the -Z direction (down), maintaining wrist pose */
 
-
-
       do {
-
+	
          T5 = inv(Z) * object_grasp * object_approach * inv(E);
-
-
 
          if (move(T5) == false) display_error_and_exit("move error ... quitting\n");
 
-
-
          approach_distance = approach_distance - delta;
+         object_approach   = trans(0,0,-approach_distance);
 
-         object_approach = trans(0,0,-approach_distance);
-
-      } while (approach_distance > 0);
-
-
+      } while (approach_distance >= 0);
 
       wait(3000);    
-
-
-
-      
 
       grasp(15);  // 15 mm opening in gripper ... this is the width of a Lego block and could be used to grasp the block 
 
       wait(1000); // we definitely do not want to use grasp(GRIPPER_CLOSED) because this closes the gripper completely                   
-
                   // and it can't reach this position if there is a block preventing it from closing fully
-
                   // this will damage the motors and possible the controller board also
-
-                 
-
-
-
-
 
       /* move vertically in the Z direction (up), maintaining wrist pose */
 
-
-
       approach_distance = 0;
-
-      object_approach = trans(0,0,-approach_distance);
+      object_approach   = trans(0,0,-approach_distance);
 
       do {
 
-         T5 = inv(Z) * object_grasp * object_approach * inv(E);
-
-
+	 T5 = inv(Z) * object_grasp * object_approach * inv(E);
 
          if (move(T5) == false) display_error_and_exit("move error ... quitting\n");
 
-
-
          approach_distance = approach_distance + delta;
-
-         object_approach = trans(0,0,-approach_distance);
+         object_approach   = trans(0,0,-approach_distance);
 
       } while (approach_distance <= initial_approach_distance);
 
-
-
       wait(3000); 
 
-
-
-     
-
       /* move horizontally in the X direction (right), maintaining wrist pose */
-
-
 
       for (value = example_x; value <= example_x + side_x; value = value + delta) {
 
          example_pose = trans(value, example_y, example_z-effector_length) * roty(180.0) * rotz(-90.0); 
 
-
-
          T5 = inv(Z) * example_pose * inv(E);
 
-
-
          if (move(T5) == false) display_error_and_exit("move error ... quitting\n");;
-
       } 
-
-
 
       wait(3000);  
 
-
-
-
-
       /* move above the tray */
-
       /* ------------------- */
-
-
 
       tray_pose = trans(tray_x, tray_y, tray_z) * roty(180.0) * rotz(-90.0); 
 
-
-
       T5 = inv(Z) * tray_pose * inv(E);
-
-
 
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");
 
-
-
       wait(3000);  // wait for 5 seconds
-
-       
 
       grasp(GRIPPER_OPEN);   // release anything that's been grasped
 
       wait(1000); 
 
-
-
-
-
       /* move horizontally in the -X direction (left), maintaining wrist pose */
-
-
 
       for (value = example_x + side_x; value >= example_x; value = value - delta) {
 
          example_pose = trans(value, example_y, example_z-effector_length) * roty(180.0) * rotz(-90.0); 
 
-
-
          T5 = inv(Z) * example_pose * inv(E);
 
-
-
          if (move(T5) == false) display_error_and_exit("move error ... quitting\n");;
-
       }       
 
-
-
-      wait(3000);
-
-
-
- 
+      wait(3000); 
 
       /**************************************************/
-
+      /*                                                */
       /* Alternative without the point-to-point control */
-
+      /*                                                */
       /**************************************************/
-
-
 
       object_grasp = trans(object_x, object_y, object_z) * roty(180.0) * rotz(object_theta);     // object grasp frame
 
- 
-
       approach_distance = initial_approach_distance;
-
-      object_approach = trans(0,0,-approach_distance); // frame defined wrt object_grasp frame
-
-
-
-
+      object_approach   = trans(0,0,-approach_distance); // frame defined wrt object_grasp frame
 
       /* move to initial approach pose */
 
-
-
       T5 = inv(Z) * object_grasp * object_approach * inv(E);
-
-
-
+      
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");;
 
-
-
       wait(3000);  // wait for 5 seconds
-
-   
 
       grasp(GRIPPER_OPEN); // open the gripper fully before attempting to grasp an object
 
       wait(1000); 
 
-
-
       /* move to the grasp pose */
-
-       
 
       T5 = inv(Z) * object_grasp * inv(E);
 
-
-
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");;
 
- 
-
-      wait(3000);    
-
- 
-
+      wait(3000);
+      
       grasp(15);  // 15 mm opening in gripper ... this is the width of a Lego block and could be used to grasp the block 
 
       wait(1000); // we definitely do not want to use grasp(GRIPPER_CLOSED) because this closes the gripper completely                   
-
                   // and it can't reach this position if there is a block preventing it from closing fully
-
                   // this will damage the motors and possible the controller board also
-
-                 
-
-
 
       /* move to initial approach pose */
 
-
-
       T5 = inv(Z) * object_grasp * object_approach * inv(E);
 
-
-
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");;
-
-
 
       wait(3000);  // wait for 5 seconds
 
-   
-
-
-
       /* move to example pose */
-
-
-
+      
       example_pose = trans(example_x, example_y, example_z-effector_length) * roty(180.0) * rotz(-90.0); 
-
-
 
       T5 = inv(Z) * example_pose * inv(E);
 
-
-
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");;
-
-
 
       wait(3000);
 
-
-
-
-
       /* move horizontally in the X direction (right) */
-
-
 
       example_pose = trans(example_x + side_x, example_y, example_z-effector_length) * roty(180.0) * rotz(-90.0); 
 
-
-
       T5 = inv(Z) * example_pose * inv(E);
 
-
-
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");;
-
-
 
       wait(3000);  
 
 
-
-
-
       /* move above the tray */
-
       /* ------------------- */
-
-
 
       tray_pose = trans(tray_x, tray_y, tray_z) * roty(180.0) * rotz(-90.0); 
 
-
-
       T5 = inv(Z) * tray_pose * inv(E);
-
-
 
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");
 
-
-
       wait(3000);  // wait for 3 seconds
-
-       
 
       grasp(GRIPPER_OPEN);   // release anything that's been grasped
 
       wait(1000); 
 
-    
-
-
-
       /* move back to example pose */
-
-
 
       example_pose = trans(example_x, example_y, example_z-effector_length) * roty(180.0) * rotz(-90.0); 
 
-
-
       T5 = inv(Z) * example_pose * inv(E);
-
-
 
       if (move(T5) == false) display_error_and_exit("move error ... quitting\n");;
 
-
-
       wait(3000);
 
-
-
-    
-
       goHome(); // this returns the robot to the home position so that when it's switched off 
-
                 // it's in a pose that is close to the one that the servo-controller uses as its initial state
-
                 // could also do this with a move() as show above
 
-
-
- 
-
-      prompt_and_exit(0);
-
-
-
+      // prompt_and_exit(0);
    }
 
    return 0;
-
 }
