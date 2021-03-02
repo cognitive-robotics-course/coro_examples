@@ -1,0 +1,3 @@
+../data/Media/cube1.png
+../data/Media/RGBimage.jpg
+../data/Media/gull_occ.bmp

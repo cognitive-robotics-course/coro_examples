@@ -1,0 +1,4 @@
+../data/cameraModelCoefficientsLeft.txt
+../data/cameraModelCoefficientsRight.txt
+../data/Media/TrinityRegentHouse.jpg
+../data/Media/TrinityRegentHouse.jpg
