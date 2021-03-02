@@ -6,23 +6,10 @@ The image below shows the simulated Lynxmotion AL5D robotic arm grasping a red L
 ![Lynxmotion AL5D robotic arm grasping action](screenshots/grasp.png?raw=true "Robotic arm grasping Lego brick")
 
 ## Table of contents
-1. [Installation](#installation)
-2. [Gazebo simulator](#gazebo-simulator)
-3. [Input](#input)
+1. [Gazebo simulator](#gazebo-simulator)
+2. [Input](#input)
    1. [Sample input](#sample-input)
-4. [Running the example code](#running-the-example-code)
-
-
-### Installation
-It is advisable to start by installing the [lynxmotion_al5d_description](https://github.com/CRAM-Team/lynxmotion_al5d_description) package which gives instructions about installing the **ros-kinetic-desktop** package for the user not using the CRAM VM that doesn't have a fully functional ROS Kinetic installation. The C++ package can be installed by opening a terminal and running the following commands:
-
-`roscd; cd ../src`
-
-`git clone https://github.com/CRAM-Team/lynxmotion_cpp.git`
-
-`cd ..`
-
-`catkin_make`
+3. [Running the example code](#running-the-example-code)
 
 ### Gazebo simulator
 Please refer to the [lynxmotion_al5d_description](https://github.com/CRAM-Team/lynxmotion_al5d_description) package to launch the Gazebo simulation enviroment and to access the services in the simulator such as spawning a Lego brick or resetting the workspace.
@@ -46,10 +33,4 @@ Assuming that the Gazebo simulation world has been launched and services such as
 `rosrun lynxmotion_cpp pickAndPlace`
 
 After either of the example code has been run, the workspace can be cleared by using the reset service found in the [lynxmotion_al5d_description](https://github.com/CRAM-Team/lynxmotion_al5d_description) package.
-
-
-
-
-
-
 
