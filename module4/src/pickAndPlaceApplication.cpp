@@ -38,13 +38,13 @@
 *   Vinny Adjibi
 *   9 February 2021
 *
-*   The option to spawn and kill a brick to aid with debugging with the simulator in now options
+*   The option to spawn and kill a brick in the simulator to aid with debugging is now available
 *   To switch this option on, set the create_brick variable to true
 *   David Vernon
 *   25 February 2021
 *
 *   Implemented piece-wise continuous path control for approach and depart phases of both the pick and the place actions
-*   To override this, set the continuous_path variable to false 
+*   To switch this option on, set the continuous_path variable to true 
 *   David Vernon
 *   26 February 2021
 *
@@ -408,10 +408,12 @@ int main(int argc, char ** argv) {
              // could also do this with a move() as show above
 
 #ifdef ROS
-   prompt_and_continue();
+
 
    if (create_brick) {
-     
+
+       prompt_and_continue();
+	
        /* Remove the brick for the next time  */
        /* ----------------------------------- */
 
