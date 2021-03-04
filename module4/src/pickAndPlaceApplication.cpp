@@ -48,6 +48,11 @@
 *   David Vernon
 *   26 February 2021
 *
+*   Fixed a bug with the type of the color and name strings: changed from const char* to string 
+*   so that they are compatible with the parameters of the spawn_brick() and kill_brick() functions
+*   David Vernon
+*   4 March 2021
+*
 *******************************************************************************************************************/
 
 #include <stdlib.h>
@@ -118,8 +123,8 @@ int main(int argc, char ** argv) {
 #ifdef ROS   
    bool create_brick = false;       // if true, spawn a brick at the specified location
    
-   const char* name  = "brick1";    // name and colors for option to spawn and kill a brick
-   const char* colors[3]  = {"red", "green", "blue"};
+   string name       = "brick1";    // name and colors for option to spawn and kill a brick
+   string colors[3]  = {"red", "green", "blue"};
 #endif
 
    
@@ -195,8 +200,8 @@ int main(int argc, char ** argv) {
        srand(time(NULL));
 
        if (debug) {
-          printf("Spawning brick %s  color %s at position (%.2f %.2f %.2f %.2f)\n",
-	         name, colors[rand() % 3], object_x, object_y, object_z, object_phi);
+          printf("Spawning brick with name %s at position (%.2f %.2f %.2f %.2f)\n",
+	         name.c_str(), object_x, object_y, object_z, object_phi);
        }
      
        /* Call the utility function */
@@ -418,7 +423,7 @@ int main(int argc, char ** argv) {
        /* ----------------------------------- */
 
        if (debug) {
-          printf("Killing brick\n");
+	  printf("Killing brick named %s\n",name.c_str());
        }
      
        /* Call the utility function */

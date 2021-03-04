@@ -1462,6 +1462,7 @@ int spawn_brick(std::string name, std::string color, double x, double y, double 
     if (client.call(srv))
     {
       if (debug) ROS_INFO("Spawned brick [%s] of color [%s] at position (%.3f %.3f %.3f %.2f %.3f %.3f)", srv.response.name.c_str(), color.c_str(), (x/1000.0), (y/1000.0), (z/1000.0), 0.0, 0.0, radians(phi));
+      wait(1000); // pause before continuing
     }
     else
     {
