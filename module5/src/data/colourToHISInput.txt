@@ -1,9 +1,0 @@
-../data/Media/HSV.bmp
-../data/Media/blobs.bmp
-../data/Media/handrr.bmp
-../data/Media/FruitStall.JPG
-../data/Media/RGBimage.jpg
-../data/Media/Smarties1.jpg
-../data/Media/Smarties2.jpg
-../data/Media/Smarties3.jpg
-../data/Media/Smarties4.jpg

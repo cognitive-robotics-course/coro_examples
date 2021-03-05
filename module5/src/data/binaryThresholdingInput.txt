@@ -1,5 +1,0 @@
-../data/Media/gull_occ.bmp
-../data/Media/blobs.bmp
-../data/Media/PCBImage.jpg
-../data/Media/RGBimage.jpg
-../data/Media/PCBMorphOpen.jpg

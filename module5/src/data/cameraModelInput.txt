@@ -1,3 +1,0 @@
-../data/cameraModelImageControlPoints.txt
-../data/cameraModelWorldControlPoints.txt
-../data/cameraModelCoefficients.txt

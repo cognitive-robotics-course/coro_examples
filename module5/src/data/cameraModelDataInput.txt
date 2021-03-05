@@ -1,3 +1,0 @@
-1
-../data/cameraCalibConfig.xml
-../data/cameraModelImageControlPoints.txt
