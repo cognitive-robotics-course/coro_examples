@@ -11,7 +11,6 @@ following packages:
 ```
 sudo apt-get install libncurses-dev
 ```
-
 * ncurses
 
 ### Installation
@@ -25,9 +24,9 @@ catkin_make
 
 If you have previously installed other modules from the coro_examples repository, run the following commands.
 ```
-roscd; cd ../src
+roscd; cd ../src/coro_examples
 git pull origin main
-cd ..
+cd ../..
 catkin_make
 ```
 
