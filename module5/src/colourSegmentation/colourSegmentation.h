@@ -8,7 +8,7 @@
   24 November 2017
 */
  
-#define ROS_PACKAGE_NAME "lectures"
+#define ROS_PACKAGE_NAME "module5"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
