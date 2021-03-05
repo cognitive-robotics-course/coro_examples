@@ -1,0 +1,4 @@
+Media/blobs2.bmp
+Media/blobs3.bmp
+Media/Numbers.jpg
+Media/GoodORings.jpg

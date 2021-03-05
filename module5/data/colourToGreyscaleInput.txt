@@ -1,0 +1,3 @@
+Media/cube1.png
+Media/RGBimage.jpg
+Media/gull_occ.bmp

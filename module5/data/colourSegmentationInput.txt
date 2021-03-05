@@ -1,0 +1,9 @@
+Media/HSV.bmp
+Media/blobs.bmp
+Media/handrr.bmp
+Media/FruitStall.JPG
+Media/RGBimage.jpg
+Media/Smarties1.jpg
+Media/Smarties2.jpg
+Media/Smarties3.jpg
+Media/Smarties4.jpg
