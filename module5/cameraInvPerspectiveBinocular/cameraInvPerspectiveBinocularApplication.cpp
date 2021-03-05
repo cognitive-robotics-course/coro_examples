@@ -50,6 +50,16 @@ char* left_window_name       = "Left Image";
 char* right_window_name      = "Right Image";
 
 int main() {
+   
+   string                 path;
+   string                 input_filename            = "cameraInvPerspectiveBinocularInput.txt";
+   string                 input_path_and_filename;
+   string                 data_dir;
+   string                 datafile_path_and_filename;
+   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
+   data_dir += "/data/";
+   input_path_and_filename = data_dir + input_filename;
+     
    // Initialize screen in ncurses raw mode
    initscr(); 
 
@@ -60,6 +70,7 @@ int main() {
    char right_camera_model_filename[MAX_FILENAME_LENGTH];
    char left_image_filename[MAX_FILENAME_LENGTH];
    char right_image_filename[MAX_FILENAME_LENGTH];
+   char filename[MAX_FILENAME_LENGTH];
 
    int i, j;
 
@@ -85,35 +96,43 @@ int main() {
    printf("Press any key to finish ...\n\n");
 
 
-   if ((fp_in = fopen("../data/cameraInvPerspectiveBinocularInput.txt","r")) == 0) {
+   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
 	  printf("Fatal error can't open input cameraInvPerspectiveBinocularInput.txt\n");
      prompt_and_exit(1);
    }
 
  
-   end_of_file = fscanf(fp_in, "%s", left_camera_model_filename);
+   end_of_file = fscanf(fp_in, "%s", filename);
    if (end_of_file == EOF) {
       printf("Fatal error: unable to read left camera model filename\n");
      prompt_and_exit(1);
    }
+   strcpy(left_camera_model_filename, data_dir.c_str());
+   strcat(left_camera_model_filename, filename);
 
-   end_of_file = fscanf(fp_in, "%s", right_camera_model_filename);
+   end_of_file = fscanf(fp_in, "%s", filename);
    if (end_of_file == EOF) {
       printf("Fatal error: unable to read right camera model filename\n");
      prompt_and_exit(1);
    }
+   strcpy(right_camera_model_filename, data_dir.c_str());
+   strcat(right_camera_model_filename, filename);
 
-   end_of_file = fscanf(fp_in, "%s", left_image_filename);
+   end_of_file = fscanf(fp_in, "%s", filename);
    if (end_of_file == EOF) {
       printf("Fatal error: unable to read left image filename\n");
      prompt_and_exit(1);
    }
+   strcpy(left_image_filename, data_dir.c_str());
+   strcat(left_image_filename, filename);
 
    end_of_file = fscanf(fp_in, "%s", right_image_filename);
    if (end_of_file == EOF) {
       printf("Fatal error: unable to read right image filename\n");
       prompt_and_exit(1);
    }
+   strcpy(right_image_filename, data_dir.c_str());
+   strcat(right_image_filename, filename);
 
    /* get the left and right camera models */
 

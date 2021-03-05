@@ -30,6 +30,16 @@ char* direction_window_name   = "Sobel Gradient Direction";
 char* edge_window_name        = "Sobel Edges";
 
 int main() {
+   
+   string                 path;
+   string                 input_filename            = "sobelEdgeDetectionInput.txt";
+   string                 input_path_and_filename;
+   string                 data_dir;
+   string                 datafile_path_and_filename;
+   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
+   data_dir += "/data/";
+   input_path_and_filename = data_dir + input_filename;
+     
    // Initialize screen in ncurses raw mode
    initscr(); 
 
@@ -48,7 +58,7 @@ int main() {
 
    printf("Example use of openCV to perform Sobel edge detection.\n\n");
 
-   if ((fp_in = fopen("../data/sobelEdgeDetectionInput.txt","r")) == 0) {
+   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
 	  printf("Error can't open input file sobelEdgeDetectionInput.txt\n");
      prompt_and_exit(1);
    }
@@ -58,8 +68,10 @@ int main() {
       end_of_file = fscanf(fp_in, "%s", filename);
       
       if (end_of_file != EOF) {
+         datafile_path_and_filename = filename;
+         datafile_path_and_filename = data_dir + datafile_path_and_filename;
 
-         inputImage = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);  // edge detection on greyscale images
+         inputImage = imread(datafile_path_and_filename, CV_LOAD_IMAGE_GRAYSCALE);  // edge detection on greyscale images
          if(inputImage.empty()) {
             cout << "can not open " << filename << endl;
             prompt_and_exit(-1);

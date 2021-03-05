@@ -25,6 +25,16 @@
 #include "cameraModel.h"
 
 int main() {
+   
+   string                 path;
+   string                 input_filename            = "cameraModelInput.txt";
+   string                 input_path_and_filename;
+   string                 data_dir;
+   string                 datafile_path_and_filename;
+   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
+   data_dir += "/data/";
+   input_path_and_filename = data_dir + input_filename;
+     
    // Initialize screen in ncurses raw mode
    initscr(); 
 
@@ -34,9 +44,10 @@ int main() {
    int i, j;
    double u, v, t;
    double x, y, z;
-   char imageControlPointsFilename[MAX_FILENAME_LENGTH];
-   char worldControlPointsFilename[MAX_FILENAME_LENGTH];
-   char cameralModelFilename[MAX_FILENAME_LENGTH];
+   char imageControlPointsPathAndFilename[MAX_FILENAME_LENGTH];
+   char worldControlPointsPathAndFilename[MAX_FILENAME_LENGTH];
+   char cameralModelPathAndFilename[MAX_FILENAME_LENGTH];
+   char filename[MAX_FILENAME_LENGTH];
    FILE *fp_in;
    FILE *fp_image_control_points;
    FILE *fp_world_control_points;
@@ -48,46 +59,52 @@ int main() {
    int           numberOfImageControlPoints;
    int           numberOfWorldControlPoints;
 
-   if ((fp_in = fopen("../data/cameraModelInput.txt","r")) == 0) {
+   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
 	  printf("Error can't open input cameraModelInput.txt\n");
      prompt_and_exit(1);
    }
 
    printf("Computing the camera model\n\n");
    
-   end_of_file = fscanf(fp_in, "%s", imageControlPointsFilename);
+   end_of_file = fscanf(fp_in, "%s", filename);
       
    if (end_of_file != EOF) {
+      strcpy(imageControlPointsPathAndFilename, data_dir.c_str());
+      strcat(imageControlPointsPathAndFilename, filename);
 
       if (debug) {
-         printf ("%s\n",imageControlPointsFilename);
+         printf ("%s\n", imageControlPointsPathAndFilename);
       }
 
-      end_of_file = fscanf(fp_in, "%s", worldControlPointsFilename);
+      end_of_file = fscanf(fp_in, "%s", filename);
       
       if (end_of_file != EOF) {
+         strcpy(worldControlPointsPathAndFilename, data_dir.c_str());
+         strcat(worldControlPointsPathAndFilename, filename);
 
          if (debug) {
-            printf ("%s\n",worldControlPointsFilename);
+            printf ("%s\n", worldControlPointsPathAndFilename);
          }
 
-         end_of_file = fscanf(fp_in, "%s", cameralModelFilename);
+         end_of_file = fscanf(fp_in, "%s", cameralModelPathAndFilename);
 
          if (end_of_file != EOF) {
+            strcpy(cameralModelPathAndFilename, data_dir.c_str());
+            strcat(cameralModelPathAndFilename, filename);
 
             if (debug) {
-               printf ("%s\n",cameralModelFilename);
+               printf ("%s\n", cameralModelPathAndFilename);
             }
 
             /* read the image control points */
 
-            if ((fp_image_control_points = fopen(imageControlPointsFilename,"r")) == 0) {
-	            printf("Error can't open input %s\n",imageControlPointsFilename);
+            if ((fp_image_control_points = fopen(imageControlPointsPathAndFilename, "r")) == 0) {
+	            printf("Error can't open input %s\n", imageControlPointsPathAndFilename);
                prompt_and_exit(1);
             }
 
-            if ((fp_world_control_points = fopen(worldControlPointsFilename,"r")) == 0) {
-	            printf("Error can't open input %s\n",worldControlPointsFilename);
+            if ((fp_world_control_points = fopen(worldControlPointsPathAndFilename, "r")) == 0) {
+	            printf("Error can't open input %s\n", worldControlPointsPathAndFilename);
                prompt_and_exit(1);
             }
 
@@ -168,8 +185,8 @@ int main() {
                }
 
 
-               if ((fp_camera_model = fopen(cameralModelFilename,"w")) == 0) {
-	               printf("Error can't open output %s\n",cameralModelFilename);
+               if ((fp_camera_model = fopen(cameralModelPathAndFilename, "w")) == 0) {
+	               printf("Error can't open output %s\n", cameralModelPathAndFilename);
                   prompt_and_exit(1);
                }
 

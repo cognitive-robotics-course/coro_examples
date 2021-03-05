@@ -18,6 +18,16 @@
 #include "cameraCalibration.h"
 
 int main() {
+   
+   string                 path;
+   string                 input_filename            = "cameraCalibrationInput.txt";
+   string                 input_path_and_filename;
+   string                 data_dir;
+   string                 datafile_path_and_filename;
+   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
+   data_dir += "/data/";
+   input_path_and_filename = data_dir + input_filename;
+     
    // Initialize screen in ncurses raw mode
    initscr(); 
 
@@ -28,7 +38,7 @@ int main() {
 
    FILE *fp_in;
    
-   if ((fp_in = fopen("../data/cameraCalibrationInput.txt","r")) == 0) {
+   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
 	  printf("Error can't open input cameraCalibrationInput.txt\n");
      prompt_and_exit(1);
    }
@@ -38,7 +48,8 @@ int main() {
    do {
 
       end_of_file = fscanf(fp_in, "%s", filename);
-      
+      datafile_path_and_filename = filename;
+      datafile_path_and_filename = data_dir + datafile_path_and_filename;
       if (end_of_file != EOF) {
          if (debug) {
             printf ("%s\n",filename);
@@ -47,7 +58,7 @@ int main() {
 
          printf("\nPerforming camera calibration on %s \n",filename);
 
-		   CameraCalibration( string(filename) );
+         CameraCalibration( datafile_path_and_filename );
       }
    } while (end_of_file != EOF);
 

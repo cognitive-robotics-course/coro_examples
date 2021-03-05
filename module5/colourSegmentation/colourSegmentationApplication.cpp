@@ -34,6 +34,16 @@ char* input_window_name       = "Input Image";
 char* segmented_window_name   = "Segmented Image";
 
 int main() {
+   
+   string                 path;
+   string                 input_filename            = "colourSegmentationInput.txt";
+   string                 input_path_and_filename;
+   string                 data_dir;
+   string                 datafile_path_and_filename;
+   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
+   data_dir += "/data/";
+   input_path_and_filename = data_dir + input_filename;
+     
    // Initialize screen in ncurses raw mode
    initscr(); 
 
@@ -47,7 +57,7 @@ int main() {
 
    FILE *fp_in;
    
-   if ((fp_in = fopen("../data/colourSegmentationInput.txt","r")) == 0) {
+   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
 	  printf("Error can't open input colourSegmentationInput.txt\n");
      prompt_and_exit(1);
    }
@@ -58,8 +68,10 @@ int main() {
       end_of_file = fscanf(fp_in, "%s", filename);
 
       if (end_of_file != EOF) {
-         
-         inputBGRImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
+         datafile_path_and_filename = filename;
+         datafile_path_and_filename = data_dir + datafile_path_and_filename;
+
+         inputBGRImage = imread(datafile_path_and_filename, CV_LOAD_IMAGE_UNCHANGED);
          if(inputBGRImage.empty()) {
             cout << "can not open " << filename << endl;
             prompt_and_exit(-1);

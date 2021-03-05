@@ -18,6 +18,16 @@
 #include "binaryThresholdingOtsu.h"
 
 int main() {
+   
+   string                 path;
+   string                 input_filename            = "binaryThresholdingOtsuInput.txt";
+   string                 input_path_and_filename;
+   string                 data_dir;
+   string                 datafile_path_and_filename;
+   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
+   data_dir += "/data/";
+   input_path_and_filename = data_dir + input_filename;
+     
    // Initialize screen in ncurses raw mode
    initscr(); 
 
@@ -32,7 +42,7 @@ int main() {
   
    printf("Example use of openCV to perform automatic binary thresholding using the Otsu algorithm.\n\n");
 
-   if ((fp_in = fopen("../data/binaryThresholdingOtsuInput.txt","r")) == 0) {
+   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
 	  printf("Error can't open input file binaryThresholdingOtsuInput.txt\n");
      prompt_and_exit(1);
    }
@@ -42,7 +52,10 @@ int main() {
       end_of_file = fscanf(fp_in, "%s", filename);
       
       if (end_of_file != EOF) {
-          
+         datafile_path_and_filename = filename;
+         datafile_path_and_filename = data_dir + datafile_path_and_filename;
+         strcpy(filename, datafile_path_and_filename.c_str());
+
          printf("\nPerforming binary thresholding using the Otsu algorithm on %s \n",filename);
          binaryThresholdingOtsu(filename);
     

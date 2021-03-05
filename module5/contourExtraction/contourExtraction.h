@@ -10,6 +10,7 @@
 */
  
 
+#define ROS_PACKAGE_NAME "lectures"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
@@ -30,12 +31,15 @@
 
 // Must be included after opencv2/opencv.hpp to avoid incompatiability
 #include <ncurses.h>
+#include <ros/ros.h>
+#include <ros/package.h>
+
 
 
 #define TRUE  1
 #define FALSE 0
 #define MAX_STRING_LENGTH   80
-#define MAX_FILENAME_LENGTH 80
+#define MAX_FILENAME_LENGTH 200
 
 using namespace std;
 using namespace cv;

@@ -37,14 +37,25 @@ Mat image;
 char* window_name       = "Image";
 
 int main() {
+   
+   string                 path;
+   string                 input_filename            = "cameraInvPerspectiveMonocularInput.txt";
+   string                 input_path_and_filename;
+   string                 data_dir;
+   string                 datafile_path_and_filename;
+   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
+   data_dir += "/data/";
+   input_path_and_filename = data_dir + input_filename;
+     
    // Initialize screen in ncurses raw mode
    initscr(); 
 
 
    int end_of_file;
    bool debug = false;
-   char camera_model_filename[MAX_FILENAME_LENGTH];
-   char image_filename[MAX_FILENAME_LENGTH];
+   char camera_model_path_and_filename[MAX_FILENAME_LENGTH];
+   char image_path_and_filename[MAX_FILENAME_LENGTH]; // contains path and filename
+   char filename[MAX_FILENAME_LENGTH];
 
    int i, j;
    float z;
@@ -67,27 +78,32 @@ int main() {
    printf("Click on a point in the image to compute the world coordinates.\n\n");   
    printf("Press any key to finish ...\n\n");
 
-   if ((fp_in = fopen("../data/cameraInvPerspectiveMonocularInput.txt","r")) == 0) {
+   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
 	  printf("Fatal error can't open input cameraInvPerspectiveMonocularInput.txt\n");
      prompt_and_exit(1);
    }
  
-   end_of_file = fscanf(fp_in, "%s", camera_model_filename);
+   end_of_file = fscanf(fp_in, "%s", filename);
+
    if (end_of_file == EOF) {
       printf("Fatal error: unable to read camera model filename\n");
      prompt_and_exit(1);
    }
+   strcpy(camera_model_path_and_filename, data_dir.c_str());
+   strcat(camera_model_path_and_filename, filename);
 
-   end_of_file = fscanf(fp_in, "%s", image_filename);
+   end_of_file = fscanf(fp_in, "%s", filename);
    if (end_of_file == EOF) {
       printf("Fatal error: unable to read image filename\n");
      prompt_and_exit(1);
    }
+   strcpy(image_path_and_filename, data_dir.c_str());
+   strcat(image_path_and_filename, filename);
 
    /* get the left and right camera models */
 
-   if ((fp_camera_model = fopen(camera_model_filename,"r")) == 0) {
-	   printf("Error can't open camera model for input %s\n",camera_model_filename);
+   if ((fp_camera_model = fopen(camera_model_path_and_filename, "r")) == 0) {
+	   printf("Error can't open camera model for input %s\n", camera_model_path_and_filename);
       prompt_and_exit(1);
    }
     
@@ -97,8 +113,8 @@ int main() {
       }
    }
 
-   if ((fp_camera_model = fopen(camera_model_filename,"r")) == 0) {
-	   printf("Error can't open  camera model for input %s\n",camera_model_filename);
+   if ((fp_camera_model = fopen(camera_model_path_and_filename, "r")) == 0) {
+	   printf("Error can't open  camera model for input %s\n", camera_model_path_and_filename);
       prompt_and_exit(1);
    }
     
@@ -110,9 +126,9 @@ int main() {
 
    /* get the image */
 
-   image = imread(image_filename, CV_LOAD_IMAGE_UNCHANGED);
+   image = imread(image_path_and_filename, CV_LOAD_IMAGE_UNCHANGED);
    if (image.empty()) {
-      cout << "can not open " << image_filename << endl;
+      cout << "can not open " << image_path_and_filename << endl;
       prompt_and_exit(-1);
    }
 

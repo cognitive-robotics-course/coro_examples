@@ -66,14 +66,25 @@
 #include "cameraModelData.h"
 
 int main() {
+   
+   string                 path;
+   string                 input_filename            = "cameraModelDataInput.txt";
+   string                 input_path_and_filename;
+   string                 data_dir;
+   string                 datafile_path_and_filename;
+   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
+   data_dir += "/data/";
+   input_path_and_filename = data_dir + input_filename;
+     
    // Initialize screen in ncurses raw mode
    initscr(); 
 
 
    int end_of_file;
    bool debug = false;
-   char configurationFilename[MAX_FILENAME_LENGTH];
-   char controlPointsFilename[MAX_FILENAME_LENGTH];
+   char configurationPathAndFilename[MAX_FILENAME_LENGTH];
+   char controlPointsPathAndFilename[MAX_FILENAME_LENGTH];
+   char filename[MAX_FILENAME_LENGTH];
    int i;
    int numberOfViews;
 
@@ -83,7 +94,7 @@ int main() {
    imagePointType imagePoints[MAX_NUMBER_OF_CONTROL_POINTS];
    int numberOfControlPoints;
 
-   if ((fp_in = fopen("../data/cameraModelDataInput.txt","r")) == 0) {
+   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
 	  printf("Error can't open input cameraModelDataInput.txt\n");
      prompt_and_exit(1);
    }
@@ -98,26 +109,30 @@ int main() {
 
    if (numberOfViews > 0) {
 
-      end_of_file = fscanf(fp_in, "%s", configurationFilename);
+      end_of_file = fscanf(fp_in, "%s", filename);
       
       if (end_of_file != EOF) {
+         strcpy(configurationPathAndFilename, data_dir.c_str());
+         strcat(configurationPathAndFilename, filename);
          if (debug) {
-            printf ("%s\n",configurationFilename);
+            printf ("%s\n", configurationPathAndFilename);
            //prompt_and_continue();
          }
 
-         end_of_file = fscanf(fp_in, "%s", controlPointsFilename);
+         end_of_file = fscanf(fp_in, "%s", controlPointsPathAndFilename);
 
          if (end_of_file != EOF) {
+            strcpy(controlPointsPathAndFilename, data_dir.c_str());
+            strcat(controlPointsPathAndFilename, filename);
             if (debug) {
-               printf ("%s\n",controlPointsFilename);
+               printf ("%s\n", controlPointsPathAndFilename);
                //prompt_and_continue();
             }
        
             /* write out the image control points */
 
-            if ((fp_control_points = fopen(controlPointsFilename,"w")) == 0) {
-	            printf("Error can't open input %s\n",controlPointsFilename);
+            if ((fp_control_points = fopen(controlPointsPathAndFilename, "w")) == 0) {
+	            printf("Error can't open input %s\n", controlPointsPathAndFilename);
                prompt_and_exit(1);
             }
             else {
@@ -126,9 +141,9 @@ int main() {
 
                printf("\nCollecting image control points.\n");
 
-               getImageControlPoints(configurationFilename, 
-                                     numberOfViews, 
-                                     &numberOfControlPoints, 
+               getImageControlPoints(string(configurationPathAndFilename),
+                                     numberOfViews,
+                                     &numberOfControlPoints,
                                      imagePoints);
                                
                if (debug) { 

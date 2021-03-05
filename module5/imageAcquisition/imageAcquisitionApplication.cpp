@@ -32,6 +32,16 @@
 #include "imageAcquisition.h"
 
 int main() {
+   
+   string                 path;
+   string                 input_filename            = "imageAcquisitionInput.txt";
+   string                 input_path_and_filename;
+   string                 data_dir;
+   string                 datafile_path_and_filename;
+   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
+   data_dir += "/data/";
+   input_path_and_filename = data_dir + input_filename;
+     
    // Initialize screen in ncurses raw mode
    initscr(); 
 
@@ -43,7 +53,7 @@ int main() {
 
    FILE *fp_in;
    
-   if ((fp_in = fopen("../data/imageAcquisitionInput.txt","r")) == 0) {
+   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
 	  printf("Error can't open input imageAcquisitionInput.txt\n");
      prompt_and_exit(1);
    }
@@ -54,13 +64,22 @@ int main() {
    do {
 
       end_of_file = fscanf(fp_in, "%s", filename);
-      
-      if (end_of_file != EOF) { 
+
+
+      if (end_of_file != EOF) {
+         datafile_path_and_filename = filename;
+         datafile_path_and_filename = data_dir + datafile_path_and_filename;
+
+         strcpy(filename, datafile_path_and_filename.c_str());
          printf("\nDisplaying image from image file %s \n",filename);
          display_image_from_file(filename);
 
          end_of_file = fscanf(fp_in, "%s", filename);
          if (end_of_file != EOF) {
+            datafile_path_and_filename = filename;
+            datafile_path_and_filename = data_dir + datafile_path_and_filename;
+
+            strcpy(filename, datafile_path_and_filename.c_str());
             printf("\nDisplaying image from video file %s \n",filename);
             display_image_from_video(filename);
          }

@@ -28,6 +28,16 @@ char* thresholded_window_name = "Thresholded Image";
 
 
 int main() {
+   
+   string                 path;
+   string                 input_filename            = "binaryThresholdingInput.txt";
+   string                 input_path_and_filename;
+   string                 data_dir;
+   string                 datafile_path_and_filename;
+   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
+   data_dir += "/data/";
+   input_path_and_filename = data_dir + input_filename;
+     
    // Initialize screen in ncurses raw mode
    initscr(); 
 
@@ -44,7 +54,7 @@ int main() {
    cout << CV_MAJOR_VERSION << std::endl;
    printf("Example use of openCV to perform binary thresholding.\n\n");
 
-   if ((fp_in = fopen("../data/binaryThresholdingInput.txt","r")) == 0) {
+   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
 	  printf("Error can't open input file binaryThresholdingInput.txt\n");
      prompt_and_exit(1);
    }
@@ -54,8 +64,10 @@ int main() {
       end_of_file = fscanf(fp_in, "%s", filename);
       
       if (end_of_file != EOF) {
+         datafile_path_and_filename = filename;
+         datafile_path_and_filename = data_dir + datafile_path_and_filename;
 
-         inputImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
+         inputImage = imread(datafile_path_and_filename, CV_LOAD_IMAGE_UNCHANGED);
          if(inputImage.empty()) {
             cout << "can not open " << filename << endl;
             prompt_and_exit(-1);
@@ -91,8 +103,6 @@ int main() {
 
    fclose(fp_in);
    
-   // end raw mode
-   endwin();
    // end raw mode
    endwin();
    return 0;
