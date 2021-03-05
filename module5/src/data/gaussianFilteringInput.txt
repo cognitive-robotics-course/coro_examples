@@ -1,0 +1,4 @@
+../data/Media/gull_occ.bmp
+../data/Media/blobs.bmp
+../data/Media/cube1.png
+../data/Media/RGBimage.jpg

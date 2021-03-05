@@ -1,0 +1,6 @@
+../data/Media/bicycle_foreground.jpg
+../data/Media/handrr.bmp
+../data/Media/People1.jpg
+../data/Media/Astronaut2.jpg
+../data/Media/PETS2000Frame0129.jpg
+../data/Media/CollegePark.jpg

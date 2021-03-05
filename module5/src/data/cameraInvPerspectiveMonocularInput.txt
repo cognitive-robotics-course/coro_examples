@@ -1,0 +1,2 @@
+../data/cameraModelCoefficients.txt
+../data/Media/camera_image.png
