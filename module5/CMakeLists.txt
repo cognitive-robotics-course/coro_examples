@@ -19,7 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   roslib
 )
-message(WARNING ${OpenCV_INCLUDE_DIRS})
+# message(WARNING ${OpenCV_INCLUDE_DIRS})
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
