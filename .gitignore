@@ -1,3 +1,5 @@
+CMakeLists.txt
+!*/CMakeLists.txt
 cram
 giskard_msgs
 iai_common_msgs
