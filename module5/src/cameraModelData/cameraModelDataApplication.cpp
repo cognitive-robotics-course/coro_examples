@@ -119,7 +119,7 @@ int main() {
            //prompt_and_continue();
          }
 
-         end_of_file = fscanf(fp_in, "%s", controlPointsPathAndFilename);
+         end_of_file = fscanf(fp_in, "%s", filename);
 
          if (end_of_file != EOF) {
             strcpy(controlPointsPathAndFilename, data_dir.c_str());
@@ -141,7 +141,7 @@ int main() {
 
                printf("\nCollecting image control points.\n");
 
-               getImageControlPoints(string(configurationPathAndFilename),
+               getImageControlPoints(configurationPathAndFilename,
                                      numberOfViews,
                                      &numberOfControlPoints,
                                      imagePoints);
@@ -165,6 +165,7 @@ int main() {
 
    fclose(fp_in); 
    if (debug) prompt_and_continue();
+
    // end raw mode
    endwin();
    return 0;
