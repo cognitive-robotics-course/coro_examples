@@ -86,7 +86,7 @@ int main() {
             printf ("%s\n", worldControlPointsPathAndFilename);
          }
 
-         end_of_file = fscanf(fp_in, "%s", cameralModelPathAndFilename);
+         end_of_file = fscanf(fp_in, "%s", filename);
 
          if (end_of_file != EOF) {
             strcpy(cameralModelPathAndFilename, data_dir.c_str());
