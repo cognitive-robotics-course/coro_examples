@@ -13,6 +13,18 @@
 
   David Vernon
   24 November 2017
+    
+  Audit Trail
+  --------------------
+  Removed ../data/ prefix from binaryThresholdingInput.txt
+  Abrham Gebreselasie
+  3 March 2021
+  
+  Ported to Ubuntu 16.04 and OpenCV 3.3
+  Abrham Gebreselasie
+  10 March 2021
+  
+
 */
 
 #include "module5/binaryThresholding.h"
@@ -28,16 +40,8 @@ const char* thresholded_window_name = "Thresholded Image";
 
 
 int main() {
-   termios old_settings;
-   termios new_settings;
-
-   tcgetattr( 0, &old_settings );
-   new_settings = old_settings;
-   new_settings.c_oflag = new_settings.c_oflag | ONLRET;
-   tcsetattr( 0, TCSANOW, &new_settings );
-   tcsetattr( 0, TCSANOW, &old_settings );
-
-   const char input_filename[MAX_FILENAME_LENGTH] = "binaryThresholdingInput.txt";
+   
+   const char input_filename[MAX_FILENAME_LENGTH] = "binaryThresholdingInput.txt";    
    char input_path_and_filename[MAX_FILENAME_LENGTH];    
    char data_dir[MAX_FILENAME_LENGTH];
    char datafile_path_and_filename[MAX_FILENAME_LENGTH];

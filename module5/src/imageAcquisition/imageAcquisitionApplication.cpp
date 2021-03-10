@@ -23,6 +23,18 @@
 
   David Vernon
   24 November 2017
+    
+  Audit Trail
+  --------------------
+  Removed ../data/ prefix from imageAcquisitionInput.txt
+  Abrham Gebreselasie
+  3 March 2021
+  
+  Ported to Ubuntu 16.04 and OpenCV 3.3
+  Abrham Gebreselasie
+  10 March 2021
+  
+
 
   Added camera_number as an input
   DV 27 February 2019

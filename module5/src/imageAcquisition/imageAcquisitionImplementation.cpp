@@ -8,6 +8,12 @@
   David Vernon
   24 November 2017
 
+  Audit Trail
+  --------------------
+  Added _kbhit
+  18 February 2021
+    
+
   Changed to C++ version for camera acquisition. DV 27/2/2018
 */
  
@@ -156,6 +162,7 @@ void prompt_and_continue() {
    printf("Press any key to continue ... \n");
    getchar();
 }
+
 
 
 #ifdef ROS

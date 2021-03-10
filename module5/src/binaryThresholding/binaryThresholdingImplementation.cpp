@@ -7,6 +7,12 @@
 
   David Vernon
   24 November 2017
+
+  Audit Trail
+  --------------------
+  Added _kbhit
+  18 February 2021
+    
 */
  
 #include "module5/binaryThresholding.h"
@@ -65,6 +71,7 @@ void prompt_and_exit(int status) {
    #endif
    exit(status);
 } 
+
 #ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().

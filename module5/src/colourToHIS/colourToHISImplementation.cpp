@@ -7,6 +7,12 @@
 
   David Vernon
   24 November 2017
+
+  Audit Trail
+  --------------------
+  Added _kbhit
+  18 February 2021
+    
 */
  
 #include "module5/colourToHIS.h"
@@ -175,6 +181,7 @@ void prompt_and_continue() {
    printf("Press any key to continue ... \n");
    getchar();
 }
+
 
 #ifdef ROS
 /**

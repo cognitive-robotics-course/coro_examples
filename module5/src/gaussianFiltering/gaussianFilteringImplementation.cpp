@@ -7,6 +7,12 @@
 
   David Vernon
   24 November 2017
+
+  Audit Trail
+  --------------------
+  Added _kbhit
+  18 February 2021
+    
 */
  
 #include "module5/gaussianFiltering.h"
@@ -89,6 +95,7 @@ void addGaussianNoise(Mat &image, double average, double standard_deviation)
 }
 
 /************************************************************************************************/
+
 
 #ifdef ROS
 /**

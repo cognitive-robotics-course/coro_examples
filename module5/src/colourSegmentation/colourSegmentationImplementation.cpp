@@ -7,6 +7,12 @@
 
   David Vernon
   24 November 2017
+
+  Audit Trail
+  --------------------
+  Added _kbhit
+  18 February 2021
+    
 */
  
 #include "module5/colourSegmentation.h"
@@ -147,6 +153,7 @@ void prompt_and_continue() {
      elapsed =(s2*1000+ms2)-(s1*1000+ms1);
    } while (elapsed < milliseconds);
 } */
+
 
 
 #ifdef ROS

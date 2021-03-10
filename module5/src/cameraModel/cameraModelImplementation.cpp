@@ -160,6 +160,7 @@ void prompt_and_continue() {
    getchar();
 }
 
+
 #ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().

@@ -13,6 +13,18 @@
 
   David Vernon
   24 November 2017
+    
+  Audit Trail
+  --------------------
+  Removed ../data/ prefix from colourToHISInput.txt
+  Abrham Gebreselasie
+  3 March 2021
+  
+  Ported to Ubuntu 16.04 and OpenCV 3.3
+  Abrham Gebreselasie
+  10 March 2021
+  
+
 */
  
 #include "module5/colourToHIS.h"

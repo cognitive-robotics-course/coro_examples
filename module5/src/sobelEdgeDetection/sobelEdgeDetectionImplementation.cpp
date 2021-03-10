@@ -7,6 +7,12 @@
 
   David Vernon
   24 November 2017
+
+  Audit Trail
+  --------------------
+  Added _kbhit
+  18 February 2021
+    
 */
  
 #include "module5/sobelEdgeDetection.h"
@@ -91,6 +97,7 @@ Mat convert_32bit_image_for_display(Mat& passed_image, double zero_maps_to/*=0.0
 }
 
 /*******************************************************************************************************/
+
 #ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
