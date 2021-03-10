@@ -9,7 +9,7 @@
   24 November 2017
 */
  
-#include "contourExtraction.h"
+#include "module5/contourExtraction.h"
 
 /*
  * ContourExtraction
@@ -30,7 +30,7 @@ void ContourExtraction(int, void*) {
    int ratio = 3;
    int kernel_size = 3;
    int filter_size;
-   vector<vector<Point> > contours;
+   vector <vector<Point> > contours;
 	vector<Vec4i> hierarchy;
    Mat thresholdedImage; 
 
@@ -65,9 +65,13 @@ void ContourExtraction(int, void*) {
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 }
-
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -90,3 +94,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

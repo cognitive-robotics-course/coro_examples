@@ -1,5 +1,5 @@
 /* 
-  Example use of openCV to use the Canny edge detector
+  Example use of openCV to perform binary thresholding
   ----------------------------------------------------
  
   (This is the interface file: it contains the declarations of dedicated functions to implement the application.
@@ -8,31 +8,49 @@
   David Vernon
   24 November 2017
 */
- 
-#define ROS_PACKAGE_NAME "module5"
+
+
+#define GCC_COMPILER (defined(__GNUC__) && !defined(__clang__))
+
+#if GCC_COMPILER
+   #ifndef ROS
+       #define ROS
+   #endif
+   #ifndef ROS_PACKAGE_NAME
+      #define ROS_PACKAGE_NAME "module5"
+   #endif
+#endif
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 #include <ctype.h>
 #include <iostream>
 #include <string>
-#include <sys/select.h>
-#include <termios.h>
-#include <stropts.h>
-#include <sys/ioctl.h>
+
+#ifndef ROS
+   #include <conio.h>
+#else
+   #include <sys/select.h>
+   #include <termios.h>
+   #include <stropts.h>
+   #include <sys/ioctl.h>
+#endif
+    
 
 //opencv
 #include <cv.h>
 #include <highgui.h>
 #include <opencv2/opencv.hpp>
 
-
-
-// Must be included after opencv2/opencv.hpp to avoid incompatiability
-#include <ncurses.h>
-#include <ros/ros.h>
-#include <ros/package.h>
-
+#ifdef ROS
+   // ncurses.h must be included after opencv2/opencv.hpp to avoid incompatibility
+   #include <ncurses.h>
+  
+   #include <ros/ros.h>
+   #include <ros/package.h>
+#endif 
+    
 
 #define TRUE  1
 #define FALSE 0
@@ -44,7 +62,11 @@ using namespace cv;
 
 /* function prototypes go here */
 
-void CannyThreshold(int, void*);
+void binaryThresholding(int, void*);  
 void prompt_and_exit(int status);
 void prompt_and_continue();
-int _kbhit();
+
+#ifdef ROS
+   int _kbhit();
+#endif
+   

@@ -29,22 +29,15 @@
 */
 
  
-#include "imageAcquisition.h"
+#include "module5/imageAcquisition.h"
 
 int main() {
    
-   string                 path;
-   string                 input_filename            = "imageAcquisitionInput.txt";
-   string                 input_path_and_filename;
-   string                 data_dir;
-   string                 datafile_path_and_filename;
-   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
-   data_dir += "/data/";
-   input_path_and_filename = data_dir + input_filename;
+   const char input_filename[MAX_FILENAME_LENGTH] = "imageAcquisitionInput.txt";    
+   char input_path_and_filename[MAX_FILENAME_LENGTH];    
+   char data_dir[MAX_FILENAME_LENGTH];
+   char datafile_path_and_filename[MAX_FILENAME_LENGTH];
      
-   // Initialize screen in ncurses raw mode
-   initscr(); 
-
       
    int end_of_file;
    bool debug = true;
@@ -53,7 +46,23 @@ int main() {
 
    FILE *fp_in;
    
-   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
+   
+   #ifdef ROS   
+      strcpy(data_dir, ros::package::getPath(ROS_PACKAGE_NAME).c_str()); // get the package directory
+   #else
+      strcpy(data_dir, "..");
+   #endif
+   
+   strcat(data_dir, "/data/");
+   strcpy(input_path_and_filename, data_dir);
+   strcat(input_path_and_filename, input_filename);
+   
+   #ifdef ROS
+      // Initialize screen in ncurses raw mode
+      initscr();
+   #endif
+
+   if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Error can't open input imageAcquisitionInput.txt\n");
      prompt_and_exit(1);
    }
@@ -64,22 +73,13 @@ int main() {
    do {
 
       end_of_file = fscanf(fp_in, "%s", filename);
-
-
-      if (end_of_file != EOF) {
-         datafile_path_and_filename = filename;
-         datafile_path_and_filename = data_dir + datafile_path_and_filename;
-
-         strcpy(filename, datafile_path_and_filename.c_str());
+      
+      if (end_of_file != EOF) { 
          printf("\nDisplaying image from image file %s \n",filename);
          display_image_from_file(filename);
 
          end_of_file = fscanf(fp_in, "%s", filename);
          if (end_of_file != EOF) {
-            datafile_path_and_filename = filename;
-            datafile_path_and_filename = data_dir + datafile_path_and_filename;
-
-            strcpy(filename, datafile_path_and_filename.c_str());
             printf("\nDisplaying image from video file %s \n",filename);
             display_image_from_video(filename);
          }
@@ -96,8 +96,10 @@ int main() {
 
    fclose(fp_in);
   
-   // end raw mode
-   endwin();
+   #ifdef ROS
+      // end raw mode
+      endwin();
+   #endif
    return 0;
 }
 

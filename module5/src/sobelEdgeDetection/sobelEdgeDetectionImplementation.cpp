@@ -9,7 +9,7 @@
   24 November 2017
 */
  
-#include "sobelEdgeDetection.h"
+#include "module5/sobelEdgeDetection.h"
 
 /*
  * function sobelEdgeDetection
@@ -41,7 +41,7 @@ void sobelEdgeDetection(int, void*) {
    /*******************************************************************************************************/
    /*
     * This code is provided as part of "A Practical Introduction to Computer Vision with OpenCV"
-    * by Kenneth Dawson-Howe � Wiley & Sons Inc. 2014.  All rights reserved.
+    * by Kenneth Dawson-Howe © Wiley & Sons Inc. 2014.  All rights reserved.
     */
 
 	Sobel(greyscaleImage,horizontal_partial_derivative,CV_32F,1,0);
@@ -62,6 +62,10 @@ void sobelEdgeDetection(int, void*) {
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 } 
 
@@ -69,7 +73,7 @@ void prompt_and_exit(int status) {
 /*******************************************************************************************************/
 /*
  * This code is provided as part of "A Practical Introduction to Computer Vision with OpenCV"
- * by Kenneth Dawson-Howe � Wiley & Sons Inc. 2014.  All rights reserved.
+ * by Kenneth Dawson-Howe © Wiley & Sons Inc. 2014.  All rights reserved.
  */
 
 Mat convert_32bit_image_for_display(Mat& passed_image, double zero_maps_to/*=0.0*/, double passed_scale_factor/*=-1.0*/ )
@@ -87,7 +91,7 @@ Mat convert_32bit_image_for_display(Mat& passed_image, double zero_maps_to/*=0.0
 }
 
 /*******************************************************************************************************/
-
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -110,3 +114,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

@@ -11,7 +11,7 @@
   Changed to C++ version for camera acquisition. DV 27/2/2018
 */
  
-#include "imageAcquisition.h"
+#include "module5/imageAcquisition.h"
 
 /*================================================*/
 /* Display images from a file in an openCV window */
@@ -145,6 +145,10 @@ void display_image_from_camera(int cameraNum) {
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 }
 
@@ -153,6 +157,8 @@ void prompt_and_continue() {
    getchar();
 }
 
+
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -175,3 +181,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

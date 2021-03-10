@@ -9,7 +9,7 @@
   24 November 2017
 */
  
-#include "binaryThresholdingOtsu.h"
+#include "module5/binaryThresholdingOtsu.h"
 
 void binaryThresholdingOtsu(char *filename) {  
 
@@ -19,8 +19,8 @@ void binaryThresholdingOtsu(char *filename) {
 
    int thresholdValue            = 128; // default threshold
 
-   char* input_window_name       = "Input Image";
-   char* thresholded_window_name = "Thresholded Image";
+   const char* input_window_name       = "Input Image";
+   const char* thresholded_window_name = "Thresholded Image";
  
    inputImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
    if (inputImage.empty()) {
@@ -64,9 +64,13 @@ void binaryThresholdingOtsu(char *filename) {
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 } 
-
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -89,3 +93,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

@@ -9,7 +9,7 @@
   24 November 2017
 */
  
-#include "colourSegmentation.h"
+#include "module5/colourSegmentation.h"
 
 void colourSegmentation(int, void*) {
   
@@ -116,6 +116,10 @@ void getSamplePoint( int event, int x, int y, int, void* ) {
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 }
 
@@ -124,28 +128,28 @@ void prompt_and_continue() {
    getchar();
 }
 
-// AG: Commented out pause - not used but causes error in Ubuntu
+/* void pause(int milliseconds) {
 
-// void pause(int milliseconds) {
+   _timeb tb;
 
-//    _timeb tb;
+   long int s1, s2;
+   long int ms1, ms2;
+   long elapsed;
 
-//    long int s1, s2;
-//    long int ms1, ms2;
-//    long elapsed;
+   _ftime(&tb); 
+   s1=(long) tb.time; 
+   ms1=tb.millitm;
 
-//    _ftime(&tb); 
-//    s1=(long) tb.time; 
-//    ms1=tb.millitm;
+   do {
+     _ftime(&tb); 
+     s2=(long) tb.time; 
+     ms2=tb.millitm; 
+     elapsed =(s2*1000+ms2)-(s1*1000+ms1);
+   } while (elapsed < milliseconds);
+} */
 
-//    do {
-//      _ftime(&tb); 
-//      s2=(long) tb.time; 
-//      ms2=tb.millitm; 
-//      elapsed =(s2*1000+ms2)-(s1*1000+ms1);
-//    } while (elapsed < milliseconds);
-// }
 
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -168,3 +172,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

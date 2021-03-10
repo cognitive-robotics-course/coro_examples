@@ -9,7 +9,7 @@
   24 November 2017
 */
  
-#include "cannyEdgeDetection.h"
+#include "module5/cannyEdgeDetection.h"
 
 /*
  * CannyThreshold
@@ -46,8 +46,13 @@ void CannyThreshold(int, void*)
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 }
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -70,3 +75,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

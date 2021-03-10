@@ -63,28 +63,20 @@
   9 June 2018
 */
  
-#include "cameraModelData.h"
+#include "module5/cameraModelData.h"
 
 int main() {
    
-   string                 path;
-   string                 input_filename            = "cameraModelDataInput.txt";
-   string                 input_path_and_filename;
-   string                 data_dir;
-   string                 datafile_path_and_filename;
-   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
-   data_dir += "/data/";
-   input_path_and_filename = data_dir + input_filename;
+   const char input_filename[MAX_FILENAME_LENGTH] = "cameraModelDataInput.txt";    
+   char input_path_and_filename[MAX_FILENAME_LENGTH];    
+   char data_dir[MAX_FILENAME_LENGTH];
+   char datafile_path_and_filename[MAX_FILENAME_LENGTH];
      
-   // Initialize screen in ncurses raw mode
-   initscr(); 
-
 
    int end_of_file;
    bool debug = false;
-   char configurationPathAndFilename[MAX_FILENAME_LENGTH];
-   char controlPointsPathAndFilename[MAX_FILENAME_LENGTH];
-   char filename[MAX_FILENAME_LENGTH];
+   char configurationFilename[MAX_FILENAME_LENGTH];
+   char controlPointsFilename[MAX_FILENAME_LENGTH];
    int i;
    int numberOfViews;
 
@@ -94,7 +86,23 @@ int main() {
    imagePointType imagePoints[MAX_NUMBER_OF_CONTROL_POINTS];
    int numberOfControlPoints;
 
-   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
+   
+   #ifdef ROS   
+      strcpy(data_dir, ros::package::getPath(ROS_PACKAGE_NAME).c_str()); // get the package directory
+   #else
+      strcpy(data_dir, "..");
+   #endif
+   
+   strcat(data_dir, "/data/");
+   strcpy(input_path_and_filename, data_dir);
+   strcat(input_path_and_filename, input_filename);
+   
+   #ifdef ROS
+      // Initialize screen in ncurses raw mode
+      initscr();
+   #endif
+
+   if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Error can't open input cameraModelDataInput.txt\n");
      prompt_and_exit(1);
    }
@@ -109,30 +117,26 @@ int main() {
 
    if (numberOfViews > 0) {
 
-      end_of_file = fscanf(fp_in, "%s", filename);
+      end_of_file = fscanf(fp_in, "%s", configurationFilename);
       
       if (end_of_file != EOF) {
-         strcpy(configurationPathAndFilename, data_dir.c_str());
-         strcat(configurationPathAndFilename, filename);
          if (debug) {
-            printf ("%s\n", configurationPathAndFilename);
+            printf ("%s\n",configurationFilename);
            //prompt_and_continue();
          }
 
-         end_of_file = fscanf(fp_in, "%s", filename);
+         end_of_file = fscanf(fp_in, "%s", controlPointsFilename);
 
          if (end_of_file != EOF) {
-            strcpy(controlPointsPathAndFilename, data_dir.c_str());
-            strcat(controlPointsPathAndFilename, filename);
             if (debug) {
-               printf ("%s\n", controlPointsPathAndFilename);
+               printf ("%s\n",controlPointsFilename);
                //prompt_and_continue();
             }
        
             /* write out the image control points */
 
-            if ((fp_control_points = fopen(controlPointsPathAndFilename, "w")) == 0) {
-	            printf("Error can't open input %s\n", controlPointsPathAndFilename);
+            if ((fp_control_points = fopen(controlPointsFilename,"w")) == 0) {
+	            printf("Error can't open input %s\n",controlPointsFilename);
                prompt_and_exit(1);
             }
             else {
@@ -141,9 +145,9 @@ int main() {
 
                printf("\nCollecting image control points.\n");
 
-               getImageControlPoints(configurationPathAndFilename,
-                                     numberOfViews,
-                                     &numberOfControlPoints,
+               getImageControlPoints(configurationFilename, 
+                                     numberOfViews, 
+                                     &numberOfControlPoints, 
                                      imagePoints);
                                
                if (debug) { 
@@ -165,9 +169,10 @@ int main() {
 
    fclose(fp_in); 
    if (debug) prompt_and_continue();
-
-   // end raw mode
-   endwin();
+   #ifdef ROS
+      // end raw mode
+      endwin();
+   #endif
    return 0;
 }
 

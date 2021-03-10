@@ -9,7 +9,7 @@
   14 June 2018
 */
  
-#include "cameraInvPerspectiveMonocular.h"
+#include "module5/cameraInvPerspectiveMonocular.h"
  
 void getSamplePoint( int event, int x, int y, int, void* ) {
       
@@ -101,6 +101,10 @@ void inversePerspectiveTransformation(Point2f image_sample_point,
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 }
 
@@ -108,27 +112,29 @@ void prompt_and_continue() {
    printf("Press any key to continue ... \n");
    getchar();
 }
-// AG: pause not used - commented out
-// void pause(int milliseconds) {
 
-//    _timeb tb;
+/* void pause(int milliseconds) {
 
-//    long int s1, s2;
-//    long int ms1, ms2;
-//    long elapsed;
+   _timeb tb;
 
-//    _ftime(&tb); 
-//    s1=(long) tb.time; 
-//    ms1=tb.millitm;
+   long int s1, s2;
+   long int ms1, ms2;
+   long elapsed;
 
-//    do {
-//      _ftime(&tb); 
-//      s2=(long) tb.time; 
-//      ms2=tb.millitm; 
-//      elapsed =(s2*1000+ms2)-(s1*1000+ms1);
-//    } while (elapsed < milliseconds);
-// }
+   _ftime(&tb); 
+   s1=(long) tb.time; 
+   ms1=tb.millitm;
 
+   do {
+     _ftime(&tb); 
+     s2=(long) tb.time; 
+     ms2=tb.millitm; 
+     elapsed =(s2*1000+ms2)-(s1*1000+ms1);
+   } while (elapsed < milliseconds);
+} */
+
+
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -151,3 +157,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

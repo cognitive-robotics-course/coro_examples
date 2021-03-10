@@ -1,6 +1,6 @@
 /* 
-  Example use of openCV to perform binary thresholding
-  ----------------------------------------------------
+  Example use of openCV to identify connected components
+  ------------------------------------------------------
   
   (This is the implementation file: it contains the code for dedicated functions to implement the application.
   These functions are called by client code in the application file. The functions are declared in the interface file.) 
@@ -9,21 +9,25 @@
   24 November 2017
 */
  
-#include "module5/binaryThresholding.h"
+#include "module5/connectedComponents.h"
 
 /*
- * function binaryThresholding
+ * function connectedComponents
  * Trackbar callback - threshold user input
 */
 
-void binaryThresholding(int, void*) {  
+void connectedComponents(int, void*) {  
 
    extern Mat inputImage; 
    extern int thresholdValue; 
    extern char* thresholded_window_name;
+   extern char* components_window_name;
+   
    Mat greyscaleImage;
    Mat thresholdedImage; 
-   int row, col;
+   
+   vector <vector<Point> > contours;
+	vector<Vec4i> hierarchy;
 
    if (thresholdValue < 1)  // the trackbar has a lower value of 0 which is invalid
       thresholdValue = 1;
@@ -35,25 +39,20 @@ void binaryThresholding(int, void*) {
       greyscaleImage = inputImage.clone();
    }
 
-   thresholdedImage.create(greyscaleImage.size(), CV_8UC1);
-   
-	for (row=0; row < greyscaleImage.rows; row++) {
-		for (col=0; col < greyscaleImage.cols; col++) {
-         if(greyscaleImage.at<uchar>(row,col) < thresholdValue) {
-            thresholdedImage.at<uchar>(row,col) = (uchar) 0;
-         }
-         else {
-            thresholdedImage.at<uchar>(row,col) = (uchar) 255;
-         }
-      }
-   }
-   
-   /* alternatively, use OpenCV */
+   threshold(greyscaleImage,thresholdedImage,thresholdValue, 255,THRESH_BINARY);
 
-   // threshold(greyscaleImage,thresholdedImage,thresholdValue, 255,THRESH_BINARY);
-   // threshold(greyscaleImage,thresholdedImage,thresholdValue, 255,THRESH_BINARY  | THRESH_OTSU); // automatic threshold selection
- 
    imshow(thresholded_window_name, thresholdedImage);
+
+	findContours(thresholdedImage,contours,hierarchy,CV_RETR_TREE,CV_CHAIN_APPROX_NONE);
+	Mat contours_image = Mat::zeros(inputImage.size(), CV_8UC3);
+	for (int contour_number=0; (contour_number<(int)contours.size()); contour_number++)
+	{
+        Scalar colour( rand()&0xFF, rand()&0xFF, rand()&0xFF );
+        drawContours( contours_image, contours, contour_number, colour, CV_FILLED, 8, hierarchy );
+	}
+
+   imshow(components_window_name, contours_image);
+
 }
 
 void prompt_and_exit(int status) {

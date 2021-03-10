@@ -5,6 +5,8 @@ SET(NESTED_BUILD TRUE)
 
 SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
+#SET(CMAKE_PROJECT_INCLUDE "${CMAKE_PROJECT_INCLUDE} include")
+#SET(CMAKE_MODULE_PATH )
 FIND_PACKAGE(OpenCV 3 REQUIRED)
 
 SUBDIRS(src)
@@ -40,6 +42,18 @@ find_package(catkin REQUIRED COMPONENTS
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
+# catkin_python_setup()
+
+################################################
+## Declare ROS messages, services and actions ##
+################################################
+
+## To declare and build messages, services or actions from within this
+## package, follow these steps:
+## * Let MSG_DEP_SET be the set of packages whose message types you use in
+##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
+## * In the file package.xml:
+##   * add a build_depend tag for //ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
 # catkin_python_setup()
 
 ################################################
@@ -136,7 +150,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 

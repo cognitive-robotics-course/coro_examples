@@ -9,7 +9,7 @@
   24 November 2017
 */
  
-#include "colourToHIS.h"
+#include "module5/colourToHIS.h"
  
 void colourToHIS(char *filename) {
   
@@ -164,6 +164,10 @@ void rgb2hsi(unsigned char red, unsigned char green, unsigned char blue, float *
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 }
 
@@ -172,7 +176,7 @@ void prompt_and_continue() {
    getchar();
 }
 
-
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -195,3 +199,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

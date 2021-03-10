@@ -9,7 +9,7 @@
   24 November 2017
 */
  
-#include "grabCut.h"
+#include "module5/grabCut.h"
 
 // Global variables to allow access by the display window callback functions
 // specifically the mouse callback function to acquire the control point coordinates and draw cross-hairs
@@ -127,9 +127,13 @@ void getControlPoints(int event, int x, int y, int, void* ) {
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 } 
-
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -152,3 +156,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

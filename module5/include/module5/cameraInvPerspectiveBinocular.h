@@ -10,30 +10,50 @@
 */
  
 
-#define ROS_PACKAGE_NAME "module5"
+
+#define GCC_COMPILER (defined(__GNUC__) && !defined(__clang__))
+
+#if GCC_COMPILER
+   #ifndef ROS
+       #define ROS
+   #endif
+   #ifndef ROS_PACKAGE_NAME
+      #define ROS_PACKAGE_NAME "module5"
+   #endif
+#endif
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 #include <ctype.h>
 #include <iostream>
 #include <string>
-#include <sys/select.h>
-#include <termios.h>
-#include <stropts.h>
-#include <sys/ioctl.h>
+
+#ifndef ROS
+   #include <conio.h>
+#else
+   #include <sys/select.h>
+   #include <termios.h>
+   #include <stropts.h>
+   #include <sys/ioctl.h>
+#endif
+     
+#include <sys/types.h> 
+#include <sys/timeb.h>
 
 //opencv
 #include <cv.h>
 #include <highgui.h>
 #include <opencv2/opencv.hpp>
 
-
-
-// Must be included after opencv2/opencv.hpp to avoid incompatiability
-#include <ncurses.h>
-#include <ros/ros.h>
-#include <ros/package.h>
-
+#ifdef ROS
+   // ncurses.h must be included after opencv2/opencv.hpp to avoid incompatibility
+   #include <ncurses.h>
+  
+   #include <ros/ros.h>
+   #include <ros/package.h>
+#endif 
+    
 
 
 #define TRUE  1
@@ -60,5 +80,9 @@ void getLeftSamplePoint( int event, int x, int y, int, void*);
 void getRightSamplePoint( int event, int x, int y, int, void*);
 void prompt_and_exit(int status);
 void prompt_and_continue();
-void pause(int milliseconds);
-int _kbhit();
+// void pause(int milliseconds);
+
+#ifdef ROS
+   int _kbhit();
+#endif
+   
