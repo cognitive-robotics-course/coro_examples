@@ -25,25 +25,15 @@
   24 November 2017
 */
  
-#include "featureExtraction.h"
+#include "module5/featureExtraction.h"
 
 int main() {
    
-   string                 path;
-   string                 input_filename            = "featureExtractionInput.txt";
-   string                 output_filename            = "featureExtractionOutput.txt";
-   string                 input_path_and_filename;
-   string                 output_path_and_filename;
-   string                 data_dir;
-   string                 datafile_path_and_filename;
-   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
-   data_dir += "/data/";
-   input_path_and_filename = data_dir + input_filename;
-   output_path_and_filename = data_dir + output_filename;
-
-   // Initialize screen in ncurses raw mode
-   initscr(); 
-
+   const char input_filename[MAX_FILENAME_LENGTH] = "featureExtractionInput.txt";    
+   char input_path_and_filename[MAX_FILENAME_LENGTH];    
+   char data_dir[MAX_FILENAME_LENGTH];
+   char datafile_path_and_filename[MAX_FILENAME_LENGTH];
+     
 
    int end_of_file;
    bool debug = true;
@@ -52,12 +42,32 @@ int main() {
    FILE *fp_in;
    FILE *fp_out;
    
-   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
+   
+   #ifdef ROS   
+      strcpy(data_dir, ros::package::getPath(ROS_PACKAGE_NAME).c_str()); // get the package directory
+   #else
+      strcpy(data_dir, "..");
+   #endif
+   
+   strcat(data_dir, "/data/");
+   strcpy(input_path_and_filename, data_dir);
+   strcat(input_path_and_filename, input_filename);
+   
+   #ifdef ROS
+      // Initialize screen in ncurses raw mode
+      initscr();
+   #endif
+
+   if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Error can't open input featureExtractionInput.txt\n");
      prompt_and_exit(1);
    }
    
-   if ((fp_out = fopen(output_path_and_filename.c_str(),"w")) == 0) {
+   
+   strcpy(filename, data_dir);
+   strcat(filename, "featureExtractionOutput.txt");
+   
+   if ((fp_out = fopen(filename, "w")) == 0) {
 	  printf("Error can't open output featureExtractionOutput.txt\n");
      prompt_and_exit(1);
    }
@@ -70,10 +80,7 @@ int main() {
       
       if (end_of_file != EOF) {
          //if (debug) printf ("%s\n",filename);
-         datafile_path_and_filename = filename;
-         datafile_path_and_filename = data_dir + datafile_path_and_filename;
-
-         strcpy(filename, datafile_path_and_filename.c_str());
+          
          printf("\nPerforming 2D feature extraction on %s \n",filename);
          featureExtraction(filename, fp_out);
       }
@@ -83,8 +90,10 @@ int main() {
    fclose(fp_in);
    fclose(fp_out);
    
-   // end raw mode
-   endwin();
+   #ifdef ROS
+      // end raw mode
+      endwin();
+   #endif
    return 0;
 }
 

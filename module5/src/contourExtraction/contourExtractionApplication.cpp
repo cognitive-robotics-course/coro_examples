@@ -17,7 +17,7 @@
   24 November 2017
 */
  
-#include "contourExtraction.h"
+#include "module5/contourExtraction.h"
 
 
 // Global variables to allow access by the display window callback functions
@@ -28,26 +28,19 @@ Mat src_gray;
 Mat detected_edges;
 int cannyThreshold             = 20;         // low threshold for Canny edge detector
 int gaussian_std_dev           = 3;          // default standard deviation for Gaussian filter: filter size = value * 4 + 1
-char* canny_window_name        = "Canny Edge Map";
-char* contour_window_name      = "Contours";
-char* input_window_name        = "Input Image";
+const char* canny_window_name        = "Canny Edge Map";
+const char* contour_window_name      = "Contours";
+const char* input_window_name        = "Input Image";
 
 int view;
 
 int main() {
    
-   string                 path;
-   string                 input_filename            = "contourExtractionInput.txt";
-   string                 input_path_and_filename;
-   string                 data_dir;
-   string                 datafile_path_and_filename;
-   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
-   data_dir += "/data/";
-   input_path_and_filename = data_dir + input_filename;
+   const char input_filename[MAX_FILENAME_LENGTH] = "contourExtractionInput.txt";    
+   char input_path_and_filename[MAX_FILENAME_LENGTH];    
+   char data_dir[MAX_FILENAME_LENGTH];
+   char datafile_path_and_filename[MAX_FILENAME_LENGTH];
      
-   // Initialize screen in ncurses raw mode
-   initscr(); 
-
          
    int end_of_file;
    bool debug = true;
@@ -60,7 +53,23 @@ int main() {
 
    printf("Example of how to use openCV to extract contours from a binary edge image.\n\n");
 
-   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
+   
+   #ifdef ROS   
+      strcpy(data_dir, ros::package::getPath(ROS_PACKAGE_NAME).c_str()); // get the package directory
+   #else
+      strcpy(data_dir, "..");
+   #endif
+   
+   strcat(data_dir, "/data/");
+   strcpy(input_path_and_filename, data_dir);
+   strcat(input_path_and_filename, input_filename);
+   
+   #ifdef ROS
+      // Initialize screen in ncurses raw mode
+      initscr();
+   #endif
+
+   if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Error can't open input file contourExtractionInput.txt\n");
      prompt_and_exit(1);
    }
@@ -70,15 +79,14 @@ int main() {
       end_of_file = fscanf(fp_in, "%s", filename);
       
       if (end_of_file != EOF) {
-         datafile_path_and_filename = filename;
-         datafile_path_and_filename = data_dir + datafile_path_and_filename;
 
-
-         src = imread(datafile_path_and_filename, CV_LOAD_IMAGE_COLOR);
+         src = imread(filename, CV_LOAD_IMAGE_COLOR);
          if(src.empty()) {
             cout << "can not open " << filename << endl;
-            // end raw mode
-   endwin();
+            #ifdef ROS
+      // end raw mode
+      endwin();
+   #endif
    return -1;
          }
           
@@ -113,7 +121,9 @@ int main() {
 
    fclose(fp_in); 
 
-   // end raw mode
-   endwin();
+   #ifdef ROS
+      // end raw mode
+      endwin();
+   #endif
    return 0;
 }

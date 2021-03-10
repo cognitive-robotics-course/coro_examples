@@ -22,32 +22,24 @@
   9 June 2018
 */
  
-#include "cameraModel.h"
+#include "module5/cameraModel.h"
 
 int main() {
    
-   string                 path;
-   string                 input_filename            = "cameraModelInput.txt";
-   string                 input_path_and_filename;
-   string                 data_dir;
-   string                 datafile_path_and_filename;
-   data_dir = ros::package::getPath(ROS_PACKAGE_NAME); // get the package directory
-   data_dir += "/data/";
-   input_path_and_filename = data_dir + input_filename;
+   const char input_filename[MAX_FILENAME_LENGTH] = "cameraModelInput.txt";    
+   char input_path_and_filename[MAX_FILENAME_LENGTH];    
+   char data_dir[MAX_FILENAME_LENGTH];
+   char datafile_path_and_filename[MAX_FILENAME_LENGTH];
      
-   // Initialize screen in ncurses raw mode
-   initscr(); 
-
 
    int end_of_file;
    bool debug = true;
    int i, j;
    double u, v, t;
    double x, y, z;
-   char imageControlPointsPathAndFilename[MAX_FILENAME_LENGTH];
-   char worldControlPointsPathAndFilename[MAX_FILENAME_LENGTH];
-   char cameralModelPathAndFilename[MAX_FILENAME_LENGTH];
-   char filename[MAX_FILENAME_LENGTH];
+   char imageControlPointsFilename[MAX_FILENAME_LENGTH];
+   char worldControlPointsFilename[MAX_FILENAME_LENGTH];
+   char cameralModelFilename[MAX_FILENAME_LENGTH];
    FILE *fp_in;
    FILE *fp_image_control_points;
    FILE *fp_world_control_points;
@@ -59,52 +51,62 @@ int main() {
    int           numberOfImageControlPoints;
    int           numberOfWorldControlPoints;
 
-   if ((fp_in = fopen(input_path_and_filename.c_str(),"r")) == 0) {
+   
+   #ifdef ROS   
+      strcpy(data_dir, ros::package::getPath(ROS_PACKAGE_NAME).c_str()); // get the package directory
+   #else
+      strcpy(data_dir, "..");
+   #endif
+   
+   strcat(data_dir, "/data/");
+   strcpy(input_path_and_filename, data_dir);
+   strcat(input_path_and_filename, input_filename);
+   
+   #ifdef ROS
+      // Initialize screen in ncurses raw mode
+      initscr();
+   #endif
+
+   if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Error can't open input cameraModelInput.txt\n");
      prompt_and_exit(1);
    }
 
    printf("Computing the camera model\n\n");
    
-   end_of_file = fscanf(fp_in, "%s", filename);
+   end_of_file = fscanf(fp_in, "%s", imageControlPointsFilename);
       
    if (end_of_file != EOF) {
-      strcpy(imageControlPointsPathAndFilename, data_dir.c_str());
-      strcat(imageControlPointsPathAndFilename, filename);
 
       if (debug) {
-         printf ("%s\n", imageControlPointsPathAndFilename);
+         printf ("%s\n",imageControlPointsFilename);
       }
 
-      end_of_file = fscanf(fp_in, "%s", filename);
+      end_of_file = fscanf(fp_in, "%s", worldControlPointsFilename);
       
       if (end_of_file != EOF) {
-         strcpy(worldControlPointsPathAndFilename, data_dir.c_str());
-         strcat(worldControlPointsPathAndFilename, filename);
 
          if (debug) {
-            printf ("%s\n", worldControlPointsPathAndFilename);
+            printf ("%s\n",worldControlPointsFilename);
          }
 
-         end_of_file = fscanf(fp_in, "%s", filename);
+         end_of_file = fscanf(fp_in, "%s", cameralModelFilename);
 
          if (end_of_file != EOF) {
-            strcpy(cameralModelPathAndFilename, data_dir.c_str());
-            strcat(cameralModelPathAndFilename, filename);
 
             if (debug) {
-               printf ("%s\n", cameralModelPathAndFilename);
+               printf ("%s\n",cameralModelFilename);
             }
 
             /* read the image control points */
 
-            if ((fp_image_control_points = fopen(imageControlPointsPathAndFilename, "r")) == 0) {
-	            printf("Error can't open input %s\n", imageControlPointsPathAndFilename);
+            if ((fp_image_control_points = fopen(imageControlPointsFilename,"r")) == 0) {
+	            printf("Error can't open input %s\n",imageControlPointsFilename);
                prompt_and_exit(1);
             }
 
-            if ((fp_world_control_points = fopen(worldControlPointsPathAndFilename, "r")) == 0) {
-	            printf("Error can't open input %s\n", worldControlPointsPathAndFilename);
+            if ((fp_world_control_points = fopen(worldControlPointsFilename,"r")) == 0) {
+	            printf("Error can't open input %s\n",worldControlPointsFilename);
                prompt_and_exit(1);
             }
 
@@ -185,8 +187,8 @@ int main() {
                }
 
 
-               if ((fp_camera_model = fopen(cameralModelPathAndFilename, "w")) == 0) {
-	               printf("Error can't open output %s\n", cameralModelPathAndFilename);
+               if ((fp_camera_model = fopen(cameralModelFilename,"w")) == 0) {
+	               printf("Error can't open output %s\n",cameralModelFilename);
                   prompt_and_exit(1);
                }
 
@@ -205,7 +207,9 @@ int main() {
    
    if (debug) prompt_and_continue();
 
-   // end raw mode
-   endwin();
+   #ifdef ROS
+      // end raw mode
+      endwin();
+   #endif
    return 0;
 }

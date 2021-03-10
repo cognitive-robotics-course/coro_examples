@@ -9,7 +9,7 @@
   24 November 2017
 */
  
-#include "cameraCalibration.h"
+#include "module5/cameraCalibration.h"
  
 /*
  * This camera calibration software has been derived from software provided
@@ -18,17 +18,17 @@
  *
  * This version of the code is provided as part of
  * "A Practical Introduction to Computer Vision with OpenCV"
- * by Kenneth Dawson-Howe � Wiley & Sons Inc. 2014.  All rights reserved.
+ * by Kenneth Dawson-Howe © Wiley & Sons Inc. 2014.  All rights reserved.
  */
 #include <iostream>
 #include <sstream>
 #include <time.h>
 #include <stdio.h>
 
-#include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/calib3d.hpp>
-#include <opencv2/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 using namespace cv;
 using namespace std;
@@ -579,6 +579,10 @@ int CameraCalibration( string passed_settings_filename  )
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 }
 
@@ -587,7 +591,7 @@ void prompt_and_continue() {
    getchar();
 }
 
-
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -610,3 +614,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

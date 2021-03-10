@@ -9,7 +9,7 @@
   27 March 2018
 */
  
-#include "cameraModel.h"
+#include "module5/cameraModel.h"
  
  
 #include <iostream>
@@ -17,10 +17,10 @@
 #include <time.h>
 #include <stdio.h>
 
-#include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/calib3d.hpp>
-#include <opencv2/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 using namespace cv;
 using namespace std;
@@ -148,6 +148,10 @@ void computeCameraModel(int numberOfControlPoints, worldPointType worldPoints[],
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 }
 
@@ -156,6 +160,7 @@ void prompt_and_continue() {
    getchar();
 }
 
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -178,3 +183,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif

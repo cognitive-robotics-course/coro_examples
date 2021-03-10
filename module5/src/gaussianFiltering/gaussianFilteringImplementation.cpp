@@ -9,7 +9,7 @@
   24 November 2017
 */
  
-#include "gaussianFiltering.h"
+#include "module5/gaussianFiltering.h"
 
 /*
  * function processNoiseAndAveraging
@@ -42,6 +42,10 @@ void processNoiseAndAveraging(int, void*) {
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+   #ifdef ROS
+      endwin();
+   #endif
    exit(status);
 }
  
@@ -50,7 +54,7 @@ void prompt_and_exit(int status) {
 
 /*
  * This code is provided as part of "A Practical Introduction to Computer Vision with OpenCV"
- * by Kenneth Dawson-Howe � Wiley & Sons Inc. 2014.  All rights reserved.
+ * by Kenneth Dawson-Howe © Wiley & Sons Inc. 2014.  All rights reserved.
  */
 
 void addGaussianNoise(Mat &image, double average, double standard_deviation)
@@ -86,6 +90,7 @@ void addGaussianNoise(Mat &image, double average, double standard_deviation)
 
 /************************************************************************************************/
 
+#ifdef ROS
 /**
  Linux (POSIX) implementation of _kbhit().
  Morgan McGuire, morgan@cs.brown.edu
@@ -108,3 +113,4 @@ int _kbhit() {
     ioctl(STDIN, FIONREAD, &bytesWaiting);
     return bytesWaiting;
 }
+#endif
