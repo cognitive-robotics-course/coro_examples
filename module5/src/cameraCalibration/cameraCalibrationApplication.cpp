@@ -16,7 +16,7 @@
     
   Audit Trail
   --------------------
-  Removed ../data/ prefix from cameraCalibrationInput.txt
+  Removed ../data/ prefix from cameraCalibrationInput.txt entries
   Abrham Gebreselasie
   3 March 2021
   
@@ -31,10 +31,20 @@
 
 int main() {
    
+   #ifdef ROS
+      // Turn off canonical terminal mode and character echoing
+      static const int STDIN = 0;
+      termios term, old_term;
+      tcgetattr(STDIN, &old_term);
+      tcgetattr(STDIN, &term);
+      term.c_lflag &= ~(ICANON | ECHO);
+      tcsetattr(STDIN, TCSANOW, &term);
+   #endif 
+    
    const char input_filename[MAX_FILENAME_LENGTH] = "cameraCalibrationInput.txt";    
    char input_path_and_filename[MAX_FILENAME_LENGTH];    
    char data_dir[MAX_FILENAME_LENGTH];
-   char datafile_path_and_filename[MAX_FILENAME_LENGTH];
+   char file_path_and_filename[MAX_FILENAME_LENGTH];
      
 
    int end_of_file;
@@ -54,10 +64,6 @@ int main() {
    strcpy(input_path_and_filename, data_dir);
    strcat(input_path_and_filename, input_filename);
    
-   #ifdef ROS
-      // Initialize screen in ncurses raw mode
-      initscr();
-   #endif
 
    if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Error can't open input cameraCalibrationInput.txt\n");
@@ -85,8 +91,8 @@ int main() {
    fclose(fp_in); 
    
    #ifdef ROS
-      // end raw mode
-      endwin();
+      // Reset terminal
+      tcsetattr(STDIN, TCSANOW, &old_term);
    #endif
    return 0;
 }

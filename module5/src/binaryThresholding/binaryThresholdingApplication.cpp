@@ -16,7 +16,7 @@
     
   Audit Trail
   --------------------
-  Removed ../data/ prefix from binaryThresholdingInput.txt
+  Removed ../data/ prefix from binaryThresholdingInput.txt entries
   Abrham Gebreselasie
   3 March 2021
   
@@ -41,10 +41,20 @@ const char* thresholded_window_name = "Thresholded Image";
 
 int main() {
    
+   #ifdef ROS
+      // Turn off canonical terminal mode and character echoing
+      static const int STDIN = 0;
+      termios term, old_term;
+      tcgetattr(STDIN, &old_term);
+      tcgetattr(STDIN, &term);
+      term.c_lflag &= ~(ICANON | ECHO);
+      tcsetattr(STDIN, TCSANOW, &term);
+   #endif 
+    
    const char input_filename[MAX_FILENAME_LENGTH] = "binaryThresholdingInput.txt";    
    char input_path_and_filename[MAX_FILENAME_LENGTH];    
    char data_dir[MAX_FILENAME_LENGTH];
-   char datafile_path_and_filename[MAX_FILENAME_LENGTH];
+   char file_path_and_filename[MAX_FILENAME_LENGTH];
      
          
    int end_of_file;
@@ -68,10 +78,6 @@ int main() {
    strcpy(input_path_and_filename, data_dir);
    strcat(input_path_and_filename, input_filename);
    
-   #ifdef ROS
-      // Initialize screen in ncurses raw mode
-      initscr();
-   #endif
 
    if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Error can't open input file binaryThresholdingInput.txt\n");
@@ -83,8 +89,10 @@ int main() {
       end_of_file = fscanf(fp_in, "%s", filename);
       
       if (end_of_file != EOF) {
+         strcpy(file_path_and_filename, data_dir);
+         strcat(file_path_and_filename, filename);
 
-         inputImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
+         inputImage = imread(file_path_and_filename, CV_LOAD_IMAGE_UNCHANGED);
          if(inputImage.empty()) {
             cout << "can not open " << filename << endl;
             prompt_and_exit(-1);
@@ -120,8 +128,8 @@ int main() {
    fclose(fp_in);
     
    #ifdef ROS
-      // end raw mode
-      endwin();
+      // Reset terminal
+      tcsetattr(STDIN, TCSANOW, &old_term);
    #endif
    return 0;
 }

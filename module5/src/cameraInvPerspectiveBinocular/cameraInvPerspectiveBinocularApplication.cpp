@@ -51,10 +51,20 @@ const char* right_window_name      = "Right Image";
 
 int main() {
    
+   #ifdef ROS
+      // Turn off canonical terminal mode and character echoing
+      static const int STDIN = 0;
+      termios term, old_term;
+      tcgetattr(STDIN, &old_term);
+      tcgetattr(STDIN, &term);
+      term.c_lflag &= ~(ICANON | ECHO);
+      tcsetattr(STDIN, TCSANOW, &term);
+   #endif 
+    
    const char input_filename[MAX_FILENAME_LENGTH] = "cameraInvPerspectiveBinocularInput.txt";    
    char input_path_and_filename[MAX_FILENAME_LENGTH];    
    char data_dir[MAX_FILENAME_LENGTH];
-   char datafile_path_and_filename[MAX_FILENAME_LENGTH];
+   char file_path_and_filename[MAX_FILENAME_LENGTH];
      
 
    int end_of_file;
@@ -99,10 +109,6 @@ int main() {
    strcpy(input_path_and_filename, data_dir);
    strcat(input_path_and_filename, input_filename);
    
-   #ifdef ROS
-      // Initialize screen in ncurses raw mode
-      initscr();
-   #endif
 
    if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Fatal error can't open input cameraInvPerspectiveBinocularInput.txt\n");

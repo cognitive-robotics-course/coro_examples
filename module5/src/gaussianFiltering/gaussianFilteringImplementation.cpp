@@ -49,9 +49,17 @@ void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
    
+
    #ifdef ROS
-      endwin();
+      // Reset terminal to canonical mode
+      static const int STDIN = 0;
+      termios term;
+      tcgetattr(STDIN, &term);
+      term.c_lflag |= (ICANON | ECHO);
+      tcsetattr(STDIN, TCSANOW, &term);
+      exit(status);
    #endif
+
    exit(status);
 }
  
