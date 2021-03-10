@@ -3,7 +3,7 @@ This package is implements the following node(s):
 
 - goToPosition
 
-Please refer to Lecturs 4 and 5 for details on the functionality of each of these node(s).
+Please refer to Lectures 4 and 5 for details on the functionality of each of these node(s).
 
 ## goToPosition
 This node implements the divide-and-conquer go-to-position controller and provides a placeholder for the implementation of the MIMO controller.
@@ -23,7 +23,9 @@ For each command, the turtle is positioned at the start pose and then drives to 
 The current turtle pose is sensed by subscribing to the turtle1/pose topic. The turtle is driven by publishing velocity commands on the turtle1/cmd_vel topic.
 
 ### Sample Input
+
 `goto1 2.0 1.0 3.14 8.0 8.0 0.0`
+
 `goto2 2.0 1.0 3.14 8.0 9.0 0.0`
 
 
