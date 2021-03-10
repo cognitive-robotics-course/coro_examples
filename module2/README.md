@@ -1,5 +1,5 @@
 # C++ package to support Module 2 on writing ROS software in C++: publishers, subscribers, services.
-This package implements the four examples in Module 2, Lecture 2, which involves the creation of a new  package, agitr, with four ROS nodes:
+This package is implements the four examples in Module 2, Lecture 2, which involves the creation of a new  package, agitr, with four ROS nodes:
 
 - hello
 - pubvel
