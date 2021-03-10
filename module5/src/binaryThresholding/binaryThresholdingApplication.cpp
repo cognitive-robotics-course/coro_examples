@@ -13,9 +13,21 @@
 
   David Vernon
   24 November 2017
+    
+  Audit Trail
+  --------------------
+  Removed ../data/ prefix from binaryThresholdingInput.txt entries
+  Abrham Gebreselasie
+  3 March 2021
+  
+  Ported to Ubuntu 16.04 and OpenCV 3.3
+  Abrham Gebreselasie
+  10 March 2021
+  
+
 */
 
-#include "binaryThresholding.h"
+#include "module5/binaryThresholding.h"
 
 
 // Global variables to allow access by the display window callback functions
@@ -23,11 +35,27 @@
 Mat inputImage;
 int thresholdValue            = 128; // default threshold
 
-char* input_window_name       = "Input Image";
-char* thresholded_window_name = "Thresholded Image";
+const char* input_window_name       = "Input Image";
+const char* thresholded_window_name = "Thresholded Image";
 
 
 int main() {
+   
+   #ifdef ROS
+      // Turn off canonical terminal mode and character echoing
+      static const int STDIN = 0;
+      termios term, old_term;
+      tcgetattr(STDIN, &old_term);
+      tcgetattr(STDIN, &term);
+      term.c_lflag &= ~(ICANON | ECHO);
+      tcsetattr(STDIN, TCSANOW, &term);
+   #endif 
+    
+   const char input_filename[MAX_FILENAME_LENGTH] = "binaryThresholdingInput.txt";    
+   char input_path_and_filename[MAX_FILENAME_LENGTH];    
+   char data_dir[MAX_FILENAME_LENGTH];
+   char file_path_and_filename[MAX_FILENAME_LENGTH];
+     
          
    int end_of_file;
    bool debug = true;
@@ -39,7 +67,19 @@ int main() {
 
    printf("Example use of openCV to perform binary thresholding.\n\n");
 
-   if ((fp_in = fopen("../data/binaryThresholdingInput.txt","r")) == 0) {
+   
+   #ifdef ROS   
+      strcpy(data_dir, ros::package::getPath(ROS_PACKAGE_NAME).c_str()); // get the package directory
+   #else
+      strcpy(data_dir, "..");
+   #endif
+   
+   strcat(data_dir, "/data/");
+   strcpy(input_path_and_filename, data_dir);
+   strcat(input_path_and_filename, input_filename);
+   
+
+   if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Error can't open input file binaryThresholdingInput.txt\n");
      prompt_and_exit(1);
    }
@@ -49,8 +89,10 @@ int main() {
       end_of_file = fscanf(fp_in, "%s", filename);
       
       if (end_of_file != EOF) {
+         strcpy(file_path_and_filename, data_dir);
+         strcat(file_path_and_filename, filename);
 
-         inputImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
+         inputImage = imread(file_path_and_filename, CV_LOAD_IMAGE_UNCHANGED);
          if(inputImage.empty()) {
             cout << "can not open " << filename << endl;
             prompt_and_exit(-1);
@@ -85,5 +127,9 @@ int main() {
 
    fclose(fp_in);
     
+   #ifdef ROS
+      // Reset terminal
+      tcsetattr(STDIN, TCSANOW, &old_term);
+   #endif
    return 0;
 }

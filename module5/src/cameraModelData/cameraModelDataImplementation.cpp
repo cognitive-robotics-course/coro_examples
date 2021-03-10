@@ -9,7 +9,7 @@
   29 March 2018
 */
  
-#include "cameraModelData.h"
+#include "module5/cameraModelData.h"
  
 /*
  * This camera calibration software has been derived from software provided
@@ -18,7 +18,7 @@
  *
  * This version of the code is provided as part of
  * "A Practical Introduction to Computer Vision with OpenCV"
- * by Kenneth Dawson-Howe © Wiley & Sons Inc. 2014.  All rights reserved.
+ * by Kenneth Dawson-Howe Â© Wiley & Sons Inc. 2014.  All rights reserved.
  */
 #include <iostream>
 #include <sstream>
@@ -732,6 +732,18 @@ void getSimulatedWorldControlPoints(int numberOfCornersWidth, int numberOfCorner
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+
+   #ifdef ROS
+      // Reset terminal to canonical mode
+      static const int STDIN = 0;
+      termios term;
+      tcgetattr(STDIN, &term);
+      term.c_lflag |= (ICANON | ECHO);
+      tcsetattr(STDIN, TCSANOW, &term);
+      exit(status);
+   #endif
+
    exit(status);
 }
 
@@ -739,3 +751,29 @@ void prompt_and_continue() {
    printf("Press any key to continue ... \n");
    getchar();
 }
+
+
+#ifdef ROS
+/**
+ Linux (POSIX) implementation of _kbhit().
+ Morgan McGuire, morgan@cs.brown.edu
+ */
+int _kbhit() {
+    static const int STDIN = 0;
+    static bool initialized = false;
+
+    if (! initialized) {
+        // Use termios to turn off line buffering
+        termios term;
+        tcgetattr(STDIN, &term);
+        term.c_lflag &= ~ICANON;
+        tcsetattr(STDIN, TCSANOW, &term);
+        setbuf(stdin, NULL);
+        initialized = true;
+    }
+
+    int bytesWaiting;
+    ioctl(STDIN, FIONREAD, &bytesWaiting);
+    return bytesWaiting;
+}
+#endif

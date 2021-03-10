@@ -26,7 +26,7 @@
 */
 
  
-#include "cameraInvPerspectiveMonocular.h"
+#include "module5/cameraInvPerspectiveMonocular.h"
 
 // Global variables to allow access by the display window callback functions
 
@@ -34,9 +34,25 @@ Point2f image_sample_point;
 int number_of_sample_points;
 Mat image;
 
-char* window_name       = "Image";
+const char* window_name       = "Image";
 
 int main() {
+   
+   #ifdef ROS
+      // Turn off canonical terminal mode and character echoing
+      static const int STDIN = 0;
+      termios term, old_term;
+      tcgetattr(STDIN, &old_term);
+      tcgetattr(STDIN, &term);
+      term.c_lflag &= ~(ICANON | ECHO);
+      tcsetattr(STDIN, TCSANOW, &term);
+   #endif 
+    
+   const char input_filename[MAX_FILENAME_LENGTH] = "cameraInvPerspectiveMonocularInput.txt";    
+   char input_path_and_filename[MAX_FILENAME_LENGTH];    
+   char data_dir[MAX_FILENAME_LENGTH];
+   char file_path_and_filename[MAX_FILENAME_LENGTH];
+     
 
    int end_of_file;
    bool debug = false;
@@ -64,7 +80,19 @@ int main() {
    printf("Click on a point in the image to compute the world coordinates.\n\n");   
    printf("Press any key to finish ...\n\n");
 
-   if ((fp_in = fopen("../data/cameraInvPerspectiveMonocularInput.txt","r")) == 0) {
+   
+   #ifdef ROS   
+      strcpy(data_dir, ros::package::getPath(ROS_PACKAGE_NAME).c_str()); // get the package directory
+   #else
+      strcpy(data_dir, "..");
+   #endif
+   
+   strcat(data_dir, "/data/");
+   strcpy(input_path_and_filename, data_dir);
+   strcat(input_path_and_filename, input_filename);
+   
+
+   if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Fatal error can't open input cameraInvPerspectiveMonocularInput.txt\n");
      prompt_and_exit(1);
    }

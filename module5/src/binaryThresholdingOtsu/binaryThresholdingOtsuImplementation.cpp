@@ -7,9 +7,15 @@
 
   David Vernon
   24 November 2017
+
+  Audit Trail
+  --------------------
+  Added _kbhit
+  18 February 2021
+    
 */
  
-#include "binaryThresholdingOtsu.h"
+#include "module5/binaryThresholdingOtsu.h"
 
 void binaryThresholdingOtsu(char *filename) {  
 
@@ -19,8 +25,8 @@ void binaryThresholdingOtsu(char *filename) {
 
    int thresholdValue            = 128; // default threshold
 
-   char* input_window_name       = "Input Image";
-   char* thresholded_window_name = "Thresholded Image";
+   const char* input_window_name       = "Input Image";
+   const char* thresholded_window_name = "Thresholded Image";
  
    inputImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
    if (inputImage.empty()) {
@@ -64,5 +70,42 @@ void binaryThresholdingOtsu(char *filename) {
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   
+
+   #ifdef ROS
+      // Reset terminal to canonical mode
+      static const int STDIN = 0;
+      termios term;
+      tcgetattr(STDIN, &term);
+      term.c_lflag |= (ICANON | ECHO);
+      tcsetattr(STDIN, TCSANOW, &term);
+      exit(status);
+   #endif
+
    exit(status);
 } 
+
+#ifdef ROS
+/**
+ Linux (POSIX) implementation of _kbhit().
+ Morgan McGuire, morgan@cs.brown.edu
+ */
+int _kbhit() {
+    static const int STDIN = 0;
+    static bool initialized = false;
+
+    if (! initialized) {
+        // Use termios to turn off line buffering
+        termios term;
+        tcgetattr(STDIN, &term);
+        term.c_lflag &= ~ICANON;
+        tcsetattr(STDIN, TCSANOW, &term);
+        setbuf(stdin, NULL);
+        initialized = true;
+    }
+
+    int bytesWaiting;
+    ioctl(STDIN, FIONREAD, &bytesWaiting);
+    return bytesWaiting;
+}
+#endif
