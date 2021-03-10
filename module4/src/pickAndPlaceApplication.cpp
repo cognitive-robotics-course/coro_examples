@@ -115,13 +115,13 @@ int main(int argc, char ** argv) {
    float final_depart_distance;     // start the approach from this distance
    float delta;                     // increment in approach and depart distance 
 
-   bool continuous_path = false;    // if true, implement approximation of continuous path control
+   bool continuous_path = true;    // if true, implement approximation of continuous path control
                                     // when approaching and departing the grasp pose
                                     // otherwise just move directly from the initial approach pose to the grasp pose
                                     // and directly from the grasp pose to the final depart pose 
 
 #ifdef ROS   
-   bool create_brick = false;       // if true, spawn a brick at the specified location
+   bool create_brick = true;       // if true, spawn a brick at the specified location
    
    string name       = "brick1";    // name and colors for option to spawn and kill a brick
    string colors[3]  = {"red", "green", "blue"};
