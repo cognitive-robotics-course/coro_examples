@@ -7,15 +7,9 @@
 
   David Vernon
   24 November 2017
-
-  Audit Trail
-  --------------------
-  Added _kbhit
-  18 February 2021
-    
 */
  
-#include "module5/featureExtraction.h"
+#include "featureExtraction.h"
  
 void featureExtraction(char *filename, FILE *fp_out) {
   
@@ -40,7 +34,7 @@ void featureExtraction(char *filename, FILE *fp_out) {
 
 /*
  * The following is based on code provided as part of "A Practical Introduction to Computer Vision with OpenCV"
- * by Kenneth Dawson-Howe Â© Wiley & Sons Inc. 2014.  All rights reserved.
+ * by Kenneth Dawson-Howe © Wiley & Sons Inc. 2014.  All rights reserved.
  */
 
    /* convert the input image to a binary image */
@@ -52,7 +46,7 @@ void featureExtraction(char *filename, FILE *fp_out) {
    threshold(gray,binary,128, 255,THRESH_BINARY_INV  | THRESH_OTSU); // David Vernon: substituted in automatic threshold selection
  
    /* extract the contours of the objects in the binary image */
-   vector <vector<Point> > contours;
+   vector<vector<Point>> contours;
 	vector<Vec4i>         hierarchy;
 
    /* David Vernon: see http://docs.opencv.org/2.4.10/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html#findcontours */
@@ -66,9 +60,9 @@ void featureExtraction(char *filename, FILE *fp_out) {
 
 	/* Prepare to do some processing on all contours (objects and holes!) by declaring appropriate data-structures */
 	vector<RotatedRect>   min_bounding_rectangle(contours.size());   // bounding rectangles
-	vector <vector<Point> > hulls(contours.size());                    // convex hulls
-	vector <vector<int> >   hull_indices(contours.size());             // indices of convex hulls
-	vector <vector<Vec4i> > convexity_defects(contours.size());        // convex cavities
+	vector<vector<Point>> hulls(contours.size());                    // convex hulls
+	vector<vector<int>>   hull_indices(contours.size());             // indices of convex hulls
+	vector<vector<Vec4i>> convexity_defects(contours.size());        // convex cavities
 	vector<Moments>       contour_moments(contours.size());          // Hu moments
 
 	for (int contour_number=0; (contour_number<(int)contours.size()); contour_number++) {
@@ -202,18 +196,6 @@ void featureExtraction(char *filename, FILE *fp_out) {
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
-   
-
-   #ifdef ROS
-      // Reset terminal to canonical mode
-      static const int STDIN = 0;
-      termios term;
-      tcgetattr(STDIN, &term);
-      term.c_lflag |= (ICANON | ECHO);
-      tcsetattr(STDIN, TCSANOW, &term);
-      exit(status);
-   #endif
-
    exit(status);
 }
 
@@ -222,29 +204,3 @@ void prompt_and_continue() {
    getchar();
 }
 
-
-
-#ifdef ROS
-/**
- Linux (POSIX) implementation of _kbhit().
- Morgan McGuire, morgan@cs.brown.edu
- */
-int _kbhit() {
-    static const int STDIN = 0;
-    static bool initialized = false;
-
-    if (! initialized) {
-        // Use termios to turn off line buffering
-        termios term;
-        tcgetattr(STDIN, &term);
-        term.c_lflag &= ~ICANON;
-        tcsetattr(STDIN, TCSANOW, &term);
-        setbuf(stdin, NULL);
-        initialized = true;
-    }
-
-    int bytesWaiting;
-    ioctl(STDIN, FIONREAD, &bytesWaiting);
-    return bytesWaiting;
-}
-#endif

@@ -7,15 +7,9 @@
 
   David Vernon
   24 November 2017
-
-  Audit Trail
-  --------------------
-  Added _kbhit
-  18 February 2021
-    
 */
  
-#include "module5/colourSegmentation.h"
+#include "colourSegmentation.h"
 
 void colourSegmentation(int, void*) {
   
@@ -122,18 +116,6 @@ void getSamplePoint( int event, int x, int y, int, void* ) {
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
-   
-
-   #ifdef ROS
-      // Reset terminal to canonical mode
-      static const int STDIN = 0;
-      termios term;
-      tcgetattr(STDIN, &term);
-      term.c_lflag |= (ICANON | ECHO);
-      tcsetattr(STDIN, TCSANOW, &term);
-      exit(status);
-   #endif
-
    exit(status);
 }
 
@@ -142,7 +124,7 @@ void prompt_and_continue() {
    getchar();
 }
 
-/* void pause(int milliseconds) {
+void pause(int milliseconds) {
 
    _timeb tb;
 
@@ -160,31 +142,5 @@ void prompt_and_continue() {
      ms2=tb.millitm; 
      elapsed =(s2*1000+ms2)-(s1*1000+ms1);
    } while (elapsed < milliseconds);
-} */
-
-
-
-#ifdef ROS
-/**
- Linux (POSIX) implementation of _kbhit().
- Morgan McGuire, morgan@cs.brown.edu
- */
-int _kbhit() {
-    static const int STDIN = 0;
-    static bool initialized = false;
-
-    if (! initialized) {
-        // Use termios to turn off line buffering
-        termios term;
-        tcgetattr(STDIN, &term);
-        term.c_lflag &= ~ICANON;
-        tcsetattr(STDIN, TCSANOW, &term);
-        setbuf(stdin, NULL);
-        initialized = true;
-    }
-
-    int bytesWaiting;
-    ioctl(STDIN, FIONREAD, &bytesWaiting);
-    return bytesWaiting;
 }
-#endif
+

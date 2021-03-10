@@ -12,6 +12,7 @@
 
 #define GCC_COMPILER (defined(__GNUC__) && !defined(__clang__))
 
+// Define ROS if on a GNU Compiler
 #if GCC_COMPILER
    #ifndef ROS
        #define ROS
@@ -45,8 +46,6 @@
 #include <opencv2/opencv.hpp>
 
 #ifdef ROS
-   // ncurses.h must be included after opencv2/opencv.hpp to avoid incompatibility
-   #include <ncurses.h>
   
    #include <ros/ros.h>
    #include <ros/package.h>

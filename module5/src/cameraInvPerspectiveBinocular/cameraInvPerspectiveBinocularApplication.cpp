@@ -35,7 +35,7 @@
 */
 
  
-#include "module5/cameraInvPerspectiveBinocular.h"
+#include "cameraInvPerspectiveBinocular.h"
 
 // Global variables to allow access by the display window callback functions
 
@@ -46,26 +46,10 @@ int number_of_right_sample_points;
 Mat leftImage;
 Mat rightImage;
 
-const char* left_window_name       = "Left Image";
-const char* right_window_name      = "Right Image";
+char* left_window_name       = "Left Image";
+char* right_window_name      = "Right Image";
 
 int main() {
-   
-   #ifdef ROS
-      // Turn off canonical terminal mode and character echoing
-      static const int STDIN = 0;
-      termios term, old_term;
-      tcgetattr(STDIN, &old_term);
-      tcgetattr(STDIN, &term);
-      term.c_lflag &= ~(ICANON | ECHO);
-      tcsetattr(STDIN, TCSANOW, &term);
-   #endif 
-    
-   const char input_filename[MAX_FILENAME_LENGTH] = "cameraInvPerspectiveBinocularInput.txt";    
-   char input_path_and_filename[MAX_FILENAME_LENGTH];    
-   char data_dir[MAX_FILENAME_LENGTH];
-   char file_path_and_filename[MAX_FILENAME_LENGTH];
-     
 
    int end_of_file;
    bool debug = false;
@@ -98,19 +82,7 @@ int main() {
    printf("Press any key to finish ...\n\n");
 
 
-   
-   #ifdef ROS   
-      strcpy(data_dir, ros::package::getPath(ROS_PACKAGE_NAME).c_str()); // get the package directory
-   #else
-      strcpy(data_dir, "..");
-   #endif
-   
-   strcat(data_dir, "/data/");
-   strcpy(input_path_and_filename, data_dir);
-   strcat(input_path_and_filename, input_filename);
-   
-
-   if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
+   if ((fp_in = fopen("../data/cameraInvPerspectiveBinocularInput.txt","r")) == 0) {
 	  printf("Fatal error can't open input cameraInvPerspectiveBinocularInput.txt\n");
      prompt_and_exit(1);
    }

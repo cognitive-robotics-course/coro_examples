@@ -63,25 +63,9 @@
   9 June 2018
 */
  
-#include "module5/cameraModelData.h"
+#include "cameraModelData.h"
 
 int main() {
-   
-   #ifdef ROS
-      // Turn off canonical terminal mode and character echoing
-      static const int STDIN = 0;
-      termios term, old_term;
-      tcgetattr(STDIN, &old_term);
-      tcgetattr(STDIN, &term);
-      term.c_lflag &= ~(ICANON | ECHO);
-      tcsetattr(STDIN, TCSANOW, &term);
-   #endif 
-    
-   const char input_filename[MAX_FILENAME_LENGTH] = "cameraModelDataInput.txt";    
-   char input_path_and_filename[MAX_FILENAME_LENGTH];    
-   char data_dir[MAX_FILENAME_LENGTH];
-   char file_path_and_filename[MAX_FILENAME_LENGTH];
-     
 
    int end_of_file;
    bool debug = false;
@@ -96,19 +80,7 @@ int main() {
    imagePointType imagePoints[MAX_NUMBER_OF_CONTROL_POINTS];
    int numberOfControlPoints;
 
-   
-   #ifdef ROS   
-      strcpy(data_dir, ros::package::getPath(ROS_PACKAGE_NAME).c_str()); // get the package directory
-   #else
-      strcpy(data_dir, "..");
-   #endif
-   
-   strcat(data_dir, "/data/");
-   strcpy(input_path_and_filename, data_dir);
-   strcat(input_path_and_filename, input_filename);
-   
-
-   if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
+   if ((fp_in = fopen("../data/cameraModelDataInput.txt","r")) == 0) {
 	  printf("Error can't open input cameraModelDataInput.txt\n");
      prompt_and_exit(1);
    }
@@ -175,10 +147,6 @@ int main() {
 
    fclose(fp_in); 
    if (debug) prompt_and_continue();
-   #ifdef ROS
-      // Reset terminal
-      tcsetattr(STDIN, TCSANOW, &old_term);
-   #endif
    return 0;
 }
 
