@@ -16,7 +16,7 @@ As always, make sure the ROS master is running:
 
 Open a second terminal and enter
 
-`rosrun module2 hello'
+`rosrun module2 hello`
 
 to see the Hello World message.
 
@@ -26,13 +26,13 @@ Then enter
 
 Open a third terminal and enter
 
-`rosrun module2 pubvel'
+`rosrun module2 pubvel`
 
 to publish random linear and angular command velocities and see the turtle wander about the simulator environment.
 
 Open a fourth terminal and enter
 
-`rosrun module2 subpose'
+`rosrun module2 subpose`
 
 to see the pose values published on the turtleX/Pose topic, where X stands for the turtle number.
 
@@ -40,7 +40,7 @@ Enter <ctrl>-c to stop the pubvel and subpose nodes.
 
 Enter
 
-`rosrun module2 useservices'
+`rosrun module2 useservices`
 
 to use the example services to clear the simulator and teleport the turtle 
 
