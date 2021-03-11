@@ -110,6 +110,9 @@ int main() {
    }
 
    /* get the left and right camera models */
+   strcpy(file_path_and_filename, data_dir);
+   strcat(file_path_and_filename, camera_model_filename);
+   strcpy(camera_model_filename, file_path_and_filename);
 
    if ((fp_camera_model = fopen(camera_model_filename,"r")) == 0) {
 	   printf("Error can't open camera model for input %s\n",camera_model_filename);
@@ -122,18 +125,11 @@ int main() {
       }
    }
 
-   if ((fp_camera_model = fopen(camera_model_filename,"r")) == 0) {
-	   printf("Error can't open  camera model for input %s\n",camera_model_filename);
-      prompt_and_exit(1);
-   }
-    
-   for (i=0; i<3; i++) {
-      for (j=0; j<4; j++) {
-         fscanf(fp_camera_model, "%f ", &(camera_model[i][j]));
-      }
-   }
 
    /* get the image */
+   strcpy(file_path_and_filename, data_dir);
+   strcat(file_path_and_filename, image_filename);
+   strcpy(image_filename, file_path_and_filename);
 
    image = imread(image_filename, CV_LOAD_IMAGE_UNCHANGED);
    if (image.empty()) {

@@ -98,7 +98,10 @@ int main() {
       
       if (end_of_file != EOF) {
          //if (debug) printf ("%s\n",filename);
-          
+         strcpy(file_path_and_filename, data_dir);
+         strcat(file_path_and_filename, filename);
+         strcpy(filename, file_path_and_filename);
+
          printf("\nPerforming 2D feature extraction on %s \n",filename);
          featureExtraction(filename, fp_out);
       }

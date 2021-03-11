@@ -95,7 +95,10 @@ int main() {
       end_of_file = fscanf(fp_in, "%s", filename);
 
       if (end_of_file != EOF) {
-         
+         strcpy(file_path_and_filename, data_dir);
+         strcat(file_path_and_filename, filename);
+         strcpy(filename, file_path_and_filename);
+
          inputBGRImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
          if(inputBGRImage.empty()) {
             cout << "can not open " << filename << endl;

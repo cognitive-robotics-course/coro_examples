@@ -140,6 +140,9 @@ int main() {
             }
        
             /* write out the image control points */
+            strcpy(file_path_and_filename, data_dir);
+            strcat(file_path_and_filename, controlPointsFilename);
+            strcpy(controlPointsFilename, file_path_and_filename);
 
             if ((fp_control_points = fopen(controlPointsFilename,"w")) == 0) {
 	            printf("Error can't open input %s\n",controlPointsFilename);
@@ -150,6 +153,10 @@ int main() {
                /* get the image control points */
 
                printf("\nCollecting image control points.\n");
+
+               strcpy(file_path_and_filename, data_dir);
+               strcat(file_path_and_filename, configurationFilename);
+               strcpy(configurationFilename, file_path_and_filename);
 
                getImageControlPoints(configurationFilename, 
                                      numberOfViews, 

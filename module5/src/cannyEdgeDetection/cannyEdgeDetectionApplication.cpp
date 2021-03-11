@@ -93,15 +93,14 @@ int main() {
       end_of_file = fscanf(fp_in, "%s", filename);
       
       if (end_of_file != EOF) {
+         strcpy(file_path_and_filename, data_dir);
+         strcat(file_path_and_filename, filename);
+         strcpy(filename, file_path_and_filename);
 
          src = imread(filename, CV_LOAD_IMAGE_COLOR);
          if(src.empty()) {
             cout << "can not open " << filename << endl;
-            #ifdef ROS
-      // Reset terminal
-      tcsetattr(STDIN, TCSANOW, &old_term);
-   #endif
-   return -1;
+            return -1;
          }
           
          printf("Press any key to continue ...\n");

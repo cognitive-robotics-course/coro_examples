@@ -141,6 +141,9 @@ int main() {
    }
 
    /* get the left and right camera models */
+   strcpy(file_path_and_filename, data_dir);
+   strcat(file_path_and_filename, left_camera_model_filename);
+   strcpy(left_camera_model_filename, file_path_and_filename);
 
    if ((fp_left_camera_model = fopen(left_camera_model_filename,"r")) == 0) {
 	   printf("Error can't open left camera model for input %s\n",left_camera_model_filename);
@@ -152,6 +155,10 @@ int main() {
          fscanf(fp_left_camera_model, "%f ", &(left_camera_model[i][j]));
       }
    }
+
+   strcpy(file_path_and_filename, data_dir);
+   strcat(file_path_and_filename, right_camera_model_filename);
+   strcpy(right_camera_model_filename, file_path_and_filename);
 
    if ((fp_right_camera_model = fopen(right_camera_model_filename,"r")) == 0) {
 	   printf("Error can't open right camera model for input %s\n",right_camera_model_filename);
@@ -165,12 +172,19 @@ int main() {
    }
 
    /* get the left and right images */
+   strcpy(file_path_and_filename, data_dir);
+   strcat(file_path_and_filename, left_image_filename);
+   strcpy(left_image_filename, file_path_and_filename);
 
    leftImage = imread(left_image_filename, CV_LOAD_IMAGE_UNCHANGED);
    if (leftImage.empty()) {
       cout << "can not open " << left_image_filename << endl;
       prompt_and_exit(-1);
    }
+
+   strcpy(file_path_and_filename, data_dir);
+   strcat(file_path_and_filename, right_image_filename);
+   strcpy(right_image_filename, file_path_and_filename);
 
    rightImage = imread(right_image_filename, CV_LOAD_IMAGE_UNCHANGED);
    if (rightImage.empty()) {

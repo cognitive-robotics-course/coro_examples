@@ -81,6 +81,9 @@ int main() {
             printf ("%s\n",filename);
             prompt_and_continue();
          }
+         strcpy(file_path_and_filename, data_dir);
+         strcat(file_path_and_filename, filename);
+         strcpy(filename, file_path_and_filename);
 
          printf("\nPerforming camera calibration on %s \n",filename);
 

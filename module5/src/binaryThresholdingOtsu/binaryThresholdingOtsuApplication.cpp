@@ -77,7 +77,10 @@ int main() {
       end_of_file = fscanf(fp_in, "%s", filename);
       
       if (end_of_file != EOF) {
-          
+         strcpy(file_path_and_filename, data_dir);
+         strcat(file_path_and_filename, filename);
+         strcpy(filename, file_path_and_filename);
+
          printf("\nPerforming binary thresholding using the Otsu algorithm on %s \n",filename);
          binaryThresholdingOtsu(filename);
     

@@ -105,11 +105,17 @@ int main() {
             }
 
             /* read the image control points */
+            strcpy(file_path_and_filename, data_dir);
+            strcat(file_path_and_filename, imageControlPointsFilename);
+            strcpy(imageControlPointsFilename, file_path_and_filename);
 
             if ((fp_image_control_points = fopen(imageControlPointsFilename,"r")) == 0) {
 	            printf("Error can't open input %s\n",imageControlPointsFilename);
                prompt_and_exit(1);
             }
+            strcpy(file_path_and_filename, data_dir);
+            strcat(file_path_and_filename, worldControlPointsFilename);
+            strcpy(worldControlPointsFilename, file_path_and_filename);
 
             if ((fp_world_control_points = fopen(worldControlPointsFilename,"r")) == 0) {
 	            printf("Error can't open input %s\n",worldControlPointsFilename);
@@ -192,6 +198,9 @@ int main() {
                   }
                }
 
+               strcpy(file_path_and_filename, data_dir);
+               strcat(file_path_and_filename, cameralModelFilename);
+               strcpy(cameralModelFilename, file_path_and_filename);
 
                if ((fp_camera_model = fopen(cameralModelFilename,"w")) == 0) {
 	               printf("Error can't open output %s\n",cameralModelFilename);
