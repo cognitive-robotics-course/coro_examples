@@ -168,6 +168,10 @@ int main() {
 
    fclose(fp_in);
    fclose(fp_camera_model);
+   #ifdef ROS
+      // Reset terminal
+      tcsetattr(STDIN, TCSANOW, &old_term);
+   #endif
 
    exit(0);
 
