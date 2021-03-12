@@ -26,11 +26,11 @@ robot_1_config.txt
 
 
 ### Running the example code
-Assuming that the Gazebo simulation world has been launched and services such as spawning a Lego brick have been accessed from the [lynxmotion_al5d_description](https://github.com/CRAM-Team/lynxmotion_al5d_description) package, the following commands can be used to run the robotProgramming and pickAndPlace example code respectively:
+Assuming that the Gazebo simulation world has been launched and services such as spawning a Lego brick have been accessed from the [lynxmotion_al5d_description](https://github.com/cognitive-robotics-course/lynxmotion_al5d_description) package, the following commands can be used to run the robotProgramming and pickAndPlace example code respectively:
 
-`rosrun lynxmotion_cpp robotProgramming`
+`rosrun module4 robotProgramming`
 
-`rosrun lynxmotion_cpp pickAndPlace`
+`rosrun module4 pickAndPlace`
 
-After either of the example code has been run, the workspace can be cleared by using the reset service found in the [lynxmotion_al5d_description](https://github.com/CRAM-Team/lynxmotion_al5d_description) package.
+After either of the example code has been run, the workspace can be cleared by using the reset service found in the [lynxmotion_al5d_description](https://github.com/cognitive-robotics-course/lynxmotion_al5d_description) package.
 
