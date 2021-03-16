@@ -3,7 +3,8 @@ Media/blobs.bmp
 Media/handrr.bmp
 Media/FruitStall.JPG
 Media/RGBimage.jpg
-Media/Smarties1.jpg
-Media/Smarties2.jpg
-Media/Smarties3.jpg
-Media/Smarties4.jpg
+Media/assignment4_0.jpg
+Media/assignment4_1.jpg
+Media/assignment4_2.jpg
+Media/assignment4_3.jpg
+Media/assignment4_14.jpg

@@ -3,3 +3,8 @@ Media/blobs.bmp
 Media/cube1.png
 Media/RGBimage.jpg
 Media/TrinityBikes1.JPG
+Media/assignment4_0.jpg
+Media/assignment4_1.jpg
+Media/assignment4_2.jpg
+Media/assignment4_3.jpg
+Media/assignment4_14.jpg

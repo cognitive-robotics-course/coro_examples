@@ -2,3 +2,8 @@ Media/blobs2.bmp
 Media/blobs3.bmp
 Media/Numbers.jpg
 Media/GoodORings.jpg
+Media/assignment4_0.jpg
+Media/assignment4_1.jpg
+Media/assignment4_2.jpg
+Media/assignment4_3.jpg
+Media/assignment4_14.jpg
