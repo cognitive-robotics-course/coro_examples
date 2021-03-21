@@ -1386,7 +1386,7 @@ void fail(char *message)
 /*=======================================================*/
 
 
-void display_error_and_exit(char error_message[]) {
+void display_error_and_exit(const char error_message[]) {
    printf("%s\n", error_message);
    printf("Hit any key to continue >>");
    getchar();
@@ -1415,7 +1415,7 @@ void wait(int ms)
 #endif
 }
 
-void print_message_to_file(FILE *fp, char message[]) {
+void print_message_to_file(FILE *fp, const char message[]) {
    fprintf(fp,"The message is: %s\n", message);
 }
 

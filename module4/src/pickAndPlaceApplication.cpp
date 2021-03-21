@@ -53,6 +53,10 @@
 *   David Vernon
 *   4 March 2021
 *
+*   Changed the initialization of the E frame to use the x, y, and z values read from the configuration file, not just the z value
+*   David Vernon
+*   21 March 2021
+*
 *******************************************************************************************************************/
 
 #include <stdlib.h>
@@ -91,8 +95,6 @@ int main(int argc, char ** argv) {
    Frame destination;
 
    /* data variables */
-
-   float effector_length;           // this is initialized from robot configuration file
 
    float object_x          = -40;   // default values; actual values are read from the input file
    float object_y          = 150;   //                         
@@ -213,12 +215,14 @@ int main(int argc, char ** argv) {
    /* now start the pick and place task */
    /* --------------------------------- */
 
-   effector_length = (float) robotConfigurationData.effector_z; // initialized from robot configuration data
    initial_approach_distance = 20;
    final_depart_distance     = 20;
    delta = 2;
   
-   E               = trans(0.0, 0.0, effector_length);                                           // end-effector (gripper) frame 
+   E               = trans((float) robotConfigurationData.effector_x,                            // end-effector (gripper) frame
+	                   (float) robotConfigurationData.effector_y,                            // is initialized from data
+	                   (float) robotConfigurationData.effector_z);                           // in the robot configuration file
+   
    Z               = trans(0.0 ,0.0, 0.0);                                                       // robot base frame
    object          = trans(object_x,      object_y,      object_z)      * rotz(object_phi);      // object pose
    destination     = trans(destination_x, destination_y, destination_z) * rotz(destination_phi); // destination pose

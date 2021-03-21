@@ -225,7 +225,7 @@ bool computeServoPositions(double joint_angles[], int servo_positions[]);
 
 void sig(int s);
 int  pose_within_working_env(float x, float y, float z);
-void display_error_and_exit(char error_message[]);
+void display_error_and_exit(const char error_message[]);
 double degrees(double radians);
 double radians(double degrees);
 

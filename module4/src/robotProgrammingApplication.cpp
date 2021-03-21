@@ -78,11 +78,15 @@
 *
 *   Audit Trail
 *   -----------
-*   6  June 2018: added configuration file functionality
-*   28 June 2020: re-factored code to separate calculation of the joint anglesusing the inverse kinematics,  
-*                 from the calculation of servomotor setpoint values.  
-*                 This was done to allow the simulator to be controlled by publishing joint angles on the 
-*                 ROS /lynxmotion_al5d/joints_positions/command topic 
+*   6  June 2018:  added configuration file functionality
+*   28 June 2020:  re-factored code to separate calculation of the joint anglesusing the inverse kinematics,  
+*                  from the calculation of servomotor setpoint values.  
+*                  This was done to allow the simulator to be controlled by publishing joint angles on the 
+*                  ROS /lynxmotion_al5d/joints_positions/command topic 
+*
+*   21 March 2021: Changed the initialization of the E frame to use the x, y, and z values read from the configuration file,
+*                  not just the z value
+*  
 *
 *******************************************************************************************************************/
 
@@ -157,6 +161,7 @@ int main(int argc, char ** argv) {
    from the input file robotProgrammingInput.txt
 
    ********************************************************************************/
+
    // Set the filename. Different directories for ROS and Windows versions
    #ifdef ROS
     strcat(directory, (ros::package::getPath(ROS_PACKAGE_NAME) + "/data/").c_str());
@@ -168,11 +173,11 @@ int main(int argc, char ** argv) {
     strcat(filename, "robotProgrammingInput.txt");
 
    if ((fp_in = fopen(filename,"r")) == 0) {
-	   printf("Error can't open input robotProgrammingInput.txt\n", filename);
+      printf("Error can't open input %s\n", filename);
       prompt_and_exit(0);
    }
 
-    // Reset filename
+   // Reset filename
 
    end_of_file = fscanf(fp_in, "%s", configFile); // read the configuration filename
    strcpy(filename, directory);
@@ -184,14 +189,17 @@ int main(int argc, char ** argv) {
 	  	 
       goHome();    // not strictly necessary ... just for demonstration
       wait(2000);  // wait for 2 seconds
-      
+   
 
       effector_length = (float) robotConfigurationData.effector_z;
 
-      delta = 2;                                 // increment in approach distance 
+      delta = 2;                                                    // increment in approach distance 
 
-      E = trans(0.0, 0.0, effector_length);      // end-effector (gripper) frame
-      Z = trans(0.0 ,0.0, 0.0);                  // robot base frame
+      E = trans((float) robotConfigurationData.effector_x,          // end-effector (gripper) frame
+	        (float) robotConfigurationData.effector_y,          // is initialized from data
+	        (float) robotConfigurationData.effector_z);         // in the robot configuration file
+   
+      Z = trans(0.0 ,0.0, 0.0);                                     // robot base frame
 
       
       /*****************************************************************************************/
