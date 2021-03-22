@@ -1,5 +1,6 @@
 # CMakeLists.txt
 # !*/CMakeLists.txt
+module5/cmake-build-debug
 cram
 giskard_msgs
 iai_common_msgs
