@@ -16,5 +16,7 @@ ADD_SUBDIRECTORY(featureExtraction)
 ADD_SUBDIRECTORY(gaussianFiltering)
 ADD_SUBDIRECTORY(grabCut)
 ADD_SUBDIRECTORY(imageAcquisition)
+ADD_SUBDIRECTORY(imageAcquisitionFromSimulatorCamera)
+ADD_SUBDIRECTORY(moveRobot)
 ADD_SUBDIRECTORY(sobelEdgeDetection)
 
