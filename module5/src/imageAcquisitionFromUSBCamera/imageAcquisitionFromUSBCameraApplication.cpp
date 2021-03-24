@@ -3,13 +3,9 @@
   -------------------------------------------------------------------------------------
  
   This application reads a sequence lines from an input file imageAcquisitionInput.txt.
-  Every triplet of lines contains 
+  Every line contains
   
-  1.  a filename of an image to be displayed
-  2.  a filename of a video to be displayed
-  3.  a camera number (typically 0 for the internal webcam and 1 for an external USB camera)
-
-  After the video is displayed, images from the video camera are displayed.
+  1.  a camera number (typically 0 for the internal webcam and 1 for an external USB camera)
 
   When display from the camera is terminated by the user (by pressing any key), 
   the last image to be acquired is written to a file 'camera_image.png'
@@ -26,6 +22,9 @@
     
   Audit Trail
   --------------------
+  Added camera_number as an input
+  DV 27 February 2019
+
   Removed ../data/ prefix from imageAcquisitionInput.txt entries
   Abrham Gebreselasie
   3 March 2021
@@ -33,15 +32,15 @@
   Ported to Ubuntu 16.04 and OpenCV 3.3
   Abrham Gebreselasie
   10 March 2021
-  
 
+  Functions to acquire image from image file and video file removed.
+  Abrham Gebreselasie
+  24 March 2021
 
-  Added camera_number as an input
-  DV 27 February 2019
 */
 
  
-#include "module5/imageAcquisition.h"
+#include "module5/imageAcquisitionFromUSBCamera.h"
 
 int main() {
    
@@ -55,7 +54,7 @@ int main() {
       tcsetattr(STDIN, TCSANOW, &term);
    #endif 
     
-   const char input_filename[MAX_FILENAME_LENGTH] = "imageAcquisitionInput.txt";    
+   const char input_filename[MAX_FILENAME_LENGTH] = "imageAcquisitionFromUSBCameraInput.txt";
    char input_path_and_filename[MAX_FILENAME_LENGTH];    
    char data_dir[MAX_FILENAME_LENGTH];
    char file_path_and_filename[MAX_FILENAME_LENGTH];
@@ -81,35 +80,14 @@ int main() {
    
 
    if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
-	  printf("Error can't open input imageAcquisitionInput.txt\n");
+	  printf("Error can't open input imageAcquisitionFromUSBCameraInput.txt\n");
      prompt_and_exit(1);
    }
 
    printf("Example of how to use openCV to acquire and display images\n");
-   printf("from three sources: image file, video file, and USB camera.\n\n");
+   printf("from USB camera.\n\n");
    
    do {
-
-      end_of_file = fscanf(fp_in, "%s", filename);
-      
-      if (end_of_file != EOF) { 
-         printf("\nDisplaying image from image file %s \n",filename);
-
-         strcpy(file_path_and_filename, data_dir);
-         strcat(file_path_and_filename, filename);
-         strcpy(filename, file_path_and_filename);
-
-         display_image_from_file(filename);
-
-         end_of_file = fscanf(fp_in, "%s", filename);
-         if (end_of_file != EOF) {
-            printf("\nDisplaying image from video file %s \n",filename);
-            
-            strcpy(file_path_and_filename, data_dir);
-            strcat(file_path_and_filename, filename);
-            strcpy(filename, file_path_and_filename);
-            display_image_from_video(filename);
-         }
 
 		 end_of_file = fscanf(fp_in, "%d", &camera_number);
          if (end_of_file != EOF) {
@@ -117,8 +95,6 @@ int main() {
             display_image_from_camera(camera_number);
          }
 
-
-      }
    } while (end_of_file != EOF);
 
    fclose(fp_in);

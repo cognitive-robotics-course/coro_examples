@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 #############################################
-SET(MODULENAME imageAcquisition)
+SET(MODULENAME imageAcquisitionFromUSBCamera)
 #############################################
 
 PROJECT(${MODULENAME})
