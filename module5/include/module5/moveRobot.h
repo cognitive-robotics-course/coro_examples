@@ -119,8 +119,8 @@ typedef char keyword[KEY_LENGTH];
 #define MIN_Z    0
 #define MAX_Z  380
 
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+//#define MAX(x, y) (((x) > (y)) ? (x) : (y)) // commented out to avoid warning of conflict with previous definition DV 25/3/2021
+//#define MIN(x, y) (((x) < (y)) ? (x) : (y)) // ibid.
 
 /***************************************************************************************************************************
 
