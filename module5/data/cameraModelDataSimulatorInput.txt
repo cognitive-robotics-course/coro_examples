@@ -2,5 +2,5 @@
 0 170 250
 checkerboard.sdf
 simulCameraCalibConfig.xml
-cameraModelImageControlPointsROS.txt
-cameraModelWorldControlPointsROS.txt
+cameraModelImageControlPointsSimulator.txt
+cameraModelWorldControlPointsSimulator.txt
