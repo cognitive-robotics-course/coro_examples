@@ -1,2 +1,3 @@
 cameraModelCoefficients.txt
-Media/camera_image.png
+Media/simulator_camera_view_of_calibration_grid.png
+Media/bricks.png
