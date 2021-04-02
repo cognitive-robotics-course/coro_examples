@@ -20,5 +20,6 @@ ADD_SUBDIRECTORY(imageAcquisitionFromUSBCamera)
 ADD_SUBDIRECTORY(imageAcquisitionFromVideoFile)
 ADD_SUBDIRECTORY(imageAcquisitionFromSimulatorCamera)
 ADD_SUBDIRECTORY(moveRobot)
+ADD_SUBDIRECTORY(robotCameraModelDataSimulator)
 ADD_SUBDIRECTORY(sobelEdgeDetection)
 

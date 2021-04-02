@@ -1,4 +1,4 @@
-2
+1
 0 170 250
 checkerboard.sdf
 simulCameraCalibConfig.xml

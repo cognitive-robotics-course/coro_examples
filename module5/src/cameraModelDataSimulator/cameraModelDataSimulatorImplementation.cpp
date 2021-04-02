@@ -460,9 +460,9 @@ int getImageControlPoints(string passed_settings_filename, int numberOfViews, in
     const Scalar RED(0,0,255), GREEN(0,255,0);
     const char ESC_KEY = 27;
 
+    Mat view;
     for(int i = 0;;++i)
     {
-      Mat view;
       bool blinkOutput = false;
 
       view = s.nextImage();
@@ -544,7 +544,7 @@ int getImageControlPoints(string passed_settings_filename, int numberOfViews, in
                    *numberOfControlPoints = (int) pointBuf.size();
 
                    imshow("Image View", view);
-                   waitKey(5000);
+                   waitKey(2000);
 
                    if (numberOfViews == 1) {
                       /* job done */
@@ -655,6 +655,9 @@ int getImageControlPoints(string passed_settings_filename, int numberOfViews, in
                 break;
         }
     }
+    imshow("Image View", view);
+    waitKey(2000);
+
     writeWorldCoordinatesToFile(fp_world_points, cameraX, cameraY, boardZ, s.squareSize, s.boardSize);
     return 0;
 }
@@ -881,6 +884,6 @@ void writeWorldCoordinatesToFile(FILE *fp_world_points, float cameraX, float cam
             fprintf(fp_world_points, "%3.4f %3.4f %3.4f\n", topleftX + boxsize * i, topleftY - boxsize * j, boardZ);
         }
     }
-    fprintf(fp_world_points, "\n");
+    //fprintf(fp_world_points, "\n");
 }
 

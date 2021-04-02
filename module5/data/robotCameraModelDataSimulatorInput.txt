@@ -1,0 +1,5 @@
+robot_3_config.txt
+0 170 250
+checkerboard.sdf
+8 6 25.4
+robotCameraModelWorldControlPointsSimulator.txt
