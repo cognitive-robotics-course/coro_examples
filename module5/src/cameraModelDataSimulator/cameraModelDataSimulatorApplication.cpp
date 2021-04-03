@@ -15,7 +15,7 @@
   from this single view will only yield valid inverse perspective mapping for the z value that 
   was used during calibration.
 
-  The first line of the input file (camerModelDataROSInput.txt) should be a number between 1 and 10
+  The first line of the input file (camerModelDataSimulatorInput.txt) should be a number between 1 and 10
   to identify the number of views to be used in calibration.
 
   The second line of the input file has three numbers that specify the x, y and z coordinate of the camera in that order.
@@ -112,6 +112,8 @@ int main(int argc, char** argv) {
 
 
    int end_of_file;
+   int calibrationSuccess;
+
    bool debug = false;
    char configurationPathAndFilename[MAX_FILENAME_LENGTH];
    char controlPointsPathAndFilename[MAX_FILENAME_LENGTH];
@@ -229,7 +231,10 @@ int main(int argc, char** argv) {
                                   printf("Waiting for images\n");
                                   imageCount = 0;
 
+                                  // Ensure the first image is taken after checkerboard appears in Gazebo
+                                  waitKey(1000);
                                   // Use a sequence of three images for each view
+                                  // TODO: decrease the number of images used for calibration to 2 or 1
                                   while (imageCount < 3) {
                                       ros::spinOnce();
                                   }
@@ -239,11 +244,16 @@ int main(int argc, char** argv) {
                                   printf("\nCollecting image control points.\n");
 
                                   // Use 1 image per view
-                                  getImageControlPoints(configurationPathAndFilename,
-                                                        1,
-                                                        &numberOfControlPoints,
-                                                        imagePoints, fp_world_points,
-                                                        cameraX, cameraY, boardZ);
+                                  calibrationSuccess = getImageControlPoints(configurationPathAndFilename,
+                                                                             1,
+                                                                             &numberOfControlPoints,
+                                                                             imagePoints, fp_world_points,
+                                                                             cameraX, cameraY, boardZ);
+
+                                  if (calibrationSuccess != 0)
+                                  {
+                                      prompt_and_exit(1);
+                                  }
 
                                   delete_checkerboard();
 
@@ -268,6 +278,8 @@ int main(int argc, char** argv) {
 
       }
    }
+   // Remove temporary images used for calibration
+   deleteFiles(data_dir);
 
    fclose(fp_in);
    fclose(fp_control_points);

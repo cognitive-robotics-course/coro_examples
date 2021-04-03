@@ -195,8 +195,18 @@ public:
 
     static bool readStringList( const string& filename, vector<string>& l )
     {
+        // Allow the <input> in XML file to be specified with just the filename or the absolute path
+        string pathAndFilename = filename;
+
+        // If path was specified in relative format use absolute path
+        if (access(filename.c_str(), F_OK) == -1)
+        {
+            pathAndFilename = ros::package::getPath(ROS_PACKAGE_NAME) + "/data/" + filename;
+        }
+
         l.clear();
-        FileStorage fs(filename, FileStorage::READ);
+
+        FileStorage fs(pathAndFilename, FileStorage::READ);
         if( !fs.isOpened() )
             return false;
         FileNode n = fs.getFirstTopLevelNode();
@@ -616,7 +626,7 @@ int getImageControlPoints(string passed_settings_filename, int numberOfViews, in
         
         //------------------------------ Show image and check for input commands -------------------
         imshow("Image View", view);
-       
+        waitKey(2000);
         char key = (char)waitKey(s.inputCapture.isOpened() ? 50 : s.delay);
 
         if( key  == ESC_KEY )
@@ -630,8 +640,6 @@ int getImageControlPoints(string passed_settings_filename, int numberOfViews, in
             mode = CAPTURING;
             imagePoints.clear();
         }
-
-
     }
 
   
@@ -655,8 +663,6 @@ int getImageControlPoints(string passed_settings_filename, int numberOfViews, in
                 break;
         }
     }
-    imshow("Image View", view);
-    waitKey(2000);
 
     writeWorldCoordinatesToFile(fp_world_points, cameraX, cameraY, boardZ, s.squareSize, s.boardSize);
     return 0;
@@ -757,6 +763,7 @@ void getSimulatedWorldControlPoints(int numberOfCornersWidth, int numberOfCorner
 void prompt_and_exit(int status) {
    printf("Press any key to continue and close terminal ... \n");
    getchar();
+   destroyAllWindows();
    exit(status);
 }
 
@@ -887,3 +894,18 @@ void writeWorldCoordinatesToFile(FILE *fp_world_points, float cameraX, float cam
     //fprintf(fp_world_points, "\n");
 }
 
+void deleteFiles(const char* data_dir)
+{
+    char media_dir[MAX_FILENAME_LENGTH];
+    char filename[MAX_FILENAME_LENGTH];
+
+    strcpy(media_dir, data_dir);
+    strcat(media_dir, "Media");
+
+    for (int i = 1; i <= 3; i++)
+    {
+        strcpy(filename, media_dir);
+        sprintf(filename, "%s/%d.jpg", filename, i);
+        remove(filename);
+    }
+}

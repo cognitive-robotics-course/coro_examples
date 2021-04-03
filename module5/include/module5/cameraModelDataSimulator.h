@@ -21,6 +21,7 @@
 #include <termios.h>
 #include <stropts.h>
 #include <sys/ioctl.h>
+#include <fcntl.h>
 #include <time.h>
 
 
@@ -82,3 +83,4 @@ size_t fsize(FILE *fp);
 void imageMessageReceived(const sensor_msgs::ImageConstPtr& msg);
 void writeWorldCoordinatesToFile(FILE *fp_world_points, float cameraX, float cameraY, float boardZ, float boxsize, Size size);
 void delete_checkerboard();
+void deleteFiles(const char* data_dir);
