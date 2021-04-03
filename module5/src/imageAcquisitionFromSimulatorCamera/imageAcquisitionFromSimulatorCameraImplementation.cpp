@@ -25,9 +25,18 @@ void imageMessageReceived(const sensor_msgs::ImageConstPtr& msg)
         return;
     }
     imshow(OPENCV_WINDOW_NAME, cv_ptr->image);
-    int pressedKey = waitKey(1000);
-    if ((pressedKey & 0xFF) == 27)
+    int pressedKey = waitKey(20);
+
+    if (pressedKey >= 0)
     {
+        #ifdef ROS
+                // Reset terminal to canonical mode
+                static const int STDIN = 0;
+                termios term;
+                tcgetattr(STDIN, &term);
+                term.c_lflag |= (ICANON | ECHO);
+                tcsetattr(STDIN, TCSANOW, &term);
+        #endif
         exit(0);
     }
 }

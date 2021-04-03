@@ -16,10 +16,21 @@
 #include "module5/imageAcquisitionFromSimulatorCamera.h"
 
 int main(int argc, char** argv) {
+   #ifdef ROS
+      // Turn off canonical terminal mode and character echoing
+      static const int STDIN = 0;
+      termios term, old_term;
+      tcgetattr(STDIN, &old_term);
+      tcgetattr(STDIN, &term);
+      term.c_lflag &= ~(ICANON | ECHO);
+      tcsetattr(STDIN, TCSANOW, &term);
+   #endif
+   char pressedKey;
+   int nRead;
 
    printf("Example of how to use openCV to acquire and display images from simulator camera\n");
 
-   printf("\nPress Esc to exit\n");
+   printf("\nPress any key to exit\n");
    ros::init(argc, argv, "imageAcquisitionFromSimulatorCamera");
 
    ros::NodeHandle nh;
@@ -28,7 +39,22 @@ int main(int argc, char** argv) {
    namedWindow(OPENCV_WINDOW_NAME);
    image_transport::Subscriber imageSubscriber = it.subscribe("/lynxmotion_al5d/external_vision/image_raw", 1, &imageMessageReceived);
 
-   ros::spin();
+   /* Change STDIN mode to non-blocking I/O to allow taking a key press from console as well as the CV window
+    * Using the likes of getchar (blocking I/O) will interfere with the drawing of the acquired images
+    */
+   while (true)
+   {
+      ros::spinOnce();
+      if (_kbhit())
+      {
+        break;
+      }
+   }
+   destroyAllWindows();
+   #ifdef ROS
+       // Reset terminal
+       tcsetattr(STDIN, TCSANOW, &old_term);
+   #endif
 
    return 0;
 }
