@@ -1,4 +1,4 @@
-(defsystem module9
+(defsystem cram-lynxmotion-al5d-tutorials
     :author "Vinny Adjibi"
     :license "BSD"
 

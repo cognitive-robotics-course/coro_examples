@@ -76,7 +76,7 @@ This section will present a set of usage of the package for demonstration purpos
 In order to run the exercice, please open a terminal and execute `roslisp_repl` to start a new LISP session with ROS. You can then type the below function calls at the interpreter prompt.
 
 ```lisp
-(ros-load:load-system "module9" :module9) ; Load the package
+(ros-load:load-system "cram_lynxmotion_al5d_tutorials" :cram-lynxmotion-al5d-tutorials) ; Load the package
 
 (in-package :al5d)
 
