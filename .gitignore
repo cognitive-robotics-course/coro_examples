@@ -13,3 +13,4 @@ roboticsgroup_gazebo_plugins
 .rosinstall
 .rosinstall.bak
 *.swp
+COM?
