@@ -21,7 +21,7 @@ sudo apt-get install libncurses-dev
 
 ### Run-time dependencies
 
-To run successfully, package `module4`  and node `imageAcquisitionFromSimulator` in package `module5`require the installation of the following packages:
+To run successfully, packages `module4`, `module9`  and node `imageAcquisitionFromSimulator` in package `module5`require the installation of the following packages:
 
 * [Lynxmotion AL5D robot description in URDF](https://github.com/cognitive-robotics-course/lynxmotion_al5d_description)
 
