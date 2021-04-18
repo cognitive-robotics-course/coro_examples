@@ -1,0 +1,25 @@
+<package format="2">
+  <name>module9</name>
+  <version>0.1.0</version>
+  <description>Demo code for pick and place exercises with Lynxmotion AL5D description</description>
+  <author>Vinny Adjibi</author>
+  <maintainer email="vadjibi@andrew.cmu.edu">Vinny Adjibi</maintainer>
+  <license>BSD</license>
+
+  <url type="repository">https://github.com/cognitive-robotics-course/coro_examples</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <depend>roslisp</depend>
+  <depend>roslisp_utilities</depend>
+  <depend>cl_transforms</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>cram_prolog</depend>
+  <depend>cram_designators</depend>
+  <depend>cram_process_modules</depend>
+  <build_depend>cram_language</build_depend>
+  <build_export_depend>cram_language</build_export_depend>
+  <exec_depend>cram_language</exec_depend>
+ 
+</package>
