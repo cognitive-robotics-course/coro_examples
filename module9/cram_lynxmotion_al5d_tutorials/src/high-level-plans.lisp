@@ -12,16 +12,18 @@
         (let  ((?goal (cl-transforms:make-pose
                         (cl-transforms:v+ (cl-transforms:origin ?destination) 
                             (cl-transforms:make-3d-vector 0 0 (+ *end-effector-length* *grasp-z*)))
-                        (cl-tf:q* (cl-tf:orientation ?destination) (cl-tf:euler->quaternion :ay pi :az 0 )))))
+                        (cl-tf:q* (cl-tf:orientation ?destination) (cl-tf:euler->quaternion :ay pi :az 0 ))))
+                (?gripper-open *gripper-open*)
+                (?gripper-closed *gripper-closed*))
 
             ; Open the end effector
-            (exe:perform (a motion (type grasping) (distance *gripper-open*)))
+            (exe:perform (a motion (type grasping) (distance ?gripper-open)))
             ; Move to the robot approach pose
             (exe:perform (an action (type approaching) (at ?goal)))
             ; Now we go to the grasp pose
             (exe:perform (a motion (type moving) (destination ?goal)))
             ; Close the fingers
-            (exe:perform (a motion (type grasping) (distance *gripper-closed*)))
+            (exe:perform (a motion (type grasping) (distance ?gripper-closed)))
             ; Go back to the approach pose
             (exe:perform (an action (type approaching) (at ?goal)))))
 
@@ -30,18 +32,20 @@
         (let  ((?goal (cl-transforms:make-pose
                         (cl-transforms:v+ (cl-transforms:origin ?destination) 
                             (cl-transforms:make-3d-vector 0 0 (+ *end-effector-length* *grasp-z*)))
-                        (cl-tf:q* (cl-tf:orientation ?destination) (cl-tf:euler->quaternion :ay pi :az 0 )))))
+                        (cl-tf:q* (cl-tf:orientation ?destination) (cl-tf:euler->quaternion :ay pi :az 0 ))))
+                (?gripper-open *gripper-open*)
+                (?gripper-closed *gripper-closed*))
 
             ; Move to the robot approach pose
             (exe:perform (an action (type approaching) (at ?goal)))
             ; Now we go to the grasp pose
             (exe:perform (a motion (type moving) (destination ?goal)))
             ; Open the end effector
-            (exe:perform (a motion (type grasping) (distance *gripper-open*)))
+            (exe:perform (a motion (type grasping) (distance ?gripper-open)))
             ; Go back to the approach pose
             (exe:perform (an action (type approaching) (at ?goal)))
             ; Close the fingers
-            (exe:perform (a motion (type grasping) (distance *gripper-closed*)))))
+            (exe:perform (a motion (type grasping) (distance ?gripper-closed)))))
 
 (defun approach (?target)
     ; Sends the robot to a specific approach pose
