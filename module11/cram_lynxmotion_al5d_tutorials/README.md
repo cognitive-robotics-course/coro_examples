@@ -40,7 +40,7 @@ For all the action designators under this section, the structure used to explain
 + Demoing - *(desig:an action (type demoing))*
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This action is used to run a demonstration of the capabilities of the robot simulator. It is a replication of the
-robotProgramming exercice available (here)[https://github.com/cognitive-robotics-course/coro_examples/tree/main/module4].
+robotProgramming exercise available (here)[https://github.com/cognitive-robotics-course/coro_examples/tree/main/module4].
 
 + Picking - *(desig:an action (type picking) (from \<pose\>))*
 
@@ -73,7 +73,7 @@ This fluent represents the current state of all the joints connected to the robo
 ### Tutorials
 This section will present a set of usage of the package for demonstration purpose. It doesn't explicitly specify how to spawn the bricks because this is assumed to be known by the user. For more details about this, please refer to (the Lynxmotion AL5D simulator documentation)[https://github.com/cognitive-robotics-course/lynxmotion_al5d_description]. 
 
-In order to run the exercice, please open a terminal and execute `roslisp_repl` to start a new LISP session with ROS. You can then type the below function calls at the interpreter prompt.
+In order to run the exercise, please open a terminal and execute `roslisp_repl` to start a new LISP session with ROS. You can then type the below function calls at the interpreter prompt.
 
 ```lisp
 (ros-load:load-system "cram_lynxmotion_al5d_tutorials" :cram-lynxmotion-al5d-tutorials) ; Load the package
@@ -101,12 +101,12 @@ In order to run the exercice, please open a terminal and execute `roslisp_repl` 
 ; rot_z = 135 degrees
 (defvar end-pose (cl-transforms:make-pose (cl-transforms:make-3d-vector 0.06 0.180 0) (cl-transforms:euler->quaternion :az (* 3 (/ pi 4)))))
 
-(defparameter *pick-and-place-exercice* (desig:an action (type picking-and-placing) (from start-pose) (to end-pose))) ; Defines an action designator to run a pick and place exercice
+(defparameter *pick-and-place-exercise* (desig:an action (type picking-and-placing) (from start-pose) (to end-pose))) ; Defines an action designator to run a pick and place exercise
 
-; by default, every action is ran after one second. This is not effective for a pick and place exercice so we update to 3
+; by default, every action is ran after one second. This is not effective for a pick and place exercise so we update to 3
 (setf *default-sleep-time* 3)
 
 (top-level
     (with-process-modules-running (lynxmotion-al5d-navigation)
-        (exe:perform *pick-and-place-exercice*))) ; Executes the action
+        (exe:perform *pick-and-place-exercise*))) ; Executes the action
 ```
