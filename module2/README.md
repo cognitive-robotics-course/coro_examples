@@ -42,6 +42,4 @@ Enter
 
 `rosrun module2 useservices`
 
-to use the example services to clear the simulator and teleport the turtle
-
-
+to use the example services to clear the simulator and teleport the turtle.
