@@ -1,5 +1,5 @@
 /*******************************************************************************************************************
- *   Example pick-and-place program for a LynxMotion AL5D robot arm
+ *   Task-level robot programming for a LynxMotion AL5D robot arm
  *   --------------------------------------------------------------------
  *
  *   Implementation file
@@ -399,7 +399,7 @@ bool move(Frame T5) {
    double ox, oy, oz; // components of orientation vector
    double px, py, pz; // components of position vector
 
-   double tolerance = 0.001;
+   double tolerance = 0.1; // 0.001 to allow for a non-zero x and y translation in the specification of E. DV 29/10/2021
    double r;
    double pitch;
    double roll;
@@ -459,9 +459,9 @@ bool move(Frame T5) {
 
       //gotoPose((float) px, (float) py, (float) pz, (float) pitch, (float) roll);
 
-	  computeJointAngles(px, py, pz, pitch, roll, jointAngles);
+      computeJointAngles(px, py, pz, pitch, roll, jointAngles);
 
-	  setJointAngles(jointAngles);
+      setJointAngles(jointAngles);
 
       return true;
    }
@@ -538,7 +538,7 @@ bool computeJointAngles(double x, double y, double z, double pitch_angle_d, doub
 
 
     // Base angle and radial distance from x,y coordinates
-	// ---------------------------------------------------
+    // ---------------------------------------------------
     double bas_angle_r = atan2(x, y);
     double bas_angle_d = degrees(bas_angle_r);
 
@@ -562,7 +562,7 @@ bool computeJointAngles(double x, double y, double z, double pitch_angle_d, doub
     double a2 = (float) acos(((hum_sq - uln_sq) + s_w) / (2 * A3 * s_w_sqrt));  // David Vernon ... cast to float ... this is angle beta in notes
 
     // Shoulder angle
-	//---------------
+    //---------------
     double shl_angle_r = a1 + a2; // David Vernon ... theta_2 = alpha + beta in notes
     // If result is NAN or Infinity, the desired arm position is not possible
 
@@ -575,14 +575,14 @@ bool computeJointAngles(double x, double y, double z, double pitch_angle_d, doub
     double a2_d = degrees(a2);    // David Vernon ... beta  in notes
 
 
-	// Elbow angle
-	//------------
-	/* Changed original solution to use the negative value of the original angle                                                           */
-	/* This is necessary because the shoulder angle is computed using a1 + a2 (theta_2 = alpha + beta in notes)                            */
-	/* The original value is correct for the a1 - a2 (theta_2 = alpha - beta in notes)                                                     */
-	/* The final servo value was correct because a negative value was used in that calculation                                             */
-	/* David Vernon                                                                                                                        */
-	/* 28 June 2020                                                                                                                        */           
+    // Elbow angle
+    //------------
+    /* Changed original solution to use the negative value of the original angle                                                           */
+    /* This is necessary because the shoulder angle is computed using a1 + a2 (theta_2 = alpha + beta in notes)                            */
+    /* The original value is correct for the a1 - a2 (theta_2 = alpha - beta in notes)                                                     */
+    /* The final servo value was correct because a negative value was used in that calculation                                             */
+    /* David Vernon                                                                                                                        */
+    /* 28 June 2020                                                                                                                        */           
 
     //double elb_angle_r = acos((hum_sq + uln_sq - s_w) / (2 * A3 * A4)); // David Vernon ... cast to float
     double elb_angle_r = acos((s_w - hum_sq - uln_sq) / (2 * A3 * A4)); // Innocent ... calculating the supplementary angle
@@ -608,13 +608,13 @@ bool computeJointAngles(double x, double y, double z, double pitch_angle_d, doub
     /* and the y axis of the wrist (i.e. the orientation vector) is aligned with the y axis of frame Z                                     */
     /* Thus, if T5 is pure translation the the wrist is pointing vertically upward and the plane of the gripper is aligned with the y axis */ 
     /* David Vernon                                                                                                                        */
-	/* 24 April 2018                                                                                                                       */
+    /* 24 April 2018                                                                                                                       */
                                
-	/* Note that this is necessary because the kinematic specification given in M. A. Qassem, I. Abuhadrous, and H. Elaydi,                */
-	/* “Modeling and Simulation of 5 DOF educational robot arm”, 2nd International Conference on Advanced Computer Control (ICACC), 2010.  */
-	/* has the T5 axes aligned in different directions to the base frame                                                                   */
+    /* Note that this is necessary because the kinematic specification given in M. A. Qassem, I. Abuhadrous, and H. Elaydi,                */
+    /* Modeling and Simulation of 5 DOF educational robot arm, 2nd International Conference on Advanced Computer Control (ICACC), 2010.    */
+    /* has the T5 axes aligned in different directions to the base frame                                                                   */
     /* David Vernon                                                                                                                        */
-	/* 25 June 2020                                                                                                                        */         
+    /* 25 June 2020                                                                                                                        */         
 
     //float wri_pitch_angle_d = (pitch_angle_d - elb_angle_dn) - shl_angle_d; // original code
     double wri_pitch_angle_d = (pitch_angle_d - elb_angle_dn) - shl_angle_d + 90; // David Vernon ... added 90
@@ -623,32 +623,32 @@ bool computeJointAngles(double x, double y, double z, double pitch_angle_d, doub
     if (((int) pitch_angle_d == 0))  // directed vertically up
     {
 
-        /* special case: we can adjust the required roll to compensate for the base rotation */
+       /* special case: we can adjust the required roll to compensate for the base rotation */
 
-        // wri_roll_angle_d = roll_angle_d - bas_angle_d;   // original code
-        wri_roll_angle_d = roll_angle_d + bas_angle_d + 90; // gripper orientation aligned with y axis
+       // wri_roll_angle_d = roll_angle_d - bas_angle_d;   // original code
+       wri_roll_angle_d = roll_angle_d + bas_angle_d + 90; // gripper orientation aligned with y axis
 
     }
     else if (((int) pitch_angle_d == -180) || ((int) pitch_angle_d == 180))  // directed vertically down
     {
 
-        /* special case: we can adjust the required roll to compensate for the base rotation */
+       /* special case: we can adjust the required roll to compensate for the base rotation */
 
-        // wri_roll_angle_d = roll_angle_d - bas_angle_d;   // original code
-        wri_roll_angle_d = roll_angle_d - bas_angle_d + 90; // gripper orientation aligned with y axis
+       // wri_roll_angle_d = roll_angle_d - bas_angle_d;   // original code
+       wri_roll_angle_d = roll_angle_d - bas_angle_d + 90; // gripper orientation aligned with y axis
     }
     else
     {
-        // should really throw an exception here because this isn't correct
-        wri_roll_angle_d = roll_angle_d; // original code
-        wri_roll_angle_d = roll_angle_d + 90;
+       // should really throw an exception here because this isn't correct
+       wri_roll_angle_d = roll_angle_d; // original code
+       wri_roll_angle_d = roll_angle_d + 90;
     }
 
-	joint_angles[0] = bas_angle_r;
-	joint_angles[1] = shl_angle_r;
-	joint_angles[2] = elb_angle_r;
-	joint_angles[3] = radians(wri_pitch_angle_d);
-	joint_angles[4] = radians(wri_roll_angle_d);
+    joint_angles[0] = bas_angle_r;
+    joint_angles[1] = shl_angle_r;
+    joint_angles[2] = elb_angle_r;
+    joint_angles[3] = radians(wri_pitch_angle_d);
+    joint_angles[4] = radians(wri_roll_angle_d);
 
     if (debug) {
       // printf("Joint 1 (degrees): %4.2f \n",degrees(bas_angle_r));
@@ -656,7 +656,7 @@ bool computeJointAngles(double x, double y, double z, double pitch_angle_d, doub
       // printf("Joint 3 (degrees): %4.2f \n",elb_angle_d);
       // printf("Joint 4 (degrees): %4.2f \n",wri_pitch_angle_d);
       // printf("Joint 5 (degrees): %4.2f \n",wri_roll_angle_d);
-	   printf("\n");
+       printf("\n");
        printf("Joint 1 (radians): %4.2f \n",joint_angles[0]);
        printf("Joint 2 (radians): %4.2f \n",joint_angles[1]);
        printf("Joint 3 (radians): %4.2f \n",joint_angles[2]);
@@ -675,7 +675,7 @@ bool computeJointAngles(double x, double y, double z, double pitch_angle_d, doub
 
    If using ROS, this is effected by publishing the joint angles on the /lynxmotion_al5d/joints_positions/command topic 
 
-   If not using ROS but controlling the robot from Windows, this is effected by 
+   If not using ROS but controlling the robot directly from either Ubuntu or  Windows, this is effected by 
    transforming from joint angles to servo position values and writing the servo position values to the COM port
  
    David Vernon
@@ -685,71 +685,77 @@ bool computeJointAngles(double x, double y, double z, double pitch_angle_d, doub
 
 bool setJointAngles(double joint_angles[]) {
 
-	bool debug = false; 
-    int positions[6];       
-    bool valid_pose;   
+   bool debug = false; 
+   int positions[6];       
+   bool valid_pose;   
 
-    if (debug) printf("setJointAngles(): angles %4.2f %4.2f %4.2f %4.2f %4.2f\n", joint_angles[0], joint_angles[1],joint_angles[2],joint_angles[3],joint_angles[4]);
+   if (debug) printf("setJointAngles(): angles %4.2f %4.2f %4.2f %4.2f %4.2f\n", joint_angles[0], joint_angles[1],joint_angles[2],joint_angles[3],joint_angles[4]);
 
 #ifdef ROS
 
-	/* ROS version: PUT ROS PUBLISHER CODE HERE */
+   /* ROS version: PUT ROS PUBLISHER CODE HERE */
 
-	/* copy joint angles to the globally-accessible structure so that they can be used when constucting the topic message in the grasp() function */
+   /* copy joint angles to the globally-accessible structure so that they can be used when constucting the topic message in the grasp() function */
 
-	for (int i=0; i<5; i++) {
-		robotConfigurationData.current_joint_value[i] = joint_angles[i];
-	}
+   for (int i=0; i<5; i++) {
+      robotConfigurationData.current_joint_value[i] = joint_angles[i];
+   }
 
-	/* now construct the topic message with all six joint values: five for the joint angles and one for the gripper */
-	/* use the values in robotConfigurationData.current_joint_value[]                                               */
+   /* now construct the topic message with all six joint values: five for the joint angles and one for the gripper */
+   /* use the values in robotConfigurationData.current_joint_value[]                                               */
 
-		ros::NodeHandle n;                        // Become a node
-        ros::Publisher pub_ = n.advertise<std_msgs::Float64MultiArray>("/lynxmotion_al5d/joints_positions/command", 1000);
-	ros::Rate rate(2); // Loop at 2Hz until the node is shut down
+   ros::NodeHandle n;                        // Become a node
+   ros::Publisher pub_ = n.advertise<std_msgs::Float64MultiArray>("/lynxmotion_al5d/joints_positions/command", 1000);
+   ros::Rate rate(2); // Loop at 2Hz until the node is shut down
 
-	/* Create a subscriber object */
-	ros :: Subscriber sub = n.subscribe("/lynxmotion_al5d/joint_states", 1000, &jointStates);
+   /* Create a subscriber object */
+   ros :: Subscriber sub = n.subscribe("/lynxmotion_al5d/joint_states", 1000, &jointStates);
 
-	// MultiArray message
-	std_msgs::Float64MultiArray msg;
+   // MultiArray message
+   std_msgs::Float64MultiArray msg;
 
-	std::vector<float> joints_values;
-
+   std::vector<float> joints_values;
 	
-	/* publish the message on the topic */
+   /* publish the message on the topic */
 
-	joints_values = {robotConfigurationData.current_joint_value[0], robotConfigurationData.current_joint_value[1], robotConfigurationData.current_joint_value[2], robotConfigurationData.current_joint_value[3], robotConfigurationData.current_joint_value[4], robotConfigurationData.current_joint_value[5]};
-
+   joints_values = {robotConfigurationData.current_joint_value[0],
+                    robotConfigurationData.current_joint_value[1],
+		    robotConfigurationData.current_joint_value[2],
+		    robotConfigurationData.current_joint_value[3],
+		    robotConfigurationData.current_joint_value[4],
+		    robotConfigurationData.current_joint_value[5]};
 	   
-	   msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
-	   msg.layout.dim[0].size = joints_values.size();
-	   msg.layout.dim[0].stride = 1;
-	   msg.layout.dim[0].label = "joints";
+   msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+   msg.layout.dim[0].size = joints_values.size();
+   msg.layout.dim[0].stride = 1;
+   msg.layout.dim[0].label = "joints";
 
-	   msg.data.clear();
-	   msg.data.insert(msg.data.end(), joints_values.begin(), joints_values.end());
-
-
-	   /* Waiting for the publisher to be ready to publish the message */
-	   while(pub_.getNumSubscribers()<1)
-	     {
-	       // waiting for a connection to publisher
-	     }
+   msg.data.clear();
+   msg.data.insert(msg.data.end(), joints_values.begin(), joints_values.end());
 
 
+   /* Waiting for the publisher to be ready to publish the message */
 	   
-	   pub_.publish(msg); // publishing the message
+   while (pub_.getNumSubscribers()<1) {
+	     
+      // waiting for a connection to publisher
 
+      break; // don't wait so that we can run even when the simulator is not running. David Vernon 18/10/2021
+	     
+   }
+	   
+    pub_.publish(msg); // publishing the message
 
+#endif
 
+    /* Windows and Ubuntu direct control of the physical robot */
+    /* ------------------------------------------------------- */
 
+    /*** this code needs to be moved to a dedicated lynxmotionController node which will subscribe to the /lynxmotion_al5d/joints_positions/command topic (see above) ***/
+    /*** we can then run either the lynxmotion simulator or the lynxmotionController depending on whether we are using the simulator or the real robot                ***/
+    /*** better still, move the inverse kinematics too and publish a pose (vector & quaternion) instead of the joint angles                                           ***/
 
-#else
-
-	/* Windows version */
-
-	valid_pose = computeServoPositions(joint_angles, positions);
+    valid_pose = computeServoPositions(joint_angles, positions);
 
     if (valid_pose) {
         
@@ -763,8 +769,6 @@ bool setJointAngles(double joint_angles[]) {
        printf("setJointAngles() error: not a valid pose for this robot\n");
        return 0;
     }
-
-#endif 
 }
 
 /* computeServoPositions()
@@ -852,71 +856,72 @@ void grasp(int d) // d is distance between finger tips:  0 <= d <= 30 mm
 
 #ifdef ROS
 
-	/* ROS version: PUT ROS PUBLISHER CODE HERE */
+    /* ROS version: PUT ROS PUBLISHER CODE HERE */
 
-	/* copy the gripper distance angles to the globally-accessible structure so that it can be used when constucting the topic message in the setJointAngles() function */
+    /* copy the gripper distance angles to the globally-accessible structure so that it can be used when constucting the topic message in the setJointAngles() function */
 
-   robotConfigurationData.current_joint_value[5] = ((double) d) / 1000;
+    robotConfigurationData.current_joint_value[5] = ((double) d) / 1000;
    
+       
+    /* now construct the topic message with all six joint values: five for the joint angles and one for the gripper */
+    /* use the values in robotConfigurationData.current_joint_value[]                                               */
+
+    ros::NodeHandle n;                        // Become a node
+    ros::Publisher pub = n.advertise<std_msgs::Float64MultiArray>("/lynxmotion_al5d/joints_positions/command", 1000);
+    ros::Rate rate(2); // Loop at 2Hz until the node is shut down
+
+    /* Create a subscriber object */
+    ros :: Subscriber sub = n.subscribe("/lynxmotion_al5d/joint_states", 1000, jointStates);
+
+    // MultiArray message
+    std_msgs::Float64MultiArray msg;
+
+    std::vector<float> joints_values;
+
+    /* publish the message on the topic */
+
+    joints_values = {robotConfigurationData.current_joint_value[0],
+		     robotConfigurationData.current_joint_value[1],
+		     robotConfigurationData.current_joint_value[2],
+		     robotConfigurationData.current_joint_value[3],
+		     robotConfigurationData.current_joint_value[4],
+		     robotConfigurationData.current_joint_value[5]};
 	
+    msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    msg.layout.dim[0].size = joints_values.size();
+    msg.layout.dim[0].stride = 1;
+    msg.layout.dim[0].label = "joints";
 
-	/* now construct the topic message with all six joint values: five for the joint angles and one for the gripper */
-	/* use the values in robotConfigurationData.current_joint_value[]                                               */
+    msg.data.clear();
+    msg.data.insert(msg.data.end(), joints_values.begin(), joints_values.end());
 
-		ros::NodeHandle n;                        // Become a node
-        ros::Publisher pub = n.advertise<std_msgs::Float64MultiArray>("/lynxmotion_al5d/joints_positions/command", 1000);
-	ros::Rate rate(2); // Loop at 2Hz until the node is shut down
-
-	/* Create a subscriber object */
-	ros :: Subscriber sub = n.subscribe("/lynxmotion_al5d/joint_states", 1000, jointStates);
-
-	// MultiArray message
-	std_msgs::Float64MultiArray msg;
-
-	std::vector<float> joints_values;
-
-
-
-	/* publish the message on the topic */
-
-	joints_values = {robotConfigurationData.current_joint_value[0], robotConfigurationData.current_joint_value[1], robotConfigurationData.current_joint_value[2], robotConfigurationData.current_joint_value[3], robotConfigurationData.current_joint_value[4], robotConfigurationData.current_joint_value[5]};
-	
-
-	   msg.layout.dim.push_back(std_msgs::MultiArrayDimension());
-	   msg.layout.dim[0].size = joints_values.size();
-	   msg.layout.dim[0].stride = 1;
-	   msg.layout.dim[0].label = "joints";
-
-	   msg.data.clear();
-	   msg.data.insert(msg.data.end(), joints_values.begin(), joints_values.end());
-
-	   /* Waiting for the publisher to be ready to publish the message */
-	   while(pub.getNumSubscribers()<1)
-	     {
-	       // Waiting for connection to publisher
-	     }
-
-
-	   pub.publish(msg); // publishing the message
-
+    /* Waiting for the publisher to be ready to publish the message */
 	   
+    while(pub.getNumSubscribers()<1) {
+	     
+       // Waiting for connection to publisher
+	     
+       break; // don't wait David Vernon 18/10/2021 so that we can proceed if the simulator is not running
+    }
 
+    pub.publish(msg); // publishing the message
 
+#endif
 
-#else
+   /* Windows and Ubuntu direct control of physical robot */
 
-   /* Windows version */
-
+   /*** this code needs to be moved to a dedicated lynxmotionController node which will subscribe to the /lynxmotion_al5d/joints_positions/command topic (see above) ***/
+   /*** we can then run either the lynxmotion simulator or the lynxmotionController depending on whether we are using the simulator or the real robot                ***/
+   /*** better still, move the inverse kinematics too and publish a pose (vector & quaternion) instead of the joint angles                                           ***/
+    
    pw = robotConfigurationData.home[5] + (int) (float (30-d) * robotConfigurationData.degree[5]);
 
    if (debug) {
       printf("grasp: %d\n",d);
      // printf("grasp: d %d  PW %d\n", d, pw);
    }
+   
    executeCommand(robotConfigurationData.channel[5], pw, robotConfigurationData.speed * 2);   
-
-#endif
-
 }
 
 

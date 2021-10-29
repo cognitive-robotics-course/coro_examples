@@ -18,9 +18,6 @@
    
    to publish the joint angles on the /lynxmotion_al5d/joints_positions/command topic with ROS
 
-   If left commented out, these two functions write the servocontrol setpoints to the COM port on Windows
-
-   NOTE: the ROS publisher code has not yet been written
 */
 
 #define ROS  
@@ -41,6 +38,8 @@
     #include <std_msgs/Float64.h>
     #include <std_msgs/Float64MultiArray.h>
     #include <sensor_msgs/JointState.h>
+    #include <lynxmotion_al5d_description/SpawnBrick.h>
+    #include <lynxmotion_al5d_description/KillBrick.h>
 #endif
 
 using namespace std;

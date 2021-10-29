@@ -2,7 +2,7 @@
 *   Example pick-and-place program for a LynxMotion AL5D robot arm
 *   ---------------------------------------------------------------
 *
-*   This application implements a simple robot program to grasp a simple object (a block),
+*   This application implements a simple robot program to grasp a simple object (a Lego brick),
 *   lift it up, and place it somewhere else.  
 *   
 *   The position and orientation (pose) of the object and the goal position are specified in the input file.
@@ -19,9 +19,8 @@
 *
 *   The third line contains the destination pose, i.e. the x, y, and z coordinates and the phi angle of the destination (i.e. rotation about z).
 *
-*   It is assumed that the input file is located in a data directory given by the path ../data/ 
-*   defined relative to the location of executable for this application.
-*
+*   It is assumed that the input file is located in a data directory. The location of this directory depends on whether 
+*   we are running on Ubuntu with ROS or on Windows.
 *
 *   David Vernon, Carnegie Mellon University Africa
 *   4 February 2020
@@ -57,6 +56,14 @@
 *   David Vernon
 *   21 March 2021
 *
+*   Changed the gripper distance to 15 mm when grasping the object and changed the approach distance to 40 mm
+*   David Vernon
+*   18 October 2021
+*
+*   Added a flag to indicate whether or not the simulator is being used
+*   David Vernon
+*   28 October 2021
+*
 *******************************************************************************************************************/
 
 #include <stdlib.h>
@@ -74,9 +81,11 @@ int main(int argc, char ** argv) {
    #endif
 
    extern robotConfigurationDataType robotConfigurationData;
+
+   bool simulator = false;         // set this to true if using the simulator; we will move this to the input file at some point
    
-   bool debug = true;
-   
+   bool debug = true;              // set this to false for silent mode
+
    FILE *fp_in;                    // pickAndPlace input file
    int  end_of_file; 
    char robot_configuration_filename[MAX_FILENAME_LENGTH];
@@ -123,8 +132,7 @@ int main(int argc, char ** argv) {
                                     // and directly from the grasp pose to the final depart pose 
 
 #ifdef ROS   
-   bool create_brick = true;       // if true, spawn a brick at the specified location
-   
+   bool   create_brick = false;     // if true, spawn a brick at the specified location when using the simulator
    string name       = "brick1";    // name and colors for option to spawn and kill a brick
    string colors[3]  = {"red", "green", "blue"};
 #endif
@@ -194,30 +202,32 @@ int main(int argc, char ** argv) {
    /* Normally, we would instantiate the brick using the terminal to mimic the way we would do it    */
    /* when using the physical robot, i.e. manually positioning it for the robot to pick and place    */
 
-   if (create_brick) {
+   if (simulator) {
+      if (create_brick) {
      
-       /* Spawn the brick at the specified position */
-       /* Randomly pick a color                     */
+         /* Spawn the brick at the specified position */
+         /* Randomly pick a color                     */
 
-       srand(time(NULL));
+         srand(time(NULL));
 
-       if (debug) {
-          printf("Spawning brick with name %s at position (%.2f %.2f %.2f %.2f)\n",
-	         name.c_str(), object_x, object_y, object_z, object_phi);
-       }
+         if (debug) {
+            printf("Spawning brick with name %s at position (%.2f %.2f %.2f %.2f)\n",
+                   name.c_str(), object_x, object_y, object_z, object_phi);
+         }
      
-       /* Call the utility function */
+         /* Call the utility function */
        
-       spawn_brick(name, colors[rand() % 3], object_x, object_y, object_z, object_phi);
+         spawn_brick(name, colors[rand() % 3], object_x, object_y, object_z, object_phi);
+      }
    }
 #endif     
    
    /* now start the pick and place task */
    /* --------------------------------- */
 
-   initial_approach_distance = 20;
-   final_depart_distance     = 20;
-   delta = 2;
+   initial_approach_distance = 60; // 40
+   final_depart_distance     = 60; // 40
+   delta                     = 5;
   
    E               = trans((float) robotConfigurationData.effector_x,                            // end-effector (gripper) frame
 	                   (float) robotConfigurationData.effector_y,                            // is initialized from data
@@ -238,7 +248,7 @@ int main(int argc, char ** argv) {
    grasp(GRIPPER_OPEN);
 
 #ifdef ROS
-      wait(5000); // wait to allow the simulator to go to the home pose before beginning
+      wait(2000); // wait to allow the simulator to go to the home pose before beginning
                   // we need to do this because the simulator does not initialize in the home pose
 #endif
 
@@ -253,7 +263,7 @@ int main(int argc, char ** argv) {
 
    if (move(T6) == false) display_error_and_exit("move error ... quitting\n");;
 
-   wait(2000); 
+   wait(5000); 
 
 
    if (continuous_path) {
@@ -292,7 +302,7 @@ int main(int argc, char ** argv) {
 
    if (debug) printf("Closing gripper\n");
 
-   grasp(GRIPPER_CLOSED);
+   grasp(12); // the width of the brick, in mm
 
    wait(1000);
 
@@ -418,22 +428,24 @@ int main(int argc, char ** argv) {
 
 #ifdef ROS
 
+   if (simulator)  {
+      if (create_brick) {
 
-   if (create_brick) {
-
-       prompt_and_continue();
+         prompt_and_continue();
 	
-       /* Remove the brick for the next time  */
-       /* ----------------------------------- */
+         /* Remove the brick for the next time  */
+         /* ----------------------------------- */
 
-       if (debug) {
-	  printf("Killing brick named %s\n",name.c_str());
-       }
+         if (debug) {
+            printf("Killing brick named %s\n",name.c_str());
+         }
      
-       /* Call the utility function */
+         /* Call the utility function */
        
-       kill_brick(name);
+         kill_brick(name);
+      }
    }
+   
 #endif
    
    return 0;

@@ -104,7 +104,7 @@ int main(int argc, char ** argv) {
 
    extern robotConfigurationDataType robotConfigurationData;
 
-   bool debug = true;
+   bool debug = false;
 
    FILE *fp_in;                        // robotProgramming input file
    int end_of_file; 
@@ -188,7 +188,7 @@ int main(int argc, char ** argv) {
       readRobotConfigurationData(filename);
 	  	 
       goHome();    // not strictly necessary ... just for demonstration
-      wait(2000);  // wait for 2 seconds
+      wait(4000);  // wait for 4 seconds
    
 
       effector_length = (float) robotConfigurationData.effector_z;
@@ -210,6 +210,8 @@ int main(int argc, char ** argv) {
       /* gripper to be                                                                         */
       /*****************************************************************************************/
 
+      if (debug) printf("Aligning gripper with base frame\n");
+      
       example_pose = trans(example_x, example_y, example_z+effector_length); 
 
       T5 = inv(Z) * example_pose * inv(E);
@@ -226,6 +228,8 @@ int main(int argc, char ** argv) {
       /* gripper to be                                                                         */
       /*****************************************************************************************/
 
+      if (debug) printf("Aligning gripper with base frame and rotating 90 degrees about z\n");
+	    
       example_pose = trans(example_x, example_y, example_z+effector_length) *  rotz(90.0);
 
       T5 = inv(Z) * example_pose * inv(E);
@@ -243,6 +247,8 @@ int main(int argc, char ** argv) {
       /* gripper to be                                                                         */
       /*****************************************************************************************/
 
+      if (debug) printf("Home configuration achieved by specifying T5\n");
+      
       example_pose = trans(example_x, example_y+effector_length, example_z) *  rotz(90.0) * roty(90); 
 
       T5 = inv(Z) * example_pose * inv(E);
@@ -255,6 +261,8 @@ int main(int argc, char ** argv) {
       /* same pose as above ... but different combination of rotations to achieve it           */
       /*****************************************************************************************/
 
+      if (debug) printf("Home configuration achieved by specifying T5 with alternative combination of rotations\n");
+	    
       example_pose = trans(example_x, example_y+effector_length, example_z) *  roty(90.0) * rotx(-90); 
 
       T5 = inv(Z) * example_pose * inv(E);
@@ -267,6 +275,8 @@ int main(int argc, char ** argv) {
       /* same wrist orientation as above but with the wrist now 40mm above to the work surface */
       /*****************************************************************************************/
 
+      if (debug) printf("T5 40 mm above the work surface\n");
+	    
       example_pose = trans(example_x, example_y+effector_length, 40) *  rotz(90.0) * roty(90); 
 
       T5 = inv(Z) * example_pose * inv(E);

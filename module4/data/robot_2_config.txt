@@ -1,4 +1,4 @@
-COM     COM3
+COM     /dev/ttyUSB0
 BAUD    9600
 SPEED   500
 CHANNEL 0 1 2 3 4 5

@@ -15,9 +15,6 @@
    
    to publish the joint angles on the /lynxmotion_al5d/joints_positions/command topic with ROS
 
-   If left commented out, these two functions write the servocontrol setpoints to the COM port on Windows
-
-   NOTE: the ROS publisher code has not yet been written
 */
 
 #define ROS  
