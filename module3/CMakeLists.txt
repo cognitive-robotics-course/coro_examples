@@ -24,3 +24,7 @@ install(DIRECTORY data/
 add_executable       (${PROJECT_NAME}_goToPosition src/goToPositionImplementation.cpp src/goToPositionApplication.cpp)
 set_target_properties(${PROJECT_NAME}_goToPosition PROPERTIES OUTPUT_NAME goToPosition  PREFIX "")
 target_link_libraries(${PROJECT_NAME}_goToPosition ${catkin_LIBRARIES})
+
+add_executable       (${PROJECT_NAME}_goToPoseCreate src/goToPoseCreateImplementation.cpp src/goToPoseCreateApplication.cpp)
+set_target_properties(${PROJECT_NAME}_goToPoseCreate PROPERTIES OUTPUT_NAME goToPoseCreate  PREFIX "")
+target_link_libraries(${PROJECT_NAME}_goToPoseCreate ${catkin_LIBRARIES})
