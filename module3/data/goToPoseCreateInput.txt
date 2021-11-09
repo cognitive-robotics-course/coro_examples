@@ -1,6 +1,4 @@
 parameters.txt
 setpose     0     0      0
-goto1       0     1.2    1.57
-goto1       1.2   1.2    0
-goto1       1.2   0      -1.57
-goto1       0     0      0
+goto1       0     1.2    0
+goto2       0     0      0
