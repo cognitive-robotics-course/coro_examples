@@ -32,13 +32,11 @@
 *   Sample Input
 *   parameters.txt
 *   setpose    0   0  0  
-*   goto1      0 120  0
-*   goto1    120 120 -1.57
-*   goto1    120   0  3.14
+*   goto1      0 1.2  0
 *   goto2      0   0  0
 *
 *   David Vernon
-*   8 November 2021
+*   9 November 2021
 *
 *   Audit Trail
 *   -----------
