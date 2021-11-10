@@ -14,7 +14,7 @@
 *  Each command comprises four fields:
 *  a key string  (either "setpose", "goto1", or "goto2") followed by three floating point numbers.
 *  
-*  The three numbers give the pose of the robot (x, y, theta), specified in centimetres and degrees, respectively.
+*  The three numbers give the pose of the robot (x, y, theta), specified in centimetres and radians, respectively.
 *
 *  In the case of the "setpose" command, the three numbers define the current absolute pose of the robot. 
 *  This pose is use to register the pose data provided by odometry (which is relative to some arbitrary initial pose)

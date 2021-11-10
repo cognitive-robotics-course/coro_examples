@@ -301,8 +301,15 @@ We set the values of the adjustment variables to be the difference between
 (a) the values associated with the start pose, and                                                    
 (b) the values published on the odom topic on start up (or whenever we reinitialize the odometry),    
                                                                                                       
-The callback then sets the values of the current variables to be the values of the odom variables plus
-the values of the adjustment variables                                                                
+The callback then sets the values of the current variables as follows.
+
+- the current x and y values are set to the sum of the adjustment x and y values and the odom x and y values 
+  (this effectively translates the odom x and y values by the adjustment x and y values) 
+
+- these translated values are then rotated about the Z axis by an angle equal to the difference 
+  between the start theta value  and the odom theta value
+
+- the current theta value is set to be the sum of the adjustment theta value and the odom theta value                                                            
 
 **********************************************************************************/
 
