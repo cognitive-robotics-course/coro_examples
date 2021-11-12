@@ -54,7 +54,7 @@ main(int argc, char **argv) {
    FILE                 *fp_in;                    
    std::string          packagedir;
    char                 path[MAX_FILENAME_LENGTH];
-   char                 input_filename[MAX_FILENAME_LENGTH]                 = "goToPoseInput.txt";
+   char                 input_filename[MAX_FILENAME_LENGTH]                 = "goToPoseCreateInput.txt";
    char                 locomotion_parameter_filename[MAX_FILENAME_LENGTH]  = "";
    char                 path_and_input_filename[MAX_FILENAME_LENGTH]        = "";
    int                  end_of_file;
