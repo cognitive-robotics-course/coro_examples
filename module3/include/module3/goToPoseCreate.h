@@ -36,7 +36,7 @@
 
 using namespace std;
 
-#define ROS_PACKAGE_NAME    "rpp_exercises"
+#define ROS_PACKAGE_NAME    "module3"
 #define PI 3.14159
 
 /***************************************************************************************************************************
