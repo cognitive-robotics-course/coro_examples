@@ -21,6 +21,61 @@
 *
 *   It is assumed that the input file is located in a data directory. The location of this directory depends on whether 
 *   we are running on Ubuntu with ROS or on Windows.
+*   This application implements robot programming with frames (homogeneous transformations)
+*   using the Frame and Vector classes and auxilliary friend functions, all defined in the interface file
+*  
+*   The frames are defined in a Cartesian frame of reference and use an inverse kinematic model 
+*   to map to the robot joint space.
+*
+*   Different AL5D robots are accommodated by reading the required calibration data from a robot-specific configuration file.
+*   The configuration filename is provided in the robotProgrammingInput.txt file.
+*   This allows the application to be easily adapted to the different robots used in class exercises.
+*   The configuration file contains the following data, specified using key-value pairs
+*
+*   COM       <serial port name>
+*   BAUD      <rate>
+*   SPEED     <value>
+*   CHANNEL   <servo 1 pin number> <servo 2 pin number> <servo 3 pin number> <servo 4 pin number> <servo 5 pin number> <servo 6 pin number> 
+*   HOME      <servo 1 setpoint>   <servo 2 setpoint>   <servo 3 setpoint>   <servo 4 setpoint>   <servo 5 setpoint>   <servo 6 setpoint> 
+*   DEGREE    <servo 1 pulses>     <servo 2 pulses>     <servo 3 pulses>     <servo 4 pulses>     <servo 5 pulses>     <servo 6 pulses>
+*   WRIST     <wrist type>
+*   CURRENT   <joint 1 angle> <joint 2 angle> <joint 3 angle> <joint 4 angle> <joint 5 angle> <gripper distance>
+*   SIMULATOR <flag value>
+*
+*   The serial port name is assigned automatically by the operating system when the robot's USB-to-serial port is connected to the computer
+*   e.g., COM0, COM6, ... 
+*
+*   The baud rate is also assigned automatically by the operating system when the robot's USB-to-serial port is connected to the computer
+*   e.g., 9600
+*
+*   The speed value determines the default servo speed.  This is specified microseconds per second, e.g. 500
+*   "For a better understanding of the speed argument, consider that 1000uS of travel will result in around 90° of rotation. 
+*   A speed value of 100uS per second means the servo will take 10 seconds (divide 1000 by 100) to move 90°. 
+*   Alternately, a speed value of 2000uS per second equates to 500mS (half a second) to move 90° (divide 1000 by 2000)."
+*   Taken from lynxmotion_ssc-32u_usb_user_guide.pdf
+*
+*   The channel data specifies which pins on the SSC-32U servo-controller board are used for each servo motor.
+*   Normally, servo 1 is controlled using pin 0, servo 2 using pin 1, ...   
+*   However, sometimes different pins are used, e.g. in the case of the servo-controller for robot 1 where pin 2 malfunctions
+*   and instead pin 6 is used to control servo 3.
+*
+*   The home data specifies the servo setpoint value required to position the robot in the pre-defined home position with 
+*   joint angles 0, 1.57 radians, -1.57 radians, 0, 0, respectively, and gripper fully open (0.030 m).
+*   These setpoint values are specified in microseconds: 
+*   typically 500 microseconds corresponds to the servo-motor positioned at one extreme and 2500 microseconds to the other extreme.
+*
+*   The degree data specifies the pulse width per degree for each servo. In theory, these should be identical for all servos 
+*   but in practice they are not and the value specified are determined using a calibration exercise. 
+*
+*   The wrist data specifies whether the wrist is a lightweight wrist or a heavy duty wrist. The key values are "lightweight" or "heavyduty"
+*   This information is used to determine which direction the roll servo should turn (the heavy duty wrist reverses the direction)
+*   
+*   The current data specifies the initial joint angles in radians and the gripper distance in metres
+*   This information is updated every time either setJointAngles() or grasp() is called 
+*   and is used in constructing the message to be published on the ROS topic when using ROS to control the robot or the simulator
+*
+*   The simulator data specifies whether to use the simulator or the physical robot.  The key values are "TRUE" or "FALSE".
+*
 *
 *   David Vernon, Carnegie Mellon University Africa
 *   4 February 2020
@@ -63,35 +118,38 @@
 *   Added a flag to indicate whether or not the simulator is being used
 *   David Vernon
 *   28 October 2021
+* 
+*   Moved the simulator flag to the robotConfigurationData data structure and added added functionality to the 
+*   readRobotConfigurationData() function to read the flag from the configuration file.
+*   Removed the ROS conditional compilation (i.e. no longer focussing on backward compatability with Windows).
+*   It's all ROS from now on.
+*   David Vernon
+*   11 February 2022
 *
 *******************************************************************************************************************/
 
 #include <stdlib.h>
 #include <time.h>
-#ifdef WIN32
-    #include "pickAndPlace.h"
-#else
-    #include <module4/pickAndPlace.h>
-#endif
+#include <module4/pickAndPlace.h>
+#include <module4/lynxmotionUtilities.h>
+
 
 int main(int argc, char ** argv) {
   
-   #ifdef ROS
-       ros::init(argc, argv, "pickAndPlace"); // Initialize the ROS system
-   #endif
+   ros::init(argc, argv, "pickAndPlace"); // Initialize the ROS system
 
    extern robotConfigurationDataType robotConfigurationData;
 
-   bool simulator = false;         // set this to true if using the simulator; we will move this to the input file at some point
    
    bool debug = true;              // set this to false for silent mode
 
    FILE *fp_in;                    // pickAndPlace input file
    int  end_of_file; 
    char robot_configuration_filename[MAX_FILENAME_LENGTH];
-   char filename[MAX_FILENAME_LENGTH] = {};
+   char filename[MAX_FILENAME_LENGTH]  = {};
    char directory[MAX_FILENAME_LENGTH] = {};
-
+   int  small_delay = 200;
+   
    /* Frame objects */
    
    Frame E;
@@ -126,29 +184,22 @@ int main(int argc, char ** argv) {
    float final_depart_distance;     // start the approach from this distance
    float delta;                     // increment in approach and depart distance 
 
-   bool continuous_path = true;    // if true, implement approximation of continuous path control
+   bool continuous_path = true;     // if true, implement approximation of continuous path control
                                     // when approaching and departing the grasp pose
                                     // otherwise just move directly from the initial approach pose to the grasp pose
                                     // and directly from the grasp pose to the final depart pose 
 
-#ifdef ROS   
-   bool   create_brick = false;     // if true, spawn a brick at the specified location when using the simulator
+   bool   create_brick = true;     // if true, spawn a brick at the specified location when using the simulator
    string name       = "brick1";    // name and colors for option to spawn and kill a brick
    string colors[3]  = {"red", "green", "blue"};
-#endif
 
    
    /* open the input file */
    /* ------------------- */
 
-   /* Set the filename. Different directories for ROS and Windows versions */
+   /* Set the filename */
    
-#ifdef ROS
     strcat(directory, (ros::package::getPath(ROS_PACKAGE_NAME) + "/data/").c_str());
-#else
-    strcat(directory, "../data/");// On Windows the exec is in bin, so we go in the parent directory first
-#endif
-
     strcpy(filename, directory);
     strcat(filename, "pickAndPlaceInput.txt"); // Input filename matches the application name
    if ((fp_in = fopen(filename, "r")) == 0) {
@@ -196,13 +247,11 @@ int main(int argc, char ** argv) {
    if (debug) printf("Destination pose %f %f %f %f\n", destination_x, destination_y, destination_z, destination_phi);
 
    
-#ifdef ROS
-
    /* If we are using the simulator on ROS, we can instantiate the brick here to help with debugging */
    /* Normally, we would instantiate the brick using the terminal to mimic the way we would do it    */
    /* when using the physical robot, i.e. manually positioning it for the robot to pick and place    */
 
-   if (simulator) {
+   if (robotConfigurationData.simulator) {
       if (create_brick) {
      
          /* Spawn the brick at the specified position */
@@ -220,7 +269,7 @@ int main(int argc, char ** argv) {
          spawn_brick(name, colors[rand() % 3], object_x, object_y, object_z, object_phi);
       }
    }
-#endif     
+   
    
    /* now start the pick and place task */
    /* --------------------------------- */
@@ -247,11 +296,10 @@ int main(int argc, char ** argv) {
    
    grasp(GRIPPER_OPEN);
 
-#ifdef ROS
+   if (robotConfigurationData.simulator) {
       wait(2000); // wait to allow the simulator to go to the home pose before beginning
                   // we need to do this because the simulator does not initialize in the home pose
-#endif
-
+   }
    
 
    /* move to the pick approach pose */
@@ -280,10 +328,13 @@ int main(int argc, char ** argv) {
 	 
          if (move(T6) == false) display_error_and_exit("move error ... quitting\n");  
 
+	 wait(small_delay);
+	 
          approach_distance = approach_distance - delta;                              
       }
    }
 
+ 
    
    /* move to the pick pose */
    /* --------------------- */
@@ -302,7 +353,7 @@ int main(int argc, char ** argv) {
 
    if (debug) printf("Closing gripper\n");
 
-   grasp(12); // the width of the brick, in mm
+   grasp(GRIPPER_CLOSED); // just less than the width of the brick, in mm, to apply some lateral pressure
 
    wait(1000);
 
@@ -326,7 +377,9 @@ int main(int argc, char ** argv) {
                                                                               
          if (move(T6) == false) display_error_and_exit("move error ... quitting\n"); 
 
-         depart_distance = depart_distance + delta;
+	 wait(small_delay);
+
+	 depart_distance = depart_distance + delta;
       }
    }
 
@@ -369,8 +422,10 @@ int main(int argc, char ** argv) {
 	
          T6 = inv(Z) * destination * object_grasp * object_approach * inv(E);   
                                                                                   
-         if (move(T6) == false) display_error_and_exit("move error ... quitting\n");  
-
+         if (move(T6) == false) display_error_and_exit("move error ... quitting\n");
+	 
+	 wait(small_delay);
+	 
          approach_distance = approach_distance - delta;
       }
    }
@@ -409,6 +464,8 @@ int main(int argc, char ** argv) {
                                                                               
          if (move(T6) == false) display_error_and_exit("move error ... quitting\n"); 
 
+	 wait(small_delay);
+		 
          depart_distance = depart_distance + delta;
       }
    }
@@ -426,9 +483,8 @@ int main(int argc, char ** argv) {
              // it's in a pose that is close to the one that the servo-controller uses as its initial state
              // could also do this with a move() as show above
 
-#ifdef ROS
 
-   if (simulator)  {
+   if (robotConfigurationData.simulator)  {
       if (create_brick) {
 
          prompt_and_continue();
@@ -445,8 +501,6 @@ int main(int argc, char ** argv) {
          kill_brick(name);
       }
    }
-   
-#endif
-   
+      
    return 0;
 }

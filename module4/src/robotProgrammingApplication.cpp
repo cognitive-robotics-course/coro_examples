@@ -8,35 +8,20 @@
 *   The frames are defined in a Cartesian frame of reference and use an inverse kinematic model 
 *   to map to the robot joint space.
 *
-*   The solution to the inverse kinematic problem is based on original code by 
-*   Oleg Mazurov:    www.circuitsathome.com/mcu/robotic-arm-inverse-kinematics-on-arduino
-*   and subsuquently adapted by Eric Goldsmith:  www.ericgoldsmith.com
-*   
-*   See the following for a figure to explain the variables in the inverse kinematic solution:
-*   github.com/EricGoldsmith/AL5D-BotBoarduino-PS2/blob/master/Robot_Arm_IK.pdf
-*
-*   Also, refer to the CR_13.pdf lectures slides on www.cognitiverobotics.net for more details on the kinematics 
-*   and the solution to the inverse kinematics.
-*
-*   This inverse kinematic solution has been modified to make it compatible with the task-level 
-*   robot program specification and so that T5 is embedded in the wrist.
-*
-*   The serial port interface to the AL5D robot was written by Victor Akinwande, Carnegie Mellon University Africa 
-*   Refer to lynxmotion_ssc-32u_usb_user_guide.pdf, p. 24, for details of the serial port command protocol.
-*
 *   Different AL5D robots are accommodated by reading the required calibration data from a robot-specific configuration file.
 *   The configuration filename is provided in the robotProgrammingInput.txt file.
 *   This allows the application to be easily adapted to the different robots used in class exercises.
 *   The configuration file contains the following data, specified using key-value pairs
 *
-*   COM     <serial port name>
-*   BAUD    <rate>
-*   SPEED   <value>
-*   CHANNEL <servo 1 pin number> <servo 2 pin number> <servo 3 pin number> <servo 4 pin number> <servo 5 pin number> <servo 6 pin number> 
-*   HOME    <servo 1 setpoint>   <servo 2 setpoint>   <servo 3 setpoint>   <servo 4 setpoint>   <servo 5 setpoint>   <servo 6 setpoint> 
-*   DEGREE  <servo 1 pulses>     <servo 2 pulses>     <servo 3 pulses>     <servo 4 pulses>     <servo 5 pulses>     <servo 6 pulses>
-*   WRIST   <wrist type>
-*   CURRENT <joint 1 angle> <joint 2 angle> <joint 3 angle> <joint 4 angle> <joint 5 angle> <gripper distance>
+*   COM       <serial port name>
+*   BAUD      <rate>
+*   SPEED     <value>
+*   CHANNEL   <servo 1 pin number> <servo 2 pin number> <servo 3 pin number> <servo 4 pin number> <servo 5 pin number> <servo 6 pin number> 
+*   HOME      <servo 1 setpoint>   <servo 2 setpoint>   <servo 3 setpoint>   <servo 4 setpoint>   <servo 5 setpoint>   <servo 6 setpoint> 
+*   DEGREE    <servo 1 pulses>     <servo 2 pulses>     <servo 3 pulses>     <servo 4 pulses>     <servo 5 pulses>     <servo 6 pulses>
+*   WRIST     <wrist type>
+*   CURRENT   <joint 1 angle> <joint 2 angle> <joint 3 angle> <joint 4 angle> <joint 5 angle> <gripper distance>
+*   SIMULATOR <flag value>
 *
 *   The serial port name is assigned automatically by the operating system when the robot's USB-to-serial port is connected to the computer
 *   e.g., COM0, COM6, ... 
@@ -70,6 +55,8 @@
 *   This information is updated every time either setJointAngles() or grasp() is called 
 *   and is used in constructing the message to be published on the ROS topic when using ROS to control the robot or the simulator
 *
+*   The simulator data specifies whether to use the simulator or the physical robot.  The key values are "TRUE" or "FALSE".
+*
 *   This code can also be compiled for ROS in which case a simulator for the robot can be controlled by publishing the joint angles on the
 *   the /lynxmotion_al5d/joints_positions/command topic.  The ROS code is conditionally compiles by defining flag in the interface file. 
 *
@@ -90,11 +77,10 @@
 *
 *******************************************************************************************************************/
 
-#ifdef WIN32
-#include "robotProgramming.h"
-#else
+
 #include <module4/robotProgramming.h>
-#endif
+#include <module4/lynxmotionUtilities.h>
+
 
 int main(int argc, char ** argv) {
 

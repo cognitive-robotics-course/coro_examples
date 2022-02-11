@@ -17,9 +17,10 @@ catkin_package()
 
 include_directories(${catkin_INCLUDE_DIRS} include)
 
-add_executable(${PROJECT_NAME}_robotProgramming src/robotProgrammingImplementation.cpp src/robotProgrammingApplication.cpp)
+add_executable(${PROJECT_NAME}_robotProgramming src/robotProgrammingApplication.cpp  src/robotProgrammingImplementation.cpp  src/lynxmotionUtilities.cpp)
 set_target_properties(${PROJECT_NAME}_robotProgramming PROPERTIES OUTPUT_NAME robotProgramming  PREFIX "")
-add_executable(${PROJECT_NAME}_pickAndPlace src/pickAndPlaceImplementation.cpp src/pickAndPlaceApplication.cpp)
+
+add_executable(${PROJECT_NAME}_pickAndPlace src/pickAndPlaceApplication.cpp src/pickAndPlaceImplementation.cpp  src/lynxmotionUtilities.cpp)
 set_target_properties(${PROJECT_NAME}_pickAndPlace PROPERTIES OUTPUT_NAME pickAndPlace  PREFIX "")
 
 # Install data files
