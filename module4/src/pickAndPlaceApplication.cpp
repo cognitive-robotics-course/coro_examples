@@ -184,7 +184,7 @@ int main(int argc, char ** argv) {
    float final_depart_distance;     // start the approach from this distance
    float delta;                     // increment in approach and depart distance 
 
-   bool continuous_path = true;     // if true, implement approximation of continuous path control
+   bool continuous_path = false;     // if true, implement approximation of continuous path control
                                     // when approaching and departing the grasp pose
                                     // otherwise just move directly from the initial approach pose to the grasp pose
                                     // and directly from the grasp pose to the final depart pose 
