@@ -205,7 +205,7 @@ void fail(char *message);
 #define A4 187.0           // Elbow-to-wrist "bone"
 #define EZ 100             // Gripper length
 #define GRIPPER_OPEN    30 // mm
-#define GRIPPER_CLOSED  0  // mm
+#define GRIPPER_CLOSED  10 // mm
 
 
 bool computeJointAngles(double x, double y, double z, double pitch, double roll, double joint_angles[]);

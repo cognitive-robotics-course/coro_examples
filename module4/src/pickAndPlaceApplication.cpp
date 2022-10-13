@@ -355,7 +355,7 @@ int main(int argc, char ** argv) {
 
    grasp(GRIPPER_CLOSED); // just less than the width of the brick, in mm, to apply some lateral pressure
 
-   wait(1000);
+   wait(2000);
 
            
    /* move to pick depart pose */
