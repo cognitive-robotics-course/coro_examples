@@ -126,6 +126,10 @@
 *   David Vernon
 *   11 February 2022
 *
+*   Removed call to goHome() and introduced a new Centre frame with the gripper oriented downwards.
+*   David Vernon
+*   13 October 2022
+*
 *******************************************************************************************************************/
 
 #include <stdlib.h>
@@ -160,7 +164,9 @@ int main(int argc, char ** argv) {
    Frame object_approach;
    Frame object_depart;
    Frame destination;
+   Frame centre;
 
+   
    /* data variables */
 
    float object_x          = -40;   // default values; actual values are read from the input file
@@ -177,14 +183,19 @@ int main(int argc, char ** argv) {
    float grasp_y           =   0;
    float grasp_z           =   5;
    float grasp_theta       = 180;   // rotation in degrees about the y axis 
-      
+
+   float centre_x          =   0;                                   
+   float centre_y          = 186;
+   float centre_z          = 216;
+   float centre_theta      = -90;
+   
    float approach_distance;         // approach  distance from grasp pose in -z direction
    float depart_distance;           // departure distance from grasp pose in -z direction
    float initial_approach_distance; // start the approach from this distance
    float final_depart_distance;     // start the approach from this distance
    float delta;                     // increment in approach and depart distance 
 
-   bool continuous_path = false;     // if true, implement approximation of continuous path control
+   bool continuous_path = true;     // if true, implement approximation of continuous path control
                                     // when approaching and departing the grasp pose
                                     // otherwise just move directly from the initial approach pose to the grasp pose
                                     // and directly from the grasp pose to the final depart pose 
@@ -199,9 +210,9 @@ int main(int argc, char ** argv) {
 
    /* Set the filename */
    
-    strcat(directory, (ros::package::getPath(ROS_PACKAGE_NAME) + "/data/").c_str());
-    strcpy(filename, directory);
-    strcat(filename, "pickAndPlaceInput.txt"); // Input filename matches the application name
+   strcat(directory, (ros::package::getPath(ROS_PACKAGE_NAME) + "/data/").c_str());
+   strcpy(filename, directory);
+   strcat(filename, "pickAndPlaceInput.txt"); // Input filename matches the application name
    if ((fp_in = fopen(filename, "r")) == 0) {
       printf("Error can't open input pickAndPlaceInput.txt\n");
       prompt_and_exit(0);
@@ -274,21 +285,33 @@ int main(int argc, char ** argv) {
    /* now start the pick and place task */
    /* --------------------------------- */
 
-   initial_approach_distance = 60; // 40
-   final_depart_distance     = 60; // 40
+   initial_approach_distance = 40;
+   final_depart_distance     = 40;
    delta                     = 5;
   
    E               = trans((float) robotConfigurationData.effector_x,                            // end-effector (gripper) frame
 	                   (float) robotConfigurationData.effector_y,                            // is initialized from data
 	                   (float) robotConfigurationData.effector_z);                           // in the robot configuration file
    
-   Z               = trans(0.0 ,0.0, 0.0);                                                       // robot base frame
+   Z               = trans(0.0, 0.0, 0.0);                                                       // robot base frame
    object          = trans(object_x,      object_y,      object_z)      * rotz(object_phi);      // object pose
    destination     = trans(destination_x, destination_y, destination_z) * rotz(destination_phi); // destination pose
    object_grasp    = trans(grasp_x,       grasp_y,       grasp_z)       * roty(grasp_theta);     // object grasp frame w.r.t. both object and destination frames
    object_approach = trans(0,0,-initial_approach_distance);                                      // frame defined w.r.t. grasp frame
    object_depart   = trans(0,0,-final_depart_distance);                                          // frame defined w.r.t. grasp frame
- 
+
+
+   /* move to the centre pose */
+   /* ----------------------------- */
+
+   centre = trans(centre_x, centre_y, centre_z - robotConfigurationData.effector_z) * roty(180.0) * rotz(centre_theta);     // centre frame: gripper oriented downwards 
+                                  
+   T6 = inv(Z) * centre * inv(E);
+
+   if (move(T6) == false) display_error_and_exit("move error ... quitting\n");
+
+   wait(2000);
+   
    /* open the gripper */
    /* ----------------- */
 
@@ -311,7 +334,7 @@ int main(int argc, char ** argv) {
 
    if (move(T6) == false) display_error_and_exit("move error ... quitting\n");;
 
-   wait(5000); 
+   wait(2000); 
 
 
    if (continuous_path) {
@@ -479,11 +502,22 @@ int main(int argc, char ** argv) {
    wait(1000);
 
     
-   goHome(); // this returns the robot to the home position so that when it's switched off 
-             // it's in a pose that is close to the one that the servo-controller uses as its initial state
-             // could also do this with a move() as show above
+   //goHome(); // this returns the robot to the home position so that when it's switched off 
+               // it's in a pose that is close to the one that the servo-controller uses as its initial state
 
+   
+   /* move to the centre pose */
+   /* ----------------------------- */
 
+   centre = trans(centre_x, centre_y, centre_z - robotConfigurationData.effector_z) * roty(180.0) * rotz(centre_theta);     // centre frame: gripper oriented downwards 
+                                  
+   T6 = inv(Z) * centre * inv(E);
+
+   if (move(T6) == false) display_error_and_exit("move error ... quitting\n");
+
+   wait(2000);  
+
+   
    if (robotConfigurationData.simulator)  {
       if (create_brick) {
 

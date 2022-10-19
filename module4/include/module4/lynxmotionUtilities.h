@@ -8,6 +8,10 @@
 *   David Vernon
 *   11 February 2022
 *
+*   Changed GRIPPER_CLOSED from 10 to 15 mm
+*   David Vernon
+*   13 October 2022
+*
 ********************************************************************************************************************
 
 
@@ -205,7 +209,7 @@ void fail(char *message);
 #define A4 187.0           // Elbow-to-wrist "bone"
 #define EZ 100             // Gripper length
 #define GRIPPER_OPEN    30 // mm
-#define GRIPPER_CLOSED  10 // mm
+#define GRIPPER_CLOSED  15 // mm
 
 
 bool computeJointAngles(double x, double y, double z, double pitch, double roll, double joint_angles[]);
