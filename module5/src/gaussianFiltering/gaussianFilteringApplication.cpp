@@ -45,7 +45,8 @@ const char* processed_window_name = "Gaussian Image";
 int view;
 
 int main() {
-   
+  
+  /* removing this stops a core dump on exit. DV 28/10/2021
    #ifdef ROS
       // Turn off canonical terminal mode and character echoing
       static const int STDIN = 0;
@@ -55,7 +56,8 @@ int main() {
       term.c_lflag &= ~(ICANON | ECHO);
       tcsetattr(STDIN, TCSANOW, &term);
    #endif 
-    
+  */
+  
    const char input_filename[MAX_FILENAME_LENGTH] = "gaussianFilteringInput.txt";    
    char input_path_and_filename[MAX_FILENAME_LENGTH];    
    char data_dir[MAX_FILENAME_LENGTH];
@@ -135,10 +137,12 @@ int main() {
    } while (end_of_file != EOF);
 
    fclose(fp_in);
-    
+
+   /*  removing this stops a core dump on exit. DV 28/10/2021
    #ifdef ROS
       // Reset terminal
       tcsetattr(STDIN, TCSANOW, &old_term);
    #endif
+   */
    return 0;
 }

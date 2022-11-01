@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
      prompt_and_exit(1);
    }
 
-   printf("Example of how to use openCV to generate image control points from simulator camera for computing the camera model.\n\n");
+   printf("Example of how to use openCV (version %s) to generate image control points from simulator camera for computing the camera model.\n\n",CV_VERSION);
 
    reset();
 

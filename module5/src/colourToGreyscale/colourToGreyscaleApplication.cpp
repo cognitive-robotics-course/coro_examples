@@ -30,7 +30,8 @@
 #include "module5/colourToGreyscale.h"
 
 int main() {
-   
+
+   /* removing this stops a core dump on exit. DV 28/10/2021
    #ifdef ROS
       // Turn off canonical terminal mode and character echoing
       static const int STDIN = 0;
@@ -40,6 +41,7 @@ int main() {
       term.c_lflag &= ~(ICANON | ECHO);
       tcsetattr(STDIN, TCSANOW, &term);
    #endif 
+   */
     
    const char input_filename[MAX_FILENAME_LENGTH] = "colourToGreyscaleInput.txt";    
    char input_path_and_filename[MAX_FILENAME_LENGTH];    
@@ -88,11 +90,14 @@ int main() {
 
 
    fclose(fp_in);
-   
+
+   /* removing this stops a core dump on exit DV 28/10/2021
    #ifdef ROS
       // Reset terminal
       tcsetattr(STDIN, TCSANOW, &old_term);
    #endif
+   */
+   
    return 0;
 }
 

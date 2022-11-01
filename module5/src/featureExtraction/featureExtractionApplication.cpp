@@ -75,6 +75,7 @@ int main() {
    strcpy(input_path_and_filename, data_dir);
    strcat(input_path_and_filename, input_filename);
    
+   //printf("data_dir %s \n", data_dir);
 
    if ((fp_in = fopen(input_path_and_filename,"r")) == 0) {
 	  printf("Error can't open input featureExtractionInput.txt\n");

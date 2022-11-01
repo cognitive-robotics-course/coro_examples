@@ -1,0 +1,337 @@
+/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/blobs2.bmp 
+Object 0: perimeter = 284, object area = 8000, bounding rectangle area = 9944, convex hull area = 8060 
+Object 0: HuMoments = 0.16, 0.00, 0.00 
+
+
+Object 1, Hole 2: Area = 2032
+Object 1: perimeter = 284, object area = 5968, bounding rectangle area = 9944, convex hull area = 8060 
+Object 1: HuMoments = 0.16, 0.00, 0.00 
+
+
+Object 3, Hole 4: Area = 2500
+Object 3: perimeter = 396, object area = 7500, bounding rectangle area = 10000, convex hull area = 10000 
+Object 3: HuMoments = 0.17, 0.00, 0.00 
+
+
+Object 5: perimeter = 396, object area = 10000, bounding rectangle area = 10000, convex hull area = 10000 
+Object 5: HuMoments = 0.17, 0.00, 0.00 
+
+
+/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/blobs3.bmp 
+Object 0: perimeter = 291, object area = 7836, bounding rectangle area = 9947, convex hull area = 8054 
+Object 0: HuMoments = 0.16, 0.00, 0.00 
+
+
+Object 1: perimeter = 284, object area = 8000, bounding rectangle area = 9944, convex hull area = 8060 
+Object 1: HuMoments = 0.16, 0.00, 0.00 
+
+
+Object 2: perimeter = 406, object area = 9814, bounding rectangle area = 10005, convex hull area = 10005 
+Object 2: HuMoments = 0.17, 0.00, 0.00 
+
+
+Object 3: perimeter = 396, object area = 10000, bounding rectangle area = 10000, convex hull area = 10000 
+Object 3: HuMoments = 0.17, 0.00, 0.00 
+
+
+/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/Numbers.jpg 
+Object 0, Hole 1: Area = 70
+Object 0: perimeter = 101, object area = 394, bounding rectangle area = 640, convex hull area = 575 
+Object 0: HuMoments = 0.23, 0.01, 0.00 
+
+
+Object 2, Hole 3: Area = 59
+Object 2, Hole 4: Area = 45
+Object 2: perimeter = 85, object area = 442, bounding rectangle area = 694, convex hull area = 614 
+Object 2: HuMoments = 0.20, 0.01, 0.00 
+
+
+Object 5: perimeter = 94, object area = 269, bounding rectangle area = 599, convex hull area = 442 
+Object 5: HuMoments = 0.46, 0.09, 0.04 
+
+
+Object 6, Hole 7: Area = 76
+Object 6: perimeter = 101, object area = 395, bounding rectangle area = 671, convex hull area = 586 
+Object 6: HuMoments = 0.23, 0.01, 0.00 
+
+
+Object 8: perimeter = 121, object area = 332, bounding rectangle area = 631, convex hull area = 564 
+Object 8: HuMoments = 0.42, 0.06, 0.00 
+
+
+Object 9, Hole 10: Area = 58
+Object 9: perimeter = 86, object area = 350, bounding rectangle area = 636, convex hull area = 488 
+Object 9: HuMoments = 0.20, 0.01, 0.00 
+
+
+Object 11: perimeter = 121, object area = 352, bounding rectangle area = 650, convex hull area = 592 
+Object 11: HuMoments = 0.40, 0.06, 0.00 
+
+
+Object 12: perimeter = 111, object area = 346, bounding rectangle area = 626, convex hull area = 584 
+Object 12: HuMoments = 0.42, 0.07, 0.00 
+
+
+Object 13: perimeter = 101, object area = 274, bounding rectangle area = 573, convex hull area = 480 
+Object 13: HuMoments = 0.46, 0.13, 0.01 
+
+
+Object 14, Hole 15: Area = 172
+Object 14: perimeter = 80, object area = 409, bounding rectangle area = 692, convex hull area = 596 
+Object 14: HuMoments = 0.17, 0.00, 0.00 
+
+
+/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/GoodORings.jpg 
+Object 0, Hole 1: Area = 1
+Object 0, Hole 2: Area = 2
+Object 0, Hole 3: Area = 1
+Object 0, Hole 4: Area = 1
+Object 0, Hole 5: Area = 1
+Object 0, Hole 6: Area = 1
+Object 0, Hole 7: Area = 2
+Object 0, Hole 8: Area = 4
+Object 0, Hole 9: Area = 4
+Object 0, Hole 10: Area = 2
+Object 0, Hole 11: Area = 4
+Object 0, Hole 12: Area = 2
+Object 0, Hole 13: Area = 1
+Object 0, Hole 14: Area = 2
+Object 0, Hole 15: Area = 4
+Object 0, Hole 16: Area = 3
+Object 0, Hole 17: Area = 12
+Object 0, Hole 18: Area = 1
+Object 0, Hole 19: Area = 2
+Object 0, Hole 20: Area = 1
+Object 0, Hole 21: Area = 10
+Object 0, Hole 22: Area = 8
+Object 0, Hole 23: Area = 2
+Object 0, Hole 24: Area = 3
+Object 0, Hole 25: Area = 1
+Object 0, Hole 26: Area = 1
+Object 0, Hole 27: Area = 1
+Object 0, Hole 28: Area = 1
+Object 0, Hole 29: Area = 9824
+Object 0: perimeter = 412, object area = 6762, bounding rectangle area = 21228, convex hull area = 16790 
+Object 0: HuMoments = 0.16, 0.00, 0.00 
+
+
+Object 31, Hole 32: Area = 14080
+Object 31: perimeter = 461, object area = 6812, bounding rectangle area = 26637, convex hull area = 21043 
+Object 31: HuMoments = 0.16, 0.00, 0.00 
+
+
+Object 33, Hole 34: Area = 10896
+Object 33, Hole 35: Area = 1
+Object 33, Hole 36: Area = 1
+Object 33: perimeter = 486, object area = 12218, bounding rectangle area = 29314, convex hull area = 23283 
+Object 33: HuMoments = 0.16, 0.00, 0.00 
+
+
+/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/assignment4_0.jpg 
+
+
+
+
+Object 4, Hole 5: Area = 6
+Object 4, Hole 6: Area = 1
+Object 4, Hole 7: Area = 6
+Object 4, Hole 8: Area = 1
+Object 4, Hole 9: Area = 1
+Object 4, Hole 10: Area = 3
+Object 4, Hole 11: Area = 3
+Object 4, Hole 12: Area = 1
+Object 4, Hole 13: Area = 1
+Object 4, Hole 14: Area = 1
+Object 4, Hole 15: Area = 2
+Object 4, Hole 16: Area = 1
+Object 4, Hole 17: Area = 1
+Object 4, Hole 18: Area = 1
+Object 4, Hole 19: Area = 4
+Object 4: perimeter = 190, object area = 2964, bounding rectangle area = 3156, convex hull area = 3087 
+Object 4: HuMoments = 0.21, 0.02, 0.00 
+
+
+
+/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/assignment4_1.jpg 
+
+
+
+
+Object 4, Hole 5: Area = 1
+Object 4, Hole 6: Area = 1
+Object 4, Hole 7: Area = 1
+Object 4, Hole 8: Area = 1
+Object 4, Hole 9: Area = 4
+Object 4, Hole 10: Area = 1
+Object 4, Hole 11: Area = 2
+Object 4, Hole 12: Area = 1
+Object 4, Hole 13: Area = 1
+Object 4, Hole 14: Area = 1
+Object 4, Hole 15: Area = 1
+Object 4, Hole 16: Area = 1
+Object 4, Hole 17: Area = 1
+Object 4, Hole 18: Area = 4
+Object 4, Hole 19: Area = 1
+Object 4, Hole 20: Area = 1
+Object 4, Hole 21: Area = 1
+Object 4, Hole 22: Area = 2
+Object 4, Hole 23: Area = 1
+Object 4, Hole 24: Area = 1
+Object 4, Hole 25: Area = 1
+Object 4: perimeter = 250, object area = 3258, bounding rectangle area = 3938, convex hull area = 3540 
+Object 4: HuMoments = 0.19, 0.01, 0.00 
+
+
+
+/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/assignment4_2.jpg 
+
+Object 1, Hole 2: Area = 11
+Object 1, Hole 3: Area = 1
+Object 1, Hole 4: Area = 1
+Object 1, Hole 5: Area = 10
+Object 1, Hole 6: Area = 1
+Object 1, Hole 7: Area = 9
+Object 1, Hole 8: Area = 14
+Object 1, Hole 9: Area = 5
+Object 1, Hole 10: Area = 2
+Object 1, Hole 11: Area = 3
+Object 1, Hole 12: Area = 12
+Object 1, Hole 13: Area = 1
+Object 1, Hole 14: Area = 14
+Object 1, Hole 15: Area = 10
+Object 1: perimeter = 180, object area = 2888, bounding rectangle area = 3112, convex hull area = 3069 
+Object 1: HuMoments = 0.21, 0.02, 0.00 
+
+
+
+/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/assignment4_3.jpg 
+
+
+
+
+
+
+
+
+
+
+
+Object 11, Hole 12: Area = 1
+Object 11, Hole 13: Area = 1
+Object 11, Hole 14: Area = 6
+Object 11, Hole 15: Area = 6
+Object 11, Hole 16: Area = 1
+Object 11, Hole 17: Area = 4
+Object 11, Hole 18: Area = 4
+Object 11, Hole 19: Area = 1
+Object 11, Hole 20: Area = 1
+Object 11, Hole 21: Area = 1
+Object 11, Hole 22: Area = 1
+Object 11, Hole 23: Area = 6
+Object 11, Hole 24: Area = 6
+Object 11: perimeter = 248, object area = 3068, bounding rectangle area = 3587, convex hull area = 3333 
+Object 11: HuMoments = 0.20, 0.01, 0.00 
+
+
+Object 25, Hole 26: Area = 1
+Object 25, Hole 27: Area = 1
+Object 25, Hole 28: Area = 1
+Object 25, Hole 29: Area = 5
+Object 25, Hole 30: Area = 3
+Object 25, Hole 31: Area = 1
+Object 25, Hole 32: Area = 1
+Object 25, Hole 33: Area = 1
+Object 25, Hole 34: Area = 4
+Object 25, Hole 35: Area = 5
+Object 25: perimeter = 216, object area = 2964, bounding rectangle area = 3129, convex hull area = 3090 
+Object 25: HuMoments = 0.21, 0.02, 0.00 
+
+
+
+/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/assignment4_14.jpg 
+
+
+
+
+Object 4: perimeter = 12, object area = 9, bounding rectangle area = 13, convex hull area = 11 
+Object 4: HuMoments = 0.25, 0.03, 0.00 
+
+
+
+
+
+
+
+
+
+
+
+Object 14: perimeter = 15, object area = 10, bounding rectangle area = 18, convex hull area = 14 
+Object 14: HuMoments = 0.26, 0.04, 0.00 
+
+
+Object 15: perimeter = 98, object area = 191, bounding rectangle area = 310, convex hull area = 247 
+Object 15: HuMoments = 0.88, 0.75, 0.01 
+
+
+
+
+
+
+Object 20: perimeter = 16, object area = 15, bounding rectangle area = 16, convex hull area = 16 
+Object 20: HuMoments = 0.80, 0.59, 0.01 
+
+
+
+
+
+
+
+
+Object 27, Hole 28: Area = 1
+Object 27, Hole 29: Area = 3
+Object 27, Hole 30: Area = 1
+Object 27, Hole 31: Area = 1
+Object 27, Hole 32: Area = 5
+Object 27, Hole 33: Area = 3
+Object 27, Hole 34: Area = 1
+Object 27, Hole 35: Area = 2
+Object 27, Hole 36: Area = 5
+Object 27, Hole 37: Area = 3
+Object 27, Hole 38: Area = 1
+Object 27, Hole 39: Area = 12
+Object 27, Hole 40: Area = 10
+Object 27, Hole 41: Area = 12
+Object 27, Hole 42: Area = 6
+Object 27: perimeter = 281, object area = 3256, bounding rectangle area = 3914, convex hull area = 3544 
+Object 27: HuMoments = 0.19, 0.01, 0.00 
+
+
+Object 43, Hole 44: Area = 12
+Object 43, Hole 45: Area = 12
+Object 43, Hole 46: Area = 8
+Object 43, Hole 47: Area = 12
+Object 43, Hole 48: Area = 1
+Object 43, Hole 49: Area = 12
+Object 43, Hole 50: Area = 13
+Object 43, Hole 51: Area = 12
+Object 43, Hole 52: Area = 9
+Object 43: perimeter = 231, object area = 2975, bounding rectangle area = 3235, convex hull area = 3188 
+Object 43: HuMoments = 0.21, 0.02, 0.00 
+
+
+Object 53, Hole 54: Area = 4
+Object 53, Hole 55: Area = 1
+Object 53, Hole 56: Area = 4
+Object 53, Hole 57: Area = 6
+Object 53, Hole 58: Area = 6
+Object 53, Hole 59: Area = 9
+Object 53, Hole 60: Area = 4
+Object 53, Hole 61: Area = 1
+Object 53, Hole 62: Area = 4
+Object 53, Hole 63: Area = 4
+Object 53: perimeter = 231, object area = 2984, bounding rectangle area = 3382, convex hull area = 3215 
+Object 53: HuMoments = 0.21, 0.02, 0.00 
+
+
+
