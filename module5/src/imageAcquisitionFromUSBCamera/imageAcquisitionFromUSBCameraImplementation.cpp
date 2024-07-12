@@ -14,7 +14,12 @@
   18 February 2021
     
 
-  Changed to C++ version for camera acquisition. DV 27/2/2018
+  Changed to C++ version for camera acquisition. 
+  DV 27/2/2018
+     
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
  
 #include "module5/imageAcquisitionFromUSBCamera.h"
@@ -37,7 +42,7 @@ void display_image_from_camera(int cameraNum) {
    strcpy(windowName,"Camera");
    sprintf(cameraNumber, " %d", cameraNum);
 
-   namedWindow(windowName,     CV_WINDOW_AUTOSIZE); // create the window  
+   namedWindow(windowName,     WINDOW_AUTOSIZE); // create the window  
     
    if (camera.open(cameraNum) == true) {          // open the camera input 
 
@@ -47,16 +52,16 @@ void display_image_from_camera(int cameraNum) {
 
       // printf("Camera image is %d x %d\n", frame.cols, frame.rows);
    
-	   do {
+      do {
          camera >> frame;                          // read a frame from the camera                    
          imshow(windowName, frame);
-         cvWaitKey(30); // this is essential as it allows openCV to handle the display event ... 
-                        // the argument is the number of milliseconds to wait 
+         waitKey(30); // this is essential as it allows openCV to handle the display event ... 
+                      // the argument is the number of milliseconds to wait 
       } while (!_kbhit());
 
       getchar(); // flush the buffer from the keyboard hit
       
-      compressionParams.push_back(CV_IMWRITE_PNG_COMPRESSION);
+      compressionParams.push_back(IMWRITE_PNG_COMPRESSION);
       compressionParams.push_back(9);                                  // 9 implies maximum compression
 
       imwrite("../data/camera_image.png", frame, compressionParams);   // write the image to a file just for fun

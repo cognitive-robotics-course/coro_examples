@@ -126,12 +126,11 @@ public:
                 else
                     inputType = VIDEO_FILE;
             }
-            if (inputType == CAMERA)
-			{
+            if (inputType == CAMERA) {
                 inputCapture.open(cameraID);
-				inputCapture.set(CV_CAP_PROP_FRAME_WIDTH, 640);
-				inputCapture.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
-			}
+				inputCapture.set(CAP_PROP_FRAME_WIDTH, 640);
+				inputCapture.set(CAP_PROP_FRAME_HEIGHT, 480);
+            }
             if (inputType == VIDEO_FILE)
                 inputCapture.open(input);
             if (inputType != IMAGE_LIST && !inputCapture.isOpened())
@@ -144,9 +143,9 @@ public:
         }
 
         flag = 0;
-        if(calibFixPrincipalPoint) flag |= CV_CALIB_FIX_PRINCIPAL_POINT;
-        if(calibZeroTangentDist)   flag |= CV_CALIB_ZERO_TANGENT_DIST;
-        if(aspectRatio)            flag |= CV_CALIB_FIX_ASPECT_RATIO;
+        if(calibFixPrincipalPoint) flag |= CALIB_FIX_PRINCIPAL_POINT;
+        if(calibZeroTangentDist)   flag |= CALIB_ZERO_TANGENT_DIST;
+        if(aspectRatio)            flag |= CALIB_FIX_ASPECT_RATIO;
 
 
         calibrationPattern = NOT_EXISTING;
@@ -171,7 +170,7 @@ public:
             view0.copyTo(result);
         }
         else if( atImageList < (int)imageList.size() )
-            result = imread(imageList[atImageList++], CV_LOAD_IMAGE_COLOR);
+            result = imread(imageList[atImageList++], IMREAD_COLOR);
 
         return result;
     }
@@ -250,7 +249,7 @@ static double computeReprojectionErrors( const vector<vector<Point3f> >& objectP
     {
         projectPoints( Mat(objectPoints[i]), rvecs[i], tvecs[i], cameraMatrix,
                        distCoeffs, imagePoints2);
-        err = norm(Mat(imagePoints[i]), Mat(imagePoints2), CV_L2);
+        err = norm(Mat(imagePoints[i]), Mat(imagePoints2), 4); // replaced CV_L2 with 4 
 
         int n = (int)objectPoints[i].size();
         perViewErrors[i] = (float) std::sqrt(err*err/n);
@@ -291,7 +290,7 @@ static bool runCalibration( Settings& s, Size& imageSize, Mat& cameraMatrix, Mat
 {
 
     cameraMatrix = Mat::eye(3, 3, CV_64F);
-    if( s.flag & CV_CALIB_FIX_ASPECT_RATIO )
+    if( s.flag & CALIB_FIX_ASPECT_RATIO )
         cameraMatrix.at<double>(0,0) = 1.0;
 
     distCoeffs = Mat::zeros(8, 1, CV_64F);
@@ -303,7 +302,7 @@ static bool runCalibration( Settings& s, Size& imageSize, Mat& cameraMatrix, Mat
 
     //Find intrinsic and extrinsic camera parameters
     double rms = calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix,
-                                 distCoeffs, rvecs, tvecs, s.flag|CV_CALIB_FIX_K4|CV_CALIB_FIX_K5);
+                                 distCoeffs, rvecs, tvecs, s.flag|CALIB_FIX_K4|CALIB_FIX_K5);
 
     bool ok = checkRange(cameraMatrix) && checkRange(distCoeffs);
 
@@ -337,17 +336,17 @@ static void saveCameraParams( Settings& s, Size& imageSize, Mat& cameraMatrix, M
     fs << "board_Height" << s.boardSize.height;
     fs << "square_Size" << s.squareSize;
 
-    if( s.flag & CV_CALIB_FIX_ASPECT_RATIO )
+    if( s.flag & CALIB_FIX_ASPECT_RATIO )
         fs << "FixAspectRatio" << s.aspectRatio;
 
     if( s.flag )
     {
         sprintf( buf, "flags: %s%s%s%s",
-            s.flag & CV_CALIB_USE_INTRINSIC_GUESS ? " +use_intrinsic_guess" : "",
-            s.flag & CV_CALIB_FIX_ASPECT_RATIO ? " +fix_aspectRatio" : "",
-            s.flag & CV_CALIB_FIX_PRINCIPAL_POINT ? " +fix_principal_point" : "",
-            s.flag & CV_CALIB_ZERO_TANGENT_DIST ? " +zero_tangent_dist" : "" );
-        cvWriteComment( *fs, buf, 0 );
+            s.flag & CALIB_USE_INTRINSIC_GUESS ? " +use_intrinsic_guess" : "",
+            s.flag & CALIB_FIX_ASPECT_RATIO ? " +fix_aspectRatio" : "",
+            s.flag & CALIB_FIX_PRINCIPAL_POINT ? " +fix_principal_point" : "",
+            s.flag & CALIB_ZERO_TANGENT_DIST ? " +zero_tangent_dist" : "" );
+        //cvWriteComment( *fs, buf, 0 );
 
     }
 
@@ -375,7 +374,7 @@ static void saveCameraParams( Settings& s, Size& imageSize, Mat& cameraMatrix, M
             r = rvecs[i].t();
             t = tvecs[i].t();
         }
-        cvWriteComment( *fs, "a set of 6-tuples (rotation vector + translation vector) for each view", 0 );
+        //cvWriteComment( *fs, "a set of 6-tuples (rotation vector + translation vector) for each view", 0 );
         fs << "Extrinsic_Parameters" << bigmat;
     }
 
@@ -471,7 +470,7 @@ int CameraCalibration( string passed_settings_filename  )
         {
         case Settings::CHESSBOARD:
             found = findChessboardCorners( view, s.boardSize, pointBuf,
-                CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FAST_CHECK | CV_CALIB_CB_NORMALIZE_IMAGE);
+                CALIB_CB_ADAPTIVE_THRESH | CALIB_CB_FAST_CHECK | CALIB_CB_NORMALIZE_IMAGE);
             break;
         case Settings::CIRCLES_GRID:
             found = findCirclesGrid( view, s.boardSize, pointBuf );
@@ -490,9 +489,9 @@ int CameraCalibration( string passed_settings_filename  )
                 if( s.calibrationPattern == Settings::CHESSBOARD)
                 {
                     Mat viewGray;
-                    cvtColor(view, viewGray, CV_BGR2GRAY);
+                    cvtColor(view, viewGray, COLOR_BGR2GRAY);
                     cornerSubPix( viewGray, pointBuf, Size(11,11),
-                        Size(-1,-1), TermCriteria( CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 30, 0.1 ));
+                        Size(-1,-1), TermCriteria(TermCriteria::EPS+TermCriteria::MAX_ITER, 30, 0.1 ));
                 }
 
                 if( mode == CAPTURING &&  // For camera only take new samples after delay time

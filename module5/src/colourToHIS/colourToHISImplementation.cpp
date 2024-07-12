@@ -12,7 +12,10 @@
   --------------------
   Added _kbhit
   18 February 2021
-    
+        
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
  
 #include "module5/colourToHIS.h"
@@ -38,12 +41,12 @@ void colourToHIS(char *filename) {
    float saturation;
    float intensity;
 
-   namedWindow(inputWindowName,      CV_WINDOW_AUTOSIZE);  
-   namedWindow(hueWindowName,        CV_WINDOW_AUTOSIZE);
-   namedWindow(intensityWindowName,  CV_WINDOW_AUTOSIZE);
-   namedWindow(saturationWindowName, CV_WINDOW_AUTOSIZE);
+   namedWindow(inputWindowName,      WINDOW_AUTOSIZE);  
+   namedWindow(hueWindowName,        WINDOW_AUTOSIZE);
+   namedWindow(intensityWindowName,  WINDOW_AUTOSIZE);
+   namedWindow(saturationWindowName, WINDOW_AUTOSIZE);
 
-   colourImage = imread(filename, CV_LOAD_IMAGE_COLOR); // Read the file
+   colourImage = imread(filename, IMREAD_COLOR); // Read the file
 
    if (!colourImage.data) {                            // Check for invalid input
       printf("Error: failed to read image %s\n",filename);

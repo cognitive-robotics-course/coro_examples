@@ -31,7 +31,9 @@
   Abrham Gebreselasie
   10 March 2021
   
-
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
 
 #include "module5/grabCut.h"
@@ -98,8 +100,9 @@ int main() {
          strcat(file_path_and_filename, filename);
          strcpy(filename, file_path_and_filename);
 
-         inputImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
-         if(inputImage.empty()) {
+         inputImage = imread(filename, IMREAD_UNCHANGED);
+         
+         if (inputImage.empty()) {
             cout << "can not open " << filename << endl;
             prompt_and_exit(-1);
          }
@@ -107,12 +110,12 @@ int main() {
          printf("Press any key to continue ...\n");
 
          // Create a window for input and display it
-         namedWindow(input_window_name, CV_WINDOW_AUTOSIZE );
+         namedWindow(input_window_name, WINDOW_AUTOSIZE );
          setMouseCallback(input_window_name, getControlPoints);    // use this callback to get the coordinates of the control points
 
          // Create a window
-         namedWindow(grabcut_window_name, CV_WINDOW_AUTOSIZE );
-         resizeWindow(grabcut_window_name,0,0); // this forces the trackbar to be as small as possible (and to fit in the window)
+         namedWindow(grabcut_window_name, WINDOW_AUTOSIZE );
+
          numberOfIterations       = 1;          // reset each time
          createTrackbar( "Iterations", grabcut_window_name, &numberOfIterations, max_iterations, performGrabCut);
 

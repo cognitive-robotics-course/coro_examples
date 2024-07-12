@@ -12,7 +12,10 @@
   --------------------
   Added _kbhit
   18 February 2021
-    
+     
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
  
 #include "module5/colourToGreyscale.h"
@@ -30,11 +33,11 @@ void colourToGreyscale(char *filename) {
    int channel;
    int temp;
 
-   namedWindow(inputWindowName,   CV_WINDOW_AUTOSIZE);  
-   namedWindow(outputWindowName,  CV_WINDOW_AUTOSIZE);
+   namedWindow(inputWindowName,   WINDOW_AUTOSIZE);  
+   namedWindow(outputWindowName,  WINDOW_AUTOSIZE);
 
-   colourImage = imread(filename, CV_LOAD_IMAGE_COLOR);        // Read the file
-   // colourImage = imread(filename, CV_LOAD_IMAGE_GRAYSCALE); // just for testing
+   colourImage = imread(filename, IMREAD_COLOR);        // Read the file
+   // colourImage = imread(filename, IMREAD_GRAYSCALE); // just for testing
   
    printf("number of channels %d\n", colourImage.channels());
 
@@ -88,7 +91,7 @@ void colourToGreyscale(char *filename) {
    }
 
    // alternative ... use OpenCV!!!
-   // cvtColor(colourImage, greyscaleImage, CV_BGR2GRAY);
+   // cvtColor(colourImage, greyscaleImage, COLOR_BGR2GRAY);
 
    imshow(outputWindowName, greyscaleImage); 
 

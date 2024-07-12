@@ -31,8 +31,8 @@ void getSamplePoint( int event, int x, int y, int, void* ) {
 
       imageCopy = image.clone();
 
-      line(imageCopy,Point(x-crossHairSize/2,y),Point(x+crossHairSize/2,y),Scalar(0, 255, 0),1, CV_AA); // Green
-      line(imageCopy,Point(x,y-crossHairSize/2),Point(x,y+crossHairSize/2),Scalar(0, 255, 0),1, CV_AA);
+      line(imageCopy,Point(x-crossHairSize/2,y),Point(x+crossHairSize/2,y),Scalar(0, 255, 0),1, LINE_AA); // Green
+      line(imageCopy,Point(x,y-crossHairSize/2),Point(x,y+crossHairSize/2),Scalar(0, 255, 0),1, LINE_AA);
 
       imshow(window_name, imageCopy); // show the image with the cross-hairs
       

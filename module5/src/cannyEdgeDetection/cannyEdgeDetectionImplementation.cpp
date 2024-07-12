@@ -40,7 +40,7 @@ void CannyThreshold(int, void*)
                                             // this places an upper limit on gaussian_std_dev of 7 to ensure the filter size < 31
                                             // which is the maximum size for the Laplacian operator
 
-   cvtColor(src, src_gray, CV_BGR2GRAY);
+   cvtColor(src, src_gray, COLOR_BGR2GRAY);
 
    GaussianBlur(src_gray, src_blur, Size(filter_size,filter_size), gaussian_std_dev);
 

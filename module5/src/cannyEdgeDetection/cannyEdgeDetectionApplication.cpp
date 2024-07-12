@@ -97,7 +97,7 @@ int main() {
          strcat(file_path_and_filename, filename);
          strcpy(filename, file_path_and_filename);
 
-         src = imread(filename, CV_LOAD_IMAGE_COLOR);
+         src = imread(filename, IMREAD_COLOR);
          if(src.empty()) {
             cout << "can not open " << filename << endl;
             return -1;
@@ -106,12 +106,11 @@ int main() {
          printf("Press any key to continue ...\n");
 
          // Create a window for input and display it
-         namedWindow(input_window_name, CV_WINDOW_AUTOSIZE );
+         namedWindow(input_window_name, WINDOW_AUTOSIZE );
          imshow(input_window_name, src);
  
          // Create a window
-         namedWindow(canny_window_name, CV_WINDOW_AUTOSIZE );
-         resizeWindow(canny_window_name,0,0); // this forces the trackbar to be as small as possible (and to fit in the window)
+         namedWindow(canny_window_name, WINDOW_AUTOSIZE);
                  
          createTrackbar( "Std Dev",    canny_window_name, &gaussian_std_dev, max_gaussian_std_dev, CannyThreshold); // same callback
          createTrackbar( "Threshold:", canny_window_name, &cannyThreshold, max_cannyThreshold,     CannyThreshold );

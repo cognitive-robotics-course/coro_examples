@@ -9,6 +9,8 @@
 
 ### Build dependencies
 
+This module uses OpenCV 4.2 which is included in ROS Noetic.
+
 To build successfully, the `module5`  package depends on the following library:
 
 * ncurses

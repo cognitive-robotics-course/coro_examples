@@ -13,8 +13,12 @@
   Added _kbhit
   18 February 2021
     
-
-  Changed to C++ version for camera acquisition. DV 27/2/2018
+  Changed to C++ version for camera acquisition. 
+  DV 27/2/2018
+   
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
  
 #include "module5/imageAcquisitionFromImageFile.h"
@@ -31,9 +35,9 @@ void display_image_from_file(char *filename) {
    Mat image;
    Mat processedImage;
     
-   namedWindow(inputWindowName, CV_WINDOW_AUTOSIZE);// create the window  
+   namedWindow(inputWindowName, WINDOW_AUTOSIZE);// create the window  
 
-   image = imread(filename, CV_LOAD_IMAGE_COLOR);   // Read the file
+   image = imread(filename, IMREAD_COLOR);       // Read the file
 
    if (!image.data) {                               // Check for invalid input
       printf("Error: failed to read image\n");

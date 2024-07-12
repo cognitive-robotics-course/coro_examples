@@ -26,7 +26,9 @@
   Abrham Gebreselasie
   10 March 2021
   
-
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
 
 #include "module5/connectedComponents.h"
@@ -96,7 +98,7 @@ int main() {
          strcat(file_path_and_filename, filename);
          strcpy(filename, file_path_and_filename);
 
-         inputImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
+         inputImage = imread(filename, IMREAD_UNCHANGED);
          if(inputImage.empty()) {
             cout << "can not open " << filename << endl;
             prompt_and_exit(-1);
@@ -105,18 +107,16 @@ int main() {
          printf("Press any key to continue ...\n");
 
          // Create a window for input image and show it
-         namedWindow(input_window_name, CV_WINDOW_AUTOSIZE );
+         namedWindow(input_window_name, WINDOW_AUTOSIZE );
          imshow(input_window_name, inputImage);
   
 
          // Create a window for the thresholded image
-         namedWindow(thresholded_window_name, CV_WINDOW_AUTOSIZE );
-         resizeWindow(thresholded_window_name,0,0); // this forces the trackbar to be as small as possible (and to fit in the window)
-
+         namedWindow(thresholded_window_name, WINDOW_AUTOSIZE );
          createTrackbar( "Threshold", thresholded_window_name, &thresholdValue, max_threshold, connectedComponents);
 
          // Create a window for the connected components image
-         namedWindow(components_window_name, CV_WINDOW_AUTOSIZE );
+         namedWindow(components_window_name, WINDOW_AUTOSIZE );
  
 
          // Show the image

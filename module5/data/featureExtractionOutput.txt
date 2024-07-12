@@ -1,4 +1,4 @@
-/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/blobs2.bmp 
+/home/cr/workspace/ros/src/coro_examples/module5/data/Media/blobs2.bmp 
 Object 0: perimeter = 284, object area = 8000, bounding rectangle area = 9944, convex hull area = 8060 
 Object 0: HuMoments = 0.16, 0.00, 0.00 
 
@@ -17,7 +17,7 @@ Object 5: perimeter = 396, object area = 10000, bounding rectangle area = 10000,
 Object 5: HuMoments = 0.17, 0.00, 0.00 
 
 
-/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/blobs3.bmp 
+/home/cr/workspace/ros/src/coro_examples/module5/data/Media/blobs3.bmp 
 Object 0: perimeter = 291, object area = 7836, bounding rectangle area = 9947, convex hull area = 8054 
 Object 0: HuMoments = 0.16, 0.00, 0.00 
 
@@ -34,7 +34,7 @@ Object 3: perimeter = 396, object area = 10000, bounding rectangle area = 10000,
 Object 3: HuMoments = 0.17, 0.00, 0.00 
 
 
-/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/Numbers.jpg 
+/home/cr/workspace/ros/src/coro_examples/module5/data/Media/Numbers.jpg 
 Object 0, Hole 1: Area = 70
 Object 0: perimeter = 101, object area = 394, bounding rectangle area = 640, convex hull area = 575 
 Object 0: HuMoments = 0.23, 0.01, 0.00 
@@ -81,7 +81,7 @@ Object 14: perimeter = 80, object area = 409, bounding rectangle area = 692, con
 Object 14: HuMoments = 0.17, 0.00, 0.00 
 
 
-/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/GoodORings.jpg 
+/home/cr/workspace/ros/src/coro_examples/module5/data/Media/GoodORings.jpg 
 Object 0, Hole 1: Area = 1
 Object 0, Hole 2: Area = 2
 Object 0, Hole 3: Area = 1
@@ -127,7 +127,7 @@ Object 33: perimeter = 486, object area = 12218, bounding rectangle area = 29314
 Object 33: HuMoments = 0.16, 0.00, 0.00 
 
 
-/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/assignment4_0.jpg 
+/home/cr/workspace/ros/src/coro_examples/module5/data/Media/assignment4_0.jpg 
 
 
 
@@ -152,7 +152,7 @@ Object 4: HuMoments = 0.21, 0.02, 0.00
 
 
 
-/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/assignment4_1.jpg 
+/home/cr/workspace/ros/src/coro_examples/module5/data/Media/assignment4_1.jpg 
 
 
 
@@ -183,7 +183,7 @@ Object 4: HuMoments = 0.19, 0.01, 0.00
 
 
 
-/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/assignment4_2.jpg 
+/home/cr/workspace/ros/src/coro_examples/module5/data/Media/assignment4_2.jpg 
 
 Object 1, Hole 2: Area = 11
 Object 1, Hole 3: Area = 1
@@ -204,7 +204,7 @@ Object 1: HuMoments = 0.21, 0.02, 0.00
 
 
 
-/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/assignment4_3.jpg 
+/home/cr/workspace/ros/src/coro_examples/module5/data/Media/assignment4_3.jpg 
 
 
 
@@ -248,7 +248,7 @@ Object 25: HuMoments = 0.21, 0.02, 0.00
 
 
 
-/home/parallels/workspace/ros/src/coro_examples/module5/data/Media/assignment4_14.jpg 
+/home/cr/workspace/ros/src/coro_examples/module5/data/Media/assignment4_14.jpg 
 
 
 

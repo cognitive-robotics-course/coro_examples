@@ -28,7 +28,7 @@ void binaryThresholdingOtsu(char *filename) {
    const char* input_window_name       = "Input Image";
    const char* thresholded_window_name = "Thresholded Image";
  
-   inputImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
+   inputImage = imread(filename, IMREAD_UNCHANGED);
    if (inputImage.empty()) {
       cout << "can not open " << filename << endl;
       prompt_and_exit(-1);
@@ -37,14 +37,14 @@ void binaryThresholdingOtsu(char *filename) {
    printf("Press any key to continue ...\n");
 
    // Create a window for input and display it
-   namedWindow(input_window_name, CV_WINDOW_AUTOSIZE );
+   namedWindow(input_window_name, WINDOW_AUTOSIZE );
    imshow(input_window_name, inputImage);
   
    // Create a window for thresholded image
-   namedWindow(thresholded_window_name, CV_WINDOW_AUTOSIZE );
+   namedWindow(thresholded_window_name, WINDOW_AUTOSIZE );
  
    if (inputImage.type() == CV_8UC3) { // colour image
-      cvtColor(inputImage, greyscaleImage, CV_BGR2GRAY);
+      cvtColor(inputImage, greyscaleImage, COLOR_BGR2GRAY);
    } 
    else {
       greyscaleImage = inputImage.clone();

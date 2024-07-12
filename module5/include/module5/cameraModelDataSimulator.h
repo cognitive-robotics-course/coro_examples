@@ -7,6 +7,10 @@
 
   David Vernon
   10 June 2018
+    
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
  
 
@@ -19,14 +23,12 @@
 #include <string>
 #include <sys/select.h>
 #include <termios.h>
-#include <stropts.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <time.h>
 
 
 //opencv
-#include <cv.h>
 #include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 

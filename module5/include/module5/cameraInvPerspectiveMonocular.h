@@ -7,6 +7,10 @@
 
   David Vernon
   14 June 2018
+    
+  Ported to OpenCV 4
+  David Vernon
+  9 July 2024
 */
  
 
@@ -34,7 +38,6 @@
 #else
    #include <sys/select.h>
    #include <termios.h>
-   #include <stropts.h>
    #include <sys/ioctl.h>
 #endif
      
@@ -42,14 +45,12 @@
 #include <sys/timeb.h>
 
 //opencv
-#include <cv.h>
-#include <highgui.h>
+#include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 
 #ifdef ROS
    // ncurses.h must be included after opencv2/opencv.hpp to avoid incompatibility
    #include <ncurses.h>
-  
    #include <ros/ros.h>
    #include <ros/package.h>
 #endif 

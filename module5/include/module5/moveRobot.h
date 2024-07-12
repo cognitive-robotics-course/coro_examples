@@ -3,6 +3,11 @@
 *
 *   Interface file
 *
+*   
+* Ported to OpenCV 4
+* David Vernon
+* 11 July 2024
+*
 ********************************************************************************************************************
 
 
@@ -47,7 +52,6 @@
 #endif
 
 // OpenCV includes
-#include <cv.h>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 

@@ -27,7 +27,9 @@
   Abrham Gebreselasie
   10 March 2021
   
-
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
 
 #include "module5/sobelEdgeDetection.h"
@@ -99,7 +101,7 @@ int main() {
          strcat(file_path_and_filename, filename);
          strcpy(filename, file_path_and_filename);
 
-         inputImage = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);  // edge detection on greyscale images
+         inputImage = imread(filename, IMREAD_GRAYSCALE);  // edge detection on greyscale images
          if(inputImage.empty()) {
             cout << "can not open " << filename << endl;
             prompt_and_exit(-1);
@@ -108,19 +110,17 @@ int main() {
          printf("Press any key to continue ...\n");
 
          // Create a window for input and display it
-         namedWindow(input_window_name, CV_WINDOW_AUTOSIZE );
+         namedWindow(input_window_name, WINDOW_AUTOSIZE );
          imshow(input_window_name, inputImage);
   
          // Create a window for gradient magnitude
-         namedWindow(magnitude_window_name, CV_WINDOW_AUTOSIZE );
+         namedWindow(magnitude_window_name, WINDOW_AUTOSIZE );
 
          // Create a window for gradient direction
-         namedWindow(direction_window_name, CV_WINDOW_AUTOSIZE );
+         namedWindow(direction_window_name, WINDOW_AUTOSIZE );
 
          // Create a window for edges
-         namedWindow(edge_window_name, CV_WINDOW_AUTOSIZE );
-         resizeWindow(edge_window_name,0,0); // this forces the trackbar to be as small as possible (and to fit in the window)
-
+         namedWindow(edge_window_name, WINDOW_AUTOSIZE );
          createTrackbar( "Threshold", edge_window_name, &thresholdValue, max_threshold, sobelEdgeDetection);
 
          // Show the image

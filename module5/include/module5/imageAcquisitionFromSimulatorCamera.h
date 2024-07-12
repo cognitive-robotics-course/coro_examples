@@ -7,6 +7,10 @@
 
   Abrham Gebreselasie
   23 March 2021
+      
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
 
 
@@ -33,7 +37,6 @@
 #else
    #include <sys/select.h>
    #include <termios.h>
-   #include <stropts.h>
    #include <sys/ioctl.h>
    #include <fcntl.h>
    #include <unistd.h>
@@ -41,8 +44,7 @@
 
 
 //opencv
-#include <cv.h>
-#include <highgui.h>
+#include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 
 // ncurses.h must be included after opencv2/opencv.hpp to avoid incompatibility

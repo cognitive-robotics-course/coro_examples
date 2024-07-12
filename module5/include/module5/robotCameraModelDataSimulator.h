@@ -3,6 +3,10 @@
 *
 *   Interface file
 *
+* 
+* Ported to OpenCV 4
+* David Vernon
+* 11 July 2024
 ********************************************************************************************************************
 
 
@@ -37,7 +41,6 @@
 #ifdef ROS
 #include <sys/select.h>
 #include <termios.h>
-#include <stropts.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
 
@@ -58,7 +61,6 @@
 #endif
 
 // OpenCV includes
-#include <cv.h>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 

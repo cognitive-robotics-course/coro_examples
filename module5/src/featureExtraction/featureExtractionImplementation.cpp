@@ -24,10 +24,10 @@ void featureExtraction(char *filename, FILE *fp_out) {
  
    Mat inputImage;
  
-   namedWindow(inputWindowName,   CV_WINDOW_AUTOSIZE);  
-   namedWindow(outputWindowName,  CV_WINDOW_AUTOSIZE);
+   namedWindow(inputWindowName,   WINDOW_AUTOSIZE);  
+   namedWindow(outputWindowName,  WINDOW_AUTOSIZE);
 
-   inputImage = imread(filename, CV_LOAD_IMAGE_COLOR); // Read the file
+   inputImage = imread(filename, IMREAD_COLOR); // Read the file
 
    if (!inputImage.data) {                            // Check for invalid input
       printf("Error: failed to read image %s\n",filename);
@@ -47,7 +47,7 @@ void featureExtraction(char *filename, FILE *fp_out) {
 	Mat gray;
    Mat binary;
 
-	cvtColor(inputImage, gray, CV_BGR2GRAY);
+	cvtColor(inputImage, gray, COLOR_BGR2GRAY);
 	//threshold(gray,binary,128,255,THRESH_BINARY_INV);
    threshold(gray,binary,128, 255,THRESH_BINARY_INV  | THRESH_OTSU); // David Vernon: substituted in automatic threshold selection
  
@@ -56,7 +56,7 @@ void featureExtraction(char *filename, FILE *fp_out) {
 	vector<Vec4i>         hierarchy;
 
    /* David Vernon: see http://docs.opencv.org/2.4.10/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html#findcontours */
-	findContours(binary,contours,hierarchy,CV_RETR_TREE,CV_CHAIN_APPROX_NONE);
+	findContours(binary,contours,hierarchy,RETR_TREE,CHAIN_APPROX_NONE);
 
    /* extract features from the contours */
 	Mat contours_image = Mat::zeros(binary.size(), CV_8UC3);
@@ -95,7 +95,7 @@ void featureExtraction(char *filename, FILE *fp_out) {
       /* only consider contours of appreciable length */
 		if (contours[contour_number].size() > 10) {
          Scalar colour(rand()&0x7F, rand()&0x7F, rand()&0x7F );                                    // generate a random colour 
-         drawContours(contours_image, contours, contour_number, colour, CV_FILLED, 8, hierarchy ); // draw the contour
+         drawContours(contours_image, contours, contour_number, colour, FILLED, 8, hierarchy ); // draw the contour
 		
          char output[500];
 
@@ -109,7 +109,7 @@ void featureExtraction(char *filename, FILE *fp_out) {
             area -= (contourArea(contours[hole_number]) - contours[hole_number].size()/2 + 1); 
             
             Scalar colour( rand()&0x7F, rand()&0x7F, rand()&0x7F );
-            drawContours( contours_image, contours, hole_number, colour, CV_FILLED, 8, hierarchy );
+            drawContours( contours_image, contours, hole_number, colour, FILLED, 8, hierarchy );
 
             sprintf(output,"Area=%.0f", contourArea(contours[hole_number]) -contours[hole_number].size()/2+1); 
 

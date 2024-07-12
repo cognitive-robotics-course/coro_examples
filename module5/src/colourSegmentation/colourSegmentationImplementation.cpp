@@ -12,7 +12,10 @@
   --------------------
   Added _kbhit
   18 February 2021
-    
+        
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
  
 #include "module5/colourSegmentation.h"
@@ -105,8 +108,8 @@ void getSamplePoint( int event, int x, int y, int, void* ) {
 
       inputImageCopy = inputBGRImage.clone();
 
-      line(inputImageCopy,Point(x-crossHairSize/2,y),Point(x+crossHairSize/2,y),Scalar(0, 255, 0),1, CV_AA); // Green
-      line(inputImageCopy,Point(x,y-crossHairSize/2),Point(x,y+crossHairSize/2),Scalar(0, 255, 0),1, CV_AA);
+      line(inputImageCopy,Point(x-crossHairSize/2,y),Point(x+crossHairSize/2,y),Scalar(0, 255, 0),1, LINE_AA); // Green
+      line(inputImageCopy,Point(x,y-crossHairSize/2),Point(x,y+crossHairSize/2),Scalar(0, 255, 0),1, LINE_AA);
 
       imshow(input_window_name, inputImageCopy); // show the image with the cross-hairs
       

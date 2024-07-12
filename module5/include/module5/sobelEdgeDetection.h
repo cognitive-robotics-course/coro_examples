@@ -7,6 +7,10 @@
 
   David Vernon
   24 November 2017
+      
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
 
 
@@ -33,14 +37,12 @@
 #else
    #include <sys/select.h>
    #include <termios.h>
-   #include <stropts.h>
    #include <sys/ioctl.h>
 #endif
     
 
 //opencv
-#include <cv.h>
-#include <highgui.h>
+#include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
 
 #ifdef ROS

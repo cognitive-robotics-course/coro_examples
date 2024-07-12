@@ -35,7 +35,7 @@ void binaryThresholding(int, void*) {
       thresholdValue = 1;
 
    if (inputImage.type() == CV_8UC3) { // colour image
-      cvtColor(inputImage, greyscaleImage, CV_BGR2GRAY);
+      cvtColor(inputImage, greyscaleImage, COLOR_BGR2GRAY);
    } 
    else {
       greyscaleImage = inputImage.clone();
@@ -43,8 +43,8 @@ void binaryThresholding(int, void*) {
 
    thresholdedImage.create(greyscaleImage.size(), CV_8UC1);
    
-	for (row=0; row < greyscaleImage.rows; row++) {
-		for (col=0; col < greyscaleImage.cols; col++) {
+   for (row=0; row < greyscaleImage.rows; row++) {
+      for (col=0; col < greyscaleImage.cols; col++) {
          if(greyscaleImage.at<uchar>(row,col) < thresholdValue) {
             thresholdedImage.at<uchar>(row,col) = (uchar) 0;
          }

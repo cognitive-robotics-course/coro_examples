@@ -131,7 +131,7 @@ int main() {
    strcat(file_path_and_filename, image_filename);
    strcpy(image_filename, file_path_and_filename);
 
-   image = imread(image_filename, CV_LOAD_IMAGE_UNCHANGED);
+   image = imread(image_filename, IMREAD_UNCHANGED);
    if (image.empty()) {
       cout << "can not open " << image_filename << endl;
       prompt_and_exit(-1);
@@ -140,7 +140,7 @@ int main() {
    z = 0; // set the depth value for the inverse perspective transformation
 
    /* Create a window for image and display it */
-   namedWindow(window_name, CV_WINDOW_AUTOSIZE );
+   namedWindow(window_name, WINDOW_AUTOSIZE );
    setMouseCallback(window_name, getSamplePoint);    // use this callback to get the coordinates of the sample point
    imshow(window_name, image);
 

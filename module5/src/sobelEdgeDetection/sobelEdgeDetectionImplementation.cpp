@@ -38,7 +38,7 @@ void sobelEdgeDetection(int, void*) {
    Mat orientation; 
 
    if (inputImage.type() == CV_8UC3) { // colour image
-      cvtColor(inputImage, greyscaleImage, CV_BGR2GRAY);
+      cvtColor(inputImage, greyscaleImage, COLOR_BGR2GRAY);
    } 
    else {
       greyscaleImage = inputImage.clone();

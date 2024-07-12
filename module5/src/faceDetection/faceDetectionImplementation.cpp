@@ -12,6 +12,9 @@
   David Vernon
   1 November 2022
   
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
 
 #include "module5/faceDetection.h"
@@ -36,7 +39,7 @@ void faceDetection(char *filename, CascadeClassifier& cascade) {
    bool debug = true;
    char local_filename[MAX_FILENAME_LENGTH];
    
-   namedWindow(outputWindowName,     CV_WINDOW_AUTOSIZE);
+   namedWindow(outputWindowName,     WINDOW_AUTOSIZE);
    
    /* check to see if the image is the camera device     */
    /* if so, grab images live from the camera            */
@@ -54,7 +57,7 @@ void faceDetection(char *filename, CascadeClassifier& cascade) {
       strcpy(local_filename, data_dir);
       strcat(local_filename, filename);
 	 
-      inputImage = imread(local_filename, CV_LOAD_IMAGE_COLOR); // Read the file
+      inputImage = imread(local_filename, IMREAD_COLOR); // Read the file
 
       if (!inputImage.data) {                            // Check for invalid input
          printf("Error: failed to read image %s\n",local_filename);
@@ -63,9 +66,9 @@ void faceDetection(char *filename, CascadeClassifier& cascade) {
 
       printf("Press any key to continue ...\n");
 
-      cvtColor(inputImage, gray, CV_BGR2GRAY );
+      cvtColor(inputImage, gray, COLOR_BGR2GRAY );
       equalizeHist(gray, gray );
-      cascade.detectMultiScale( gray, faces, 1.1, 2, CV_HAAR_SCALE_IMAGE, Size(30, 30) );
+      cascade.detectMultiScale( gray, faces, 1.1, 2, CASCADE_SCALE_IMAGE, Size(30, 30) );
 
       for (int count = 0; count < (int)faces.size(); count++ )
          rectangle(inputImage, faces[count], cv::Scalar(255,0,0), 2);
@@ -84,8 +87,8 @@ void faceDetection(char *filename, CascadeClassifier& cascade) {
       //camera.open(1); // David Vernon ... this is the original code and uses an external USB camera
       camera.open(0);   // David Vernon ... use this for the internal web camera
  
-      camera.set(CV_CAP_PROP_FRAME_WIDTH, 320);  // David Vernon ... has no effect on my webcam so resizing below
-      camera.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+      camera.set(CAP_PROP_FRAME_WIDTH, 320);  // David Vernon ... has no effect on my webcam so resizing below
+      camera.set(CAP_PROP_FRAME_HEIGHT, 240);
     
       if (camera.isOpened()) { 
 	// Mat current_frame; // David Vernon ... moved to start of function
@@ -99,9 +102,9 @@ void faceDetection(char *filename, CascadeClassifier& cascade) {
 
            //resize(current_frame,current_frame,Size(),0.5,0.5); // David Vernon 
             
-	   cvtColor( current_frame, gray, CV_BGR2GRAY );
+	   cvtColor( current_frame, gray, COLOR_BGR2GRAY );
 	   equalizeHist( gray, gray ); // David Vernon: irrespective of the equalization, well illumiated images are required
-	   cascade.detectMultiScale( gray, faces, 1.1, 2, CV_HAAR_SCALE_IMAGE, Size(30, 30) );
+	   cascade.detectMultiScale( gray, faces, 1.1, 2, CASCADE_SCALE_IMAGE, Size(30, 30) );
 
 	   for (int count = 0; count < (int)faces.size(); count++ )
 	      rectangle(current_frame, faces[count], cv::Scalar(255,0,0), 2);

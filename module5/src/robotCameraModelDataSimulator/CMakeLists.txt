@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 #############################################
 SET(MODULENAME robotCameraModelDataSimulator)
 #############################################
-find_package(gazebo 7 REQUIRED)
+find_package(gazebo 11 REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
 		cv_bridge

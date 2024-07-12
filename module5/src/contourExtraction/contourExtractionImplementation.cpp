@@ -43,7 +43,7 @@ void ContourExtraction(int, void*) {
    filter_size = gaussian_std_dev * 4 + 1;  // multiplier must be even to ensure an odd filter size as required by OpenCV
                                             // this places an upper limit on gaussian_std_dev of 7 to ensure the filter size < 31
                                             // which is the maximum size for the Laplacian operator
-   cvtColor(src, src_gray, CV_BGR2GRAY);
+   cvtColor(src, src_gray, COLOR_BGR2GRAY);
 
    GaussianBlur(src_gray, src_blur, Size(filter_size,filter_size), gaussian_std_dev);
 
@@ -53,7 +53,7 @@ void ContourExtraction(int, void*) {
 
    /* see http://docs.opencv.org/2.4/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html#findcontours */
    /* and http://docs.opencv.org/2.4/doc/tutorials/imgproc/shapedescriptors/find_contours/find_contours.html         */
-	findContours(canny_edge_image_copy,contours,hierarchy,CV_RETR_TREE,CV_CHAIN_APPROX_NONE);
+	findContours(canny_edge_image_copy,contours,hierarchy,RETR_TREE,CHAIN_APPROX_NONE);
 
    Mat contours_image = Mat::zeros(src.size(), CV_8UC3);       // draw the contours on a black background
  

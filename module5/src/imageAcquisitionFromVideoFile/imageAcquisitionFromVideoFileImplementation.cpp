@@ -14,7 +14,13 @@
   18 February 2021
     
 
-  Changed to C++ version for camera acquisition. DV 27/2/2018
+  Changed to C++ version for camera acquisition. 
+  DV 27/2/2018
+  
+      
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
  
 #include "module5/imageAcquisitionFromVideoFile.h"
@@ -32,7 +38,7 @@ void display_image_from_video(char *filename) {
    Mat processedImage;     //  a processed image
    string inputWindowName  = "Input Image"; 
    
-   namedWindow(inputWindowName, CV_WINDOW_AUTOSIZE); // create the window  
+   namedWindow(inputWindowName, WINDOW_AUTOSIZE); // create the window  
 
    video.open(filename);                     // open the video input 
    if (video.isOpened()){

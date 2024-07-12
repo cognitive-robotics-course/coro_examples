@@ -88,12 +88,11 @@ int main() {
    printf("from USB camera.\n\n");
    
    do {
-
-		 end_of_file = fscanf(fp_in, "%d", &camera_number);
-         if (end_of_file != EOF) {
-            printf("\nDisplaying image from USB camera ... \n");
-            display_image_from_camera(camera_number);
-         }
+      end_of_file = fscanf(fp_in, "%d", &camera_number);
+      if (end_of_file != EOF) {
+         printf("\nDisplaying image from USB camera ... \n");
+         display_image_from_camera(camera_number);
+      }
 
    } while (end_of_file != EOF);
 

@@ -176,7 +176,7 @@ int main() {
    strcat(file_path_and_filename, left_image_filename);
    strcpy(left_image_filename, file_path_and_filename);
 
-   leftImage = imread(left_image_filename, CV_LOAD_IMAGE_UNCHANGED);
+   leftImage = imread(left_image_filename, IMREAD_UNCHANGED);
    if (leftImage.empty()) {
       cout << "can not open " << left_image_filename << endl;
       prompt_and_exit(-1);
@@ -186,19 +186,19 @@ int main() {
    strcat(file_path_and_filename, right_image_filename);
    strcpy(right_image_filename, file_path_and_filename);
 
-   rightImage = imread(right_image_filename, CV_LOAD_IMAGE_UNCHANGED);
+   rightImage = imread(right_image_filename, IMREAD_UNCHANGED);
    if (rightImage.empty()) {
       cout << "can not open " << right_image_filename << endl;
       prompt_and_exit(-1);
    }
 
    /* Create a window for left and display it */
-   namedWindow(left_window_name, CV_WINDOW_AUTOSIZE );
+   namedWindow(left_window_name, WINDOW_AUTOSIZE );
    setMouseCallback(left_window_name, getLeftSamplePoint);    // use this callback to get the coordinates of the sample point
    imshow(left_window_name, leftImage);
   
    /* Create a window for right and display it */
-   namedWindow(right_window_name, CV_WINDOW_AUTOSIZE );
+   namedWindow(right_window_name, WINDOW_AUTOSIZE );
    setMouseCallback(right_window_name, getRightSamplePoint);  // use this callback to get the coordinates of the sample point
    imshow(right_window_name, rightImage);
 

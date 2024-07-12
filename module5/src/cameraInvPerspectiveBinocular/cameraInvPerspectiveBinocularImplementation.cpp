@@ -31,8 +31,8 @@ void getLeftSamplePoint( int event, int x, int y, int, void* ) {
 
       leftImageCopy = leftImage.clone();
 
-      line(leftImageCopy,Point(x-crossHairSize/2,y),Point(x+crossHairSize/2,y),Scalar(0, 255, 0),1, CV_AA); // Green
-      line(leftImageCopy,Point(x,y-crossHairSize/2),Point(x,y+crossHairSize/2),Scalar(0, 255, 0),1, CV_AA);
+      line(leftImageCopy,Point(x-crossHairSize/2,y),Point(x+crossHairSize/2,y),Scalar(0, 255, 0),1, LINE_AA); // Green
+      line(leftImageCopy,Point(x,y-crossHairSize/2),Point(x,y+crossHairSize/2),Scalar(0, 255, 0),1, LINE_AA);
 
       imshow(left_window_name, leftImageCopy); // show the image with the cross-hairs
       
@@ -60,8 +60,8 @@ void getRightSamplePoint( int event, int x, int y, int, void* ) {
 
       rightImageCopy = rightImage.clone();
 
-      line(rightImageCopy,Point(x-crossHairSize/2,y),Point(x+crossHairSize/2,y),Scalar(0, 255, 0),1, CV_AA); // Green
-      line(rightImageCopy,Point(x,y-crossHairSize/2),Point(x,y+crossHairSize/2),Scalar(0, 255, 0),1, CV_AA);
+      line(rightImageCopy,Point(x-crossHairSize/2,y),Point(x+crossHairSize/2,y),Scalar(0, 255, 0),1, LINE_AA); // Green
+      line(rightImageCopy,Point(x,y-crossHairSize/2),Point(x,y+crossHairSize/2),Scalar(0, 255, 0),1, LINE_AA);
 
       imshow(right_window_name, rightImageCopy); // show the image with the cross-hairs
       

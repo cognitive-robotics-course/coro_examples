@@ -26,8 +26,10 @@
   Ported to Ubuntu 16.04 and OpenCV 3.3
   Abrham Gebreselasie
   10 March 2021
-  
-
+    
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
 
  
@@ -99,7 +101,7 @@ int main() {
          strcat(file_path_and_filename, filename);
          strcpy(filename, file_path_and_filename);
 
-         inputBGRImage = imread(filename, CV_LOAD_IMAGE_UNCHANGED);
+         inputBGRImage = imread(filename, IMREAD_UNCHANGED);
          if(inputBGRImage.empty()) {
             cout << "can not open " << filename << endl;
             prompt_and_exit(-1);
@@ -111,16 +113,15 @@ int main() {
          printf("When finished with this image, press any key to continue ...\n");
 
          /* Create a window for input and display it */
-         namedWindow(input_window_name, CV_WINDOW_AUTOSIZE );
+         namedWindow(input_window_name, WINDOW_AUTOSIZE );
          setMouseCallback(input_window_name, getSamplePoint);    // use this callback to get the colour components of the sample point
          imshow(input_window_name, inputBGRImage);
   
          /* convert the BGR image to HLS to facilitate hue-saturation segmentation */
-         cvtColor(inputBGRImage, inputHLSImage, CV_BGR2HLS);
+         cvtColor(inputBGRImage, inputHLSImage, COLOR_BGR2HLS);
 
          /* Create a window for segmentation based on hue and saturation thresholding */
-         namedWindow(segmented_window_name, CV_WINDOW_AUTOSIZE );
-         resizeWindow(segmented_window_name,0,0); // this forces the trackbar to be as small as possible (and to fit in the window)
+         namedWindow(segmented_window_name, WINDOW_AUTOSIZE );
          createTrackbar( "Hue Range", segmented_window_name, &hueRange,        max_hue_range,        colourSegmentation);
          createTrackbar( "Sat Range", segmented_window_name, &saturationRange, max_saturation_range, colourSegmentation);
 

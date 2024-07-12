@@ -12,7 +12,10 @@
   --------------------
   Added _kbhit
   18 February 2021
-    
+     
+  Ported to OpenCV 4
+  David Vernon
+  11 July 2024
 */
  
 #include "module5/connectedComponents.h"
@@ -39,7 +42,7 @@ void connectedComponents(int, void*) {
       thresholdValue = 1;
 
    if (inputImage.type() == CV_8UC3) { // colour image
-      cvtColor(inputImage, greyscaleImage, CV_BGR2GRAY);
+      cvtColor(inputImage, greyscaleImage, COLOR_BGR2GRAY);
    } 
    else {
       greyscaleImage = inputImage.clone();
@@ -49,12 +52,12 @@ void connectedComponents(int, void*) {
 
    imshow(thresholded_window_name, thresholdedImage);
 
-	findContours(thresholdedImage,contours,hierarchy,CV_RETR_TREE,CV_CHAIN_APPROX_NONE);
+	findContours(thresholdedImage,contours,hierarchy,RETR_TREE,CHAIN_APPROX_NONE);
 	Mat contours_image = Mat::zeros(inputImage.size(), CV_8UC3);
 	for (int contour_number=0; (contour_number<(int)contours.size()); contour_number++)
 	{
         Scalar colour( rand()&0xFF, rand()&0xFF, rand()&0xFF );
-        drawContours( contours_image, contours, contour_number, colour, CV_FILLED, 8, hierarchy );
+        drawContours( contours_image, contours, contour_number, colour, FILLED, 8, hierarchy );
 	}
 
    imshow(components_window_name, contours_image);
